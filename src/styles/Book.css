@@ -1,0 +1,16 @@
+.ant-card-body {
+    padding: 5px;
+}
+
+.ant-card-meta-title {
+    font-size: 10px;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    padding-top: 2px;
+}
+
+.ant-card-meta-description {
+    font-size: 8px;
+    padding-top: 3px;
+}
+
