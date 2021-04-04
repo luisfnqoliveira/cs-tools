@@ -1,6 +1,12 @@
+@import '~antd/dist/antd.css';
 @import "./styles/Footer.css";
 @import "./styles/Header.css";
 @import "./styles/Main.css";
+@import "./styles/Bookshelf.css";
+@import "./styles/SingleBookCase.css";
+@import "./App.css";
+@import "./styles/Book.css";
+
 
 body {
   margin: 0;
@@ -14,4 +20,8 @@ body {
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
+}
+
+html, body, #root, .App {
+  height: 100%;
 }

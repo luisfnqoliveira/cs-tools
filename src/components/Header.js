@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import upittLogo from '../assets/images/Upitts_Logo.svg';
+import upittLogo from '../assets/images/Upitt_logo_400x400.jpg';
 
 
 class Header extends Component {

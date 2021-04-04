@@ -1,0 +1,7 @@
+.bookcase {
+    background-image: url("../assets/images/singleLayerBookcase.jpg");
+    background-repeat: no-repeat;
+    height: 120px;
+    width: 340px;
+    background-size: contain;
+}
