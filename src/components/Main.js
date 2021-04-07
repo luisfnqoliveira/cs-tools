@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
+import SplitPane from "react-split-pane";
 import Bookshelf from './Bookshelf';
 import Book from './Book';
-
+import "../styles/Main.css";
+import "antd/dist/antd.css";
 
 class Main extends Component {
 
@@ -18,22 +20,32 @@ class Main extends Component {
 
 
     render() {
+        const value = this.props.value;
         return (
             <div className="main" >
-                <div className="searchBar">
+                {/* <div className="searchBar"> */}
 
-                </div>
-                <div className="left-side" >
-                    <Bookshelf
-                        numOfLevels={this.state.numOfShelfLevels}
-                        numOfBooksPerLevel={this.state.numOfBooksPerLevel}
-                    />
-                </div>
-                <div className="right-side" >
-                    <Book />
-                </div>
-                
-                
+                <SplitPane 
+                    split="vertical" 
+                    defaultSize="50%"
+                    minSize={100}
+                    maxSize={-100}
+                    style={{position:"static"}}
+                    // pane1Style={{ backgroundColor: "#A8D0E6" }}
+                    // pane2Style={{ backgroundColor: "#24305E" }}
+                >
+                    <div>
+                        <Bookshelf
+                            numOfLevels={this.state.numOfShelfLevels}
+                            numOfBooksPerLevel={this.state.numOfBooksPerLevel}
+                        />
+                    </div>
+                    <div className={(value==="Student") ? "wrapper" : ""}>
+                        <div className={(value==="Student") ? "is-disabled" : ""}>
+                            <Book />
+                        </div>
+                    </div>
+                </SplitPane>  
             </div>
         );
     }
