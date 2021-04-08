@@ -1,14 +1,16 @@
 import React, { Component } from 'react';
+import SplitPane from "react-split-pane";
+import Bookshelf from './Bookshelf';
+import Book from './Book';
+import "../styles/Main.css";
+import "antd/dist/antd.css";
 import Container from 'react-bootstrap/Container';
-import '/Users/MAY/Desktop/cs-tools/src/App.js';
+import '../App.js';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Modal from 'react-bootstrap/Modal';
 import { MDBCol, MDBIcon, MDBBtn } from "mdbreact";
 import { Catalog } from './Catalog.js';
-
-import Bookshelf from './Bookshelf';
-import Book from './Book';
 
 class Main extends Component {
 
@@ -29,8 +31,10 @@ class Main extends Component {
 
 
     render() {
+        const value = this.props.value;
         const { lib } = this.state;
-        let catalogClose = () => this.setState({ catalogShow: false });
+        let catalogClose = () => this.setState({ catalogShow: false });     
+        
         return (
             <div className="main" >
                 <Container fluid="md">
@@ -41,8 +45,8 @@ class Main extends Component {
                         <Col>
                             <form className="form-inline mt-4 mb-4" >
                                 <MDBIcon icon="search" />
-                                <input className="form-control form-control-sm ml-3 w-75" type="text" placeholder="Find a Book" aria-label="Search" 
-                                onChange={event => this.setState({ query: event.target.value })}
+                                <input className="form-control form-control-sm ml-3 w-75" type="text" placeholder="Find a Book" aria-label="Search"
+                                    onChange={event => this.setState({ query: event.target.value })}
                                     onKeyPress={event => {
                                         if (event.key === 'Enter') {
                                             this.setState({ catalogShow: true })
@@ -56,24 +60,31 @@ class Main extends Component {
                         </Col>
                     </Row>
                     <Row>
-                        <Col>
-                        <div className="left-side" >
-                            <Bookshelf
-                            numOfLevels={this.state.numOfShelfLevels}
-                            numOfBooksPerLevel={this.state.numOfBooksPerLevel}
-                            />
-                        </div>
-                        </Col>
-                        <Col>
-                        <div className="right-side" >
-                    <Book />
-                </div>
-                        </Col>
+                        <SplitPane
+                            split="vertical"
+                            defaultSize="50%"
+                            minSize={100}
+                            maxSize={-100}
+                            style={{ position: "static" }}
+                        // pane1Style={{ backgroundColor: "#A8D0E6" }}
+                        // pane2Style={{ backgroundColor: "#24305E" }}
+                        >
+                            <div>
+                                {/* left side */}
+                                <Bookshelf
+                                    numOfLevels={this.state.numOfShelfLevels}
+                                    numOfBooksPerLevel={this.state.numOfBooksPerLevel}
+                                />
+                            </div>
+                            <div className={(value === "Student") ? "wrapper" : ""}>
+                                <div className={(value === "Student") ? "is-disabled" : ""}>
+                                    {/* right side */}
+                                    <Book />
+                                </div>
+                            </div>
+                        </SplitPane>
                     </Row>
                 </Container>
-                
-                
-                
             </div >
         );
     }
