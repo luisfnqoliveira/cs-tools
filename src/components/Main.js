@@ -11,6 +11,7 @@ import Col from 'react-bootstrap/Col';
 import Modal from 'react-bootstrap/Modal';
 import { MDBCol, MDBIcon, MDBBtn } from "mdbreact";
 import { Catalog } from './Catalog.js';
+import Storage from './Storage';
 
 class Main extends Component {
 
@@ -21,10 +22,19 @@ class Main extends Component {
             numOfShelfLevels: 5,
             numOfBooksPerLevel: 3,
             books: [
-                { name: "book1", author: "author1", level: 1, position: 1 },
-                { name: "book2", author: "author2", level: 1, position: 2 },
-                { name: "book3", author: "author3", level: 2, position: 3 },
-                { name: "book4", author: "author4", level: 3, position: 2 },
+                // location: 0 - storage; 1 - bookshelf --> level,position
+                { name: "book1", author: "author1", location: 0 },  
+                { name: "book2", author: "author2", location: 0 },
+                { name: "book3", author: "author3", location: 0 },
+                { name: "book4", author: "author4", location: 0 },
+                { name: "book5", author: "author1", location: 0 },  
+                { name: "book6", author: "author2", location: 0 },
+                { name: "book7", author: "author3", location: 0 },
+                { name: "book8", author: "author4", location: 0 },
+                { name: "book9", author: "author1", location: 0 },  
+                { name: "book10", author: "author2", location: 0 },
+                { name: "book11", author: "author3", location: 0 },
+                { name: "book12", author: "author4", location: 0 },
             ]
         }
     }
@@ -79,7 +89,9 @@ class Main extends Component {
                             <div className={(value === "Student") ? "wrapper" : ""}>
                                 <div className={(value === "Student") ? "is-disabled" : ""}>
                                     {/* right side */}
-                                    <Book />
+                                    <Storage 
+                                        books={this.state.books}
+                                    />
                                 </div>
                             </div>
                         </SplitPane>
