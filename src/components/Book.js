@@ -13,8 +13,8 @@ class Book extends Component {
                 style={{ width: 80, height:  100}}
                 cover={<img alt="bookcover" src={bookcover} />}
             >
-                <Meta title="Book1" 
-                      description="author1"
+                <Meta title={this.props.title} 
+                      description={this.props.author}
                 />
             </Card>
         );
