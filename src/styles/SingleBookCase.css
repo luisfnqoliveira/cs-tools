@@ -4,4 +4,12 @@
     height: 120px;
     width: 340px;
     background-size: contain;
+    display: flex;
+}
+
+.single {
+    height: 90px;
+    width: 110px;
+    margin-top: 30px;
+    margin-left: 5px;
 }

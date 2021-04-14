@@ -22,7 +22,7 @@ class Bookshelf extends Component {
                 {
                     bookcases.map(i => {
                         return (
-                            <SingleBookCase level={i.level} key={i.level}/>
+                            <SingleBookCase level={i.level} key={i.level} numOfBooksPerLevel={i.numOfBooks} />
                         )
                     })
                 }
