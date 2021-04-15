@@ -23,29 +23,30 @@ class Main extends Component {
             numOfBooksPerLevel: 3,
             books: [
                 // location: 0 - storage; 1 - bookshelf --> level,position
-                { name: "book1", author: "author1", location: 0 },  
+                { name: "book1", author: "author1", location: 0 },
                 { name: "book2", author: "author2", location: 0 },
                 { name: "book3", author: "author3", location: 0 },
                 { name: "book4", author: "author4", location: 0 },
-                { name: "book5", author: "author1", location: 0 },  
+                { name: "book5", author: "author1", location: 0 },
                 { name: "book6", author: "author2", location: 0 },
                 { name: "book7", author: "author3", location: 0 },
                 { name: "book8", author: "author4", location: 0 },
-                { name: "book9", author: "author1", location: 0 },  
+                { name: "book9", author: "author1", location: 0 },
                 { name: "book10", author: "author2", location: 0 },
                 { name: "book11", author: "author3", location: 0 },
                 { name: "book12", author: "author4", location: 0 },
-            ]
+            ],
+            query: ''
         }
     }
 
-    catalogClose = () => this.setState({ catalogShow: false});     
+    catalogClose = () => this.setState({ catalogShow: false });
 
     render() {
         const value = this.props.value;
         const { lib } = this.state;
-        
-        
+
+
         return (
             <div className="main" >
                 <Container fluid="md">
@@ -57,14 +58,20 @@ class Main extends Component {
                             <div className="form-inline mt-4 mb-4" >
                                 <MDBIcon icon="search" />
                                 <input className="form-control form-control-sm ml-3 w-75" type="text" placeholder="Find a Book" aria-label="Search"
+                                    value={this.state.query}
                                     onChange={event => this.setState({ query: event.target.value })}
                                     onKeyPress={event => {
                                         if (event.key === 'Enter') {
-                                            this.setState({ catalogShow: true, value:event.target.value })
+                                            if (!this.state.query) {
+                                                alert('Please input a name!');
+                                            } else {
+                                                this.setState({ catalogShow: true, value: event.target.value })
+                                            }
                                         }
                                     }} />
                             </div>
                             <Catalog
+                                query={this.state.query}
                                 show={this.state.catalogShow}
                                 onHide={this.catalogClose}
                             />
@@ -90,7 +97,7 @@ class Main extends Component {
                             <div className={(value === "Student") ? "wrapper" : ""}>
                                 <div className={(value === "Student") ? "is-disabled" : ""}>
                                     {/* right side */}
-                                    <Storage 
+                                    <Storage
                                         books={this.state.books}
                                     />
                                 </div>
