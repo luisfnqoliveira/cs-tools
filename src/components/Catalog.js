@@ -1,13 +1,13 @@
-import React,{Component} from 'react';
-import {Modal,Button, Row, Col, Form} from 'react-bootstrap';
+import React, { Component } from 'react';
+import { Modal, Button, Row, Col, Form } from 'react-bootstrap';
 
 export class Catalog extends Component {
-    constructor(props) {
-        super(props);
-    }
-    render() {
-        return(
-            <Modal
+  constructor(props) {
+    super(props);
+  }
+  render() {
+    return (
+      <Modal
         {...this.props}
         size="lg"
         aria-labelledby="contained-modal-title-vcenter"
@@ -30,7 +30,7 @@ export class Catalog extends Component {
           <Button onClick={this.props.onHide}>Close</Button>
         </Modal.Footer>
       </Modal>
-        );
-    }
+    );
+  }
 }
 

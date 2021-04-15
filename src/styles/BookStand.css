@@ -1,0 +1,7 @@
+.bookstand {
+    background-image: url("../assets/images/bookStand.png");
+    background-repeat: no-repeat;
+    height: 90px;
+    width: 110px;
+    background-size: contain;
+}
