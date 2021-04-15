@@ -8,7 +8,6 @@ import Container from 'react-bootstrap/Container';
 import '../App.js';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
-import Modal from 'react-bootstrap/Modal';
 import { MDBCol, MDBIcon, MDBBtn } from "mdbreact";
 import { Catalog } from './Catalog.js';
 import Storage from './Storage';
@@ -18,6 +17,7 @@ class Main extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            value: '',
             lib: [], catalogShow: false,
             numOfShelfLevels: 5,
             numOfBooksPerLevel: 3,
@@ -39,11 +39,12 @@ class Main extends Component {
         }
     }
 
+    catalogClose = () => this.setState({ catalogShow: false});     
 
     render() {
         const value = this.props.value;
         const { lib } = this.state;
-        let catalogClose = () => this.setState({ catalogShow: false });     
+        
         
         return (
             <div className="main" >
@@ -53,19 +54,19 @@ class Main extends Component {
                     </Row>
                     <Row>
                         <Col>
-                            <form className="form-inline mt-4 mb-4" >
+                            <div className="form-inline mt-4 mb-4" >
                                 <MDBIcon icon="search" />
                                 <input className="form-control form-control-sm ml-3 w-75" type="text" placeholder="Find a Book" aria-label="Search"
                                     onChange={event => this.setState({ query: event.target.value })}
                                     onKeyPress={event => {
                                         if (event.key === 'Enter') {
-                                            this.setState({ catalogShow: true })
+                                            this.setState({ catalogShow: true, value:event.target.value })
                                         }
                                     }} />
-                            </form>
+                            </div>
                             <Catalog
                                 show={this.state.catalogShow}
-                                onHide={catalogClose}
+                                onHide={this.catalogClose}
                             />
                         </Col>
                     </Row>
