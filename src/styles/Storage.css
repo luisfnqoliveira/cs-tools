@@ -1,7 +1,8 @@
 .storage {
     background-image: url(../assets/images/storage.jpg);
     height: 300px;
-    width: 500px;
+    width: auto;
+    /* width: 500px; */
     margin-left: 100px;
     margin-bottom: 20px;
     margin-top: 250px;

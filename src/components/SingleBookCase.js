@@ -12,6 +12,8 @@ class SingleBookCase extends Component {
         for (let i = 0; i < numOfBooksPerLevel; i++) {
             bookstands = [...bookstands, {
                 position: i + 1,
+                level: this.props.level,
+                books: this.props.books
             }];
         }
         return (
@@ -21,7 +23,12 @@ class SingleBookCase extends Component {
                         bookstands.map(i => {
                             return (
                                 <div className="single">
-                                    <BookStand position={i.position} key={i.position}/>
+                                    <BookStand position={i.position}
+                                        key={i.position}
+                                        level={i.level}
+                                        books={i.books}
+                                       dragHandler = {this.props.dragHandler}
+                                    />
                                 </div>
                             )
                         })

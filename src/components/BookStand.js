@@ -1,16 +1,60 @@
 import React, { Component } from 'react';
 import { Tooltip } from 'antd';
+import { useDrop } from 'react-dnd';
+import { useDrag } from 'react-dnd';
+import { ItemTypes } from '../utilities/items.js';
+import Book from './Book.js';
 
-class BookStand extends Component {
+function BookStand(props) {
+    const positionIntro = "Position " + props.position;
+    const [{ isOver }, drop] = useDrop({
+        accept: ItemTypes.BOOK,
+        drop: (item, monitor) => props.dragHandler(item, props.level, props.position),
+        collect: monitor => ({
+            isOver: !!monitor.isOver()
+        })
+    })
 
-    render() {
-        const positionIntro = "Position " + this.props.position;
-        return (
-            <Tooltip placement="bottom" title={positionIntro}>
-                <div className="bookstand"></div>
-            </Tooltip>
-        );
-    }
+    const books = props.books;
+    const shelfBook = books.filter(book => book.location === 1);
+    return (
+        <Tooltip placement="bottom" title={positionIntro}>
+            <div className="bookstand" ref={drop}>
+                {shelfBook.map(i => {
+                    if (i.level === props.level && i.position === props.position) {
+                        return (<Book title={i.name}
+                                      author={i.author}
+                        />)
+                    }
+                })}
+                {/* {isOver && (
+                    <div
+                        style={{
+                            position: 'absolute',
+                            top: 0,
+                            left: 0,
+                            height: '100%',
+                            width: '100%',
+                            zIndex: 1,
+                            opacity: 0.5,
+                            backgroundColor: 'yellow',
+                        }}
+                    />
+                )} */}
+            </div>
+        </Tooltip>
+    );
 }
+// class BookStand extends Component {
+
+//     render() {
+//         const positionIntro = "Position " + this.props.position;
+//         return (
+//             <Tooltip placement="bottom" title={positionIntro}>
+//                 <div className="bookstand" ref={drop}></div>
+//             </Tooltip>
+//         );
+//     }
+// }
 
 export default BookStand;
