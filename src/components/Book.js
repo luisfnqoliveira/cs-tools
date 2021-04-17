@@ -10,7 +10,7 @@ function Book(props) {
         type: ItemTypes.BOOK,
         item: {
             code: props.code,
-            title: props.title,
+            name: props.name,
             author: props.author,
             level: props.level,
             position: props.position
@@ -27,7 +27,7 @@ function Book(props) {
                 style={{ width: 80, height:  100}}
                 cover={<img alt="bookcover" src={bookcover} />}
             >
-                <Meta title={props.title} 
+                <Meta title={props.name} 
                       description={props.author}
                 />
             </Card>

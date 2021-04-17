@@ -16,18 +16,28 @@ function BookStand(props) {
     })
 
     const books = props.books;
-    const shelfBook = books.filter(book => book.location === 1);
-    return (
-        <Tooltip placement="bottom" title={positionIntro}>
-            <div className="bookstand" ref={drop}>
-                {shelfBook.map(i => {
-                    if (i.level === props.level && i.position === props.position) {
-                        return (<Book title={i.name}
-                                      author={i.author}
-                        />)
-                    }
-                })}
-                {/* {isOver && (
+    console.log(books);
+    if (Object.keys(books).length === 0 && books.constructor === Object) {
+        return (
+            <Tooltip placement="bottom" title={positionIntro}>
+                <div className="bookstand">
+                </div>
+            </Tooltip>
+        );
+    }
+    else {
+        const shelfBook = books.filter(book => book.location === 1);
+        return (
+            <Tooltip placement="bottom" title={positionIntro}>
+                <div className="bookstand" ref={drop}>
+                    {shelfBook.map(i => {
+                        if (i.level === props.level && i.position === props.position) {
+                            return (<Book name={i.name}
+                                        author={i.author}
+                            />)
+                        }
+                    })}
+                    {/* {isOver && (
                     <div
                         style={{
                             position: 'absolute',
@@ -41,9 +51,10 @@ function BookStand(props) {
                         }}
                     />
                 )} */}
-            </div>
-        </Tooltip>
-    );
+                </div>
+            </Tooltip>
+        );
+    }
 }
 // class BookStand extends Component {
 
