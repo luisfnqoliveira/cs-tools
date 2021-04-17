@@ -15,6 +15,7 @@ function getStoredBooks() {
 function updateBook(name, location) {
   // TODO
 }
+
 function storeBook(name) {
   console.log('storing book', name);
   const storedBooks = getStoredBooks();
@@ -26,8 +27,11 @@ function storeBook(name) {
   } else {
     // store the book
     const bookObj = {
+      // code,
       name: name,
-      location: 'storage'
+      location: 'storage',
+      level: 0,
+      position: 0,
     };
     storedBooks.push(bookObj);
     const storedBooksJson = JSON.stringify(storedBooks);

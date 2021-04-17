@@ -12,8 +12,18 @@ import { MDBCol, MDBIcon, MDBBtn } from "mdbreact";
 import { Catalog } from './Catalog.js';
 import Storage from './Storage';
 
-class Main extends Component {
+function allStorage() {
+    var archive = {};
+    {Object.entries(localStorage).map(([key, valueJSON]) => {
+        const value = JSON.parse(valueJSON);
+        archive = value;
+       }
+    )}
+    return (archive)
+}
 
+class Main extends Component {
+    
     constructor(props) {
         super(props);
         this.state = {
@@ -21,21 +31,22 @@ class Main extends Component {
             lib: [], catalogShow: false,
             numOfShelfLevels: 5,
             numOfBooksPerLevel: 3,
-            books: [
-                // location: 0 - storage; 1 - bookshelf --> level,position
-                { name: "book1", author: "author1", location: 0 },
-                { name: "book2", author: "author2", location: 0 },
-                { name: "book3", author: "author3", location: 0 },
-                { name: "book4", author: "author4", location: 0 },
-                { name: "book5", author: "author1", location: 0 },
-                { name: "book6", author: "author2", location: 0 },
-                { name: "book7", author: "author3", location: 0 },
-                { name: "book8", author: "author4", location: 0 },
-                { name: "book9", author: "author1", location: 0 },
-                { name: "book10", author: "author2", location: 0 },
-                { name: "book11", author: "author3", location: 0 },
-                { name: "book12", author: "author4", location: 0 },
-            ],
+            // books: [
+            //     // location: 0 - storage; 1 - bookshelf --> level,position
+            //     { name: "book1", author: "author1", location: 0 },
+            //     { name: "book2", author: "author2", location: 0 },
+            //     { name: "book3", author: "author3", location: 0 },
+            //     { name: "book4", author: "author4", location: 0 },
+            //     { name: "book5", author: "author1", location: 0 },
+            //     { name: "book6", author: "author2", location: 0 },
+            //     { name: "book7", author: "author3", location: 0 },
+            //     { name: "book8", author: "author4", location: 0 },
+            //     { name: "book9", author: "author1", location: 0 },
+            //     { name: "book10", author: "author2", location: 0 },
+            //     { name: "book11", author: "author3", location: 0 },
+            //     { name: "book12", author: "author4", location: 0 },
+            // ],
+            books: allStorage(),
             query: ''
         }
     }
@@ -46,6 +57,7 @@ class Main extends Component {
         const value = this.props.value;
         const { lib } = this.state;
 
+        
 
         return (
             <div className="main" >
@@ -98,7 +110,7 @@ class Main extends Component {
                                 <div className={(value === "Student") ? "is-disabled" : ""}>
                                     {/* right side */}
                                     <Storage
-                                        books={this.state.books}
+                                        books= {this.state.books}
                                     />
                                 </div>
                             </div>
