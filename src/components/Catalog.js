@@ -12,9 +12,9 @@ function getStoredBooks() {
   }
   return JSON.parse(retrievedBooksString);
 }
-function updateBook(name, location) {
-  // TODO
-}
+// function updateBook(name, location) {
+//   // TODO
+// }
 
 function storeBook(name) {
   console.log('storing book', name);
@@ -23,13 +23,14 @@ function storeBook(name) {
     return book.name === name;
   })
   if (found) {
-
+    
   } else {
     // store the book
+    var uniqid = require('uniqid');
     const bookObj = {
-      // code,
+      code: uniqid(),
       name: name,
-      location: 'storage',
+      location: 0,
       level: 0,
       position: 0,
     };
@@ -49,7 +50,7 @@ export function Catalog(props) {
       const books = getStoredBooks();
       const found = books.find(book => book.name === props.query);
       if (found) {
-        setLocation(found.location);
+        setLocation(found.location, found.level, found.position);
       }
     }
   }, [props.show, props.query]);
@@ -74,8 +75,14 @@ export function Catalog(props) {
           Book Name: {props.query}
         </p >
         <p>
-          Location: {location}
+          Location: {location === 0 ? 'storage' : 'bookshelf'}
         </p >
+        {/* if ({location} === 1) {
+          <p>
+            level: {level}
+            position: {position}
+          </p>
+        } */}
       </Modal.Body>
       <Modal.Footer>
         <Button type="button" onClick={props.onHide}>Close</Button>
