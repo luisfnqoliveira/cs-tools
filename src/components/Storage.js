@@ -11,27 +11,33 @@ class Storage extends Component {
     // }
 
     render() {
-        let storageBook = this.props.books.filter(book => book.location === 0);
-        const content = (
-            <div className="book-container">
-                {
-                    storageBook.map(i => {
-                        return (
-                            <div className='book-align-block'> 
-                                <Book
-                                    code = {i.code}
-                                    title = {i.name}
-                                    author = {i.author}
-                                    location = {i.location}
-                                    level = {i.level}
-                                    position = {i.position}
-                                />
-                            </div>
-                        );
-                    })
-                }
-            </div>
-        );
+        var content = (<div className="book-container"></div>);
+        if (Object.keys(this.props.books).length === 0 && this.props.books.constructor === Object) {
+
+        }
+        else {
+            let storageBook = this.props.books.filter(book => book.location === 0);
+            content = (
+                <div className="book-container">
+                    {
+                        storageBook.map(i => {
+                            return (
+                                <div className='book-align-block'>
+                                    <Book
+                                        code={i.code}
+                                        name={i.name}
+                                        author={i.author}
+                                        location={i.location}
+                                        level={i.level}
+                                        position={i.position}
+                                    />
+                                </div>
+                            );
+                        })
+                    }
+                </div>
+            );
+        }
         return (
             <Popover content={content} placement="bottomRight" title="Book Storage" trigger="click">
                 <div className="storage"></div>
