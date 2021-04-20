@@ -1,25 +1,7 @@
 .storage {
-    background-image: url(../assets/images/storage.jpg);
-    height: 300px;
-    width: auto;
-    /* width: 500px; */
-    margin-left: 100px;
-    margin-bottom: 20px;
-    margin-top: 250px;
-}
-
-.book-container {
-    display: flex;
-    flex-flow: row wrap;
-    align-content: flex-start;
-    width: 450px;
-    height: 450px;
-    overflow: auto;
-}
-
-.book-align-block {
-    flex: 0 0 30%;
-    margin: -10px 6px;
-    padding: 25px;
-    height: 150px;
+    padding-top: 200px;
+    padding-bottom: 20px;
+    padding-left: 60px;
+    position: relative;
+    text-align: center;
 }

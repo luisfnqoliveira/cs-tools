@@ -23,7 +23,8 @@ class SingleBookCase extends Component {
                         bookstands.map(i => {
                             return (
                                 <div className="single">
-                                    <BookStand position={i.position}
+                                    <BookStand 
+                                        position={i.position}
                                         key={i.position}
                                         level={i.level}
                                         books={i.books}
