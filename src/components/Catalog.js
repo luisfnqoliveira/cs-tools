@@ -1,5 +1,5 @@
-import React, { Component } from 'react';
-import { Modal, Button, Card } from 'react-bootstrap';
+import React from 'react';
+import { Modal, Button } from 'react-bootstrap';
 
 const STORED_BOOK_KEY = 'STORED_BOOK_KEY';
 

@@ -1,22 +1,21 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { Tooltip } from 'antd';
 import { useDrop } from 'react-dnd';
-import { useDrag } from 'react-dnd';
 import { ItemTypes } from '../utilities/items.js';
 import Book from './Book.js';
 
 function BookStand(props) {
     const positionIntro = "Position " + props.position;
+    const toShelf = 1;
     const [{ isOver }, drop] = useDrop({
         accept: ItemTypes.BOOK,
-        drop: (item, monitor) => props.dragHandler(item, props.level, props.position),
+        drop: (item, monitor) => props.dragHandler(item, toShelf, props.level, props.position),
         collect: monitor => ({
             isOver: !!monitor.isOver()
         })
     })
 
     const books = props.books;
-    console.log(books);
     if (Object.keys(books).length === 0 && books.constructor === Object) {
         return (
             <Tooltip placement="bottom" title={positionIntro}>
@@ -27,21 +26,18 @@ function BookStand(props) {
     }
     else {
         const shelfBook = books.filter(book => book.location === 1);
+        console.log(shelfBook);
         return (
             <Tooltip placement="bottom" title={positionIntro}>
                 <div className="bookstand" ref={drop}>
                     {shelfBook.map(i => {
-                        if (i.level === props.level && i.position === props.position
-                            //  && isEmpty === 0
-                             ) {
-                            // isEmpty = 1;
-                            return (<Book
-                                code={i.code}
-                                name={i.name}
-                                author={i.author}
-                                location={i.location}
-                                level={i.level}
-                                position={i.position}
+                        if (i.level === props.level && i.position === props.position) {
+                            return (<Book code={i.code} 
+                                        name={i.name}
+                                        author={i.author}
+                                        location={i.location}
+                                        level={i.level}
+                                        position={i.position}
                             />)
                         }
                     })}
