@@ -16,6 +16,13 @@ function getStoredBooks() {
 //   // TODO
 // }
 
+// getting a random integer between two values inclusively
+function getRandomIntInclusive(min, max) {
+  min = Math.ceil(min);
+  max = Math.floor(max);
+  return Math.floor(Math.random() * (max - min + 1) + min); //The maximum is inclusive and the minimum is inclusive
+}
+
 function storeBook(name) {
   console.log('storing book', name);
   const storedBooks = getStoredBooks();
@@ -31,6 +38,7 @@ function storeBook(name) {
       code: uniqid(),
       name: name,
       location: 0,
+      bin: getRandomIntInclusive(1,4),  // store to bin randomly
       level: 0,
       position: 0,
     };
@@ -45,6 +53,8 @@ export function Catalog(props) {
   const [location, setLocation] = React.useState();
   const [level, setLevel] = React.useState();
   const [position, setPosition] = React.useState();
+  const [bin, setBin] = React.useState();
+
   // when modal open
   React.useEffect(() => {
     if (props.show) {
@@ -52,9 +62,10 @@ export function Catalog(props) {
       const books = getStoredBooks();
       const found = books.find(book => book.name === props.query);
       if (found) {
-        setLocation(found.location, found.level, found.position);
-        setLevel(found.location, found.level, found.position);
-        setPosition(found.location, found.level, found.position);
+        setLocation(found.location, found.bin, found.level, found.position);
+        setLevel(found.location, found.bin, found.level, found.position);
+        setPosition(found.location, found.bin, found.level, found.position);
+        setBin(found.location, found.bin, found.level, found.position);
       }
     }
   }, [props.show, props.query]);
@@ -84,6 +95,8 @@ export function Catalog(props) {
         <p>
           Location: {location === 0 ? 'storage' : 'bookshelf'}
           {/* TODO: check for location to hide level and position*/}
+          <br />
+          Storage Bin: {bin}
           <br />
           Level: {level}
           <br />

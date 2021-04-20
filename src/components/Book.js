@@ -24,7 +24,7 @@ function Book(props) {
         <div ref = {drag}>
             <Card
                 hoverable
-                style={{ width: 80, height:  100}}
+                style={{ width: 70, height:  80}}
                 cover={<img alt="bookcover" src={bookcover} />}
             >
                 <Meta title={props.name} 
