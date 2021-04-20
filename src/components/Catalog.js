@@ -23,7 +23,7 @@ function storeBook(name) {
     return book.name === name;
   })
   if (found) {
-    
+
   } else {
     // store the book
     var uniqid = require('uniqid');
@@ -43,6 +43,8 @@ function storeBook(name) {
 
 export function Catalog(props) {
   const [location, setLocation] = React.useState();
+  const [level, setLevel] = React.useState();
+  const [position, setPosition] = React.useState();
   // when modal open
   React.useEffect(() => {
     if (props.show) {
@@ -51,6 +53,8 @@ export function Catalog(props) {
       const found = books.find(book => book.name === props.query);
       if (found) {
         setLocation(found.location, found.level, found.position);
+        setLevel(found.location, found.level, found.position);
+        setPosition(found.location, found.level, found.position);
       }
     }
   }, [props.show, props.query]);
@@ -60,12 +64,15 @@ export function Catalog(props) {
   return (
     <Modal
       {...props}
-      size="lg"
-      aria-labelledby="contained-modal-title-vcenter"
-      centered
+      // size="lg"
+      dialogClassName='custom-dialog'
+    // aria-labelledby="contained-modal-title-vcenter"
+    // centered
     >
       <Modal.Header closeButton>
-        <Modal.Title id="contained-modal-title-vcenter">
+        <Modal.Title
+        // id="contained-modal-title-vcenter"
+        >
           Library Catalog
           </Modal.Title>
       </Modal.Header>
@@ -76,6 +83,11 @@ export function Catalog(props) {
         </p >
         <p>
           Location: {location === 0 ? 'storage' : 'bookshelf'}
+          {/* TODO: check for location to hide level and position*/}
+          <br />
+          Level: {level}
+          <br />
+          Position: {position}
         </p >
         {/* if ({location} === 1) {
           <p>
@@ -85,7 +97,8 @@ export function Catalog(props) {
         } */}
       </Modal.Body>
       <Modal.Footer>
-        <Button type="button" onClick={props.onHide}>Close</Button>
+
+        <Button type="button" onClick={() => { props.onHide(); window.location.reload(); }}>Close</Button>
       </Modal.Footer>
     </Modal>
 

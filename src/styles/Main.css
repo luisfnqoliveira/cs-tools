@@ -5,7 +5,20 @@
     /* margin-top: auto; */
 }
 
-.Resizer {
+.search-monitor {
+  background-image: url(../assets/images/monitor.png);
+  padding-top: 20px;
+  background-size: contain;
+  height: 600px;
+  width: 300px;
+}
+
+.search-container {
+  padding-left: 65px;
+  padding-top: 40px;
+}
+
+/* .Resizer {
     background: #000;
     opacity: 0.2;
     z-index: 1;
@@ -53,7 +66,7 @@
   }
   .Resizer.disabled:hover {
     border-color: transparent;
-  }
+  } */
   
   .is-disabled {
     pointer-events: none;
