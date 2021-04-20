@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import SplitPane from "react-split-pane";
 import Bookshelf from './Bookshelf';
-import Book from './Book';
 import "../styles/Main.css";
 import "antd/dist/antd.css";
 import Container from 'react-bootstrap/Container';
@@ -62,31 +61,28 @@ class Main extends Component {
         }
     }
 
-    dragHandler = (item, toLevel, toPosition) => {
-        console.log("item", item)
+    dragHandler = (item, toLocation, toLevel, toPosition) => {
+        console.log(item);
         let booksCopy = [...this.state.books];
         let bookDragged = booksCopy.filter(book => book.code === item.code);
-        let i = booksCopy.indexOf(bookDragged[0]);
-        bookDragged[0].location = 1;
+        let index = booksCopy.indexOf(bookDragged[0]);
+        bookDragged[0].location = toLocation;
         bookDragged[0].level = toLevel;
         bookDragged[0].position = toPosition;
-        booksCopy[i] = bookDragged[0];
+        booksCopy[index] = bookDragged[0];
         this.setState({books: booksCopy});
-        
-        // const storedBooks = getStoredBooks();
-        // const bookObj = {
-        //     code: item.code,
-        //     name: item.name,
-        //     location: 1,
-        //     level: toLevel,
-        //     position: toPosition,
-        //   };
-        // var a=JSON.parse(localStorage.getItem('STORED_BOOK_KEY'));
-        // console.log(a);
-        // a.map(book => book.code === item.code ? {...book, location: 1, level: toLevel, position: toPosition} : book)
-        // // console.log(storedBooks);
-        // const storedBooksJson = JSON.stringify(storedBooks);
-        // localStorage.setItem('STORED_BOOK_KEY', storedBooksJson);
+
+        var storedBooks = getStoredBooks();
+        for (var i = 0; i < storedBooks.length; i++) {
+            if (storedBooks[i].code === item.code) {
+                storedBooks[i].name = item.name;
+                storedBooks[i].location = toLocation;
+                storedBooks[i].level = toLevel;
+                storedBooks[i].position = toPosition;
+            }
+        }
+        var storedBooksJson = JSON.stringify(storedBooks);
+        localStorage.setItem('STORED_BOOK_KEY', storedBooksJson);
     }
 
     catalogClose = () => this.setState({ catalogShow: false });
@@ -150,6 +146,7 @@ class Main extends Component {
                                         {/* right side */}
                                         <Storage 
                                             books={this.state.books}
+                                            dragHandler = {this.dragHandler.bind(this)}
                                         />
                                     </div>
                                 </div>

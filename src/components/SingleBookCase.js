@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { Tooltip } from 'antd';
-import Book from "./Book";
 import BookStand from './BookStand';
 
 class SingleBookCase extends Component {

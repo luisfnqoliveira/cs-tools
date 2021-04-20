@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { Card } from 'antd';
 import bookcover from '../assets/images/bookCover.jpg';
 import {ItemTypes} from '../utilities/items.js';
