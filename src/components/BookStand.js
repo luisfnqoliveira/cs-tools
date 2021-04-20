@@ -31,9 +31,17 @@ function BookStand(props) {
             <Tooltip placement="bottom" title={positionIntro}>
                 <div className="bookstand" ref={drop}>
                     {shelfBook.map(i => {
-                        if (i.level === props.level && i.position === props.position) {
-                            return (<Book name={i.name}
-                                        author={i.author}
+                        if (i.level === props.level && i.position === props.position
+                            //  && isEmpty === 0
+                             ) {
+                            // isEmpty = 1;
+                            return (<Book
+                                code={i.code}
+                                name={i.name}
+                                author={i.author}
+                                location={i.location}
+                                level={i.level}
+                                position={i.position}
                             />)
                         }
                     })}

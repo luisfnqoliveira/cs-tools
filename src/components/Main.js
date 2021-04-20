@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import SplitPane from "react-split-pane";
+// import SplitPane from "react-split-pane";
 import Bookshelf from './Bookshelf';
 import Book from './Book';
 import "../styles/Main.css";
@@ -17,29 +17,32 @@ import { HTML5Backend } from "react-dnd-html5-backend";
 function getStoredBooks() {
     const retrievedBooksString = localStorage.getItem('STORED_BOOK_KEY');
     if (!retrievedBooksString) {
-      localStorage.setItem('STORED_BOOK_KEY', "[]")
-      return [];
+        localStorage.setItem('STORED_BOOK_KEY', "[]")
+        return [];
     }
     return JSON.parse(retrievedBooksString);
-  }
+}
 
 function allStorage() {
     var archive = {};
-    {Object.entries(localStorage).map(([key, valueJSON]) => {
-        const value = JSON.parse(valueJSON);
-        archive = value;
-       }
-    )}
+    {
+        Object.entries(localStorage).map(([key, valueJSON]) => {
+            const value = JSON.parse(valueJSON);
+            archive = value;
+        }
+        )
+    }
     return (archive)
 }
 
 class Main extends Component {
-    
+
     constructor(props) {
         super(props);
         this.state = {
             value: '',
-            lib: [], catalogShow: false,
+            lib: [],
+            catalogShow: false,
             numOfShelfLevels: 5,
             numOfBooksPerLevel: 3,
             // books: [
@@ -71,34 +74,37 @@ class Main extends Component {
         bookDragged[0].level = toLevel;
         bookDragged[0].position = toPosition;
         booksCopy[i] = bookDragged[0];
-        this.setState({books: booksCopy});
+        this.setState({ books: booksCopy });
+
+
+        var storedBooks = getStoredBooks();
+        for (i = 0; i < storedBooks.length; i++){
+            if (storedBooks[i].code === item.code) {
+                storedBooks[i].name = item.name;
+                storedBooks[i].location = 1;
+                storedBooks[i].level = toLevel;
+                storedBooks[i].position = toPosition
+            }
+        }
         
-        // const storedBooks = getStoredBooks();
-        // const bookObj = {
-        //     code: item.code,
-        //     name: item.name,
-        //     location: 1,
-        //     level: toLevel,
-        //     position: toPosition,
-        //   };
-        // var a=JSON.parse(localStorage.getItem('STORED_BOOK_KEY'));
-        // console.log(a);
-        // a.map(book => book.code === item.code ? {...book, location: 1, level: toLevel, position: toPosition} : book)
-        // // console.log(storedBooks);
-        // const storedBooksJson = JSON.stringify(storedBooks);
-        // localStorage.setItem('STORED_BOOK_KEY', storedBooksJson);
+        var storedBooksJson = JSON.stringify(storedBooks);
+        console.log("storedBooksJson", storedBooksJson)
+        localStorage.setItem("STORED_BOOK_KEY", storedBooksJson);
+        window.location.reload();
     }
 
     catalogClose = () => this.setState({ catalogShow: false });
+    onSubmit = () => {
 
+    }
     render() {
         const value = this.props.value;
         const { lib } = this.state;
-        
+
         return (
             <div className="main" >
-                <Container fluid="md">
-                    <Row>
+                <Container fluid="lg">
+                    {/* <Row>
                         <h1>Search a Book in the Library</h1>
                     </Row>
                     <Row>
@@ -124,37 +130,89 @@ class Main extends Component {
                                 onHide={this.catalogClose}
                             />
                         </Col>
-                    </Row>
+                    </Row> */}
                     <Row>
+                        <Col>
+                            <div className="search-monitor">
+                                <div className="search-container">
+                                    <Row>
+                                        <p>Search a Book in the Library</p>
+                                    </Row>
+                                    <Row>
+                                        <div className="form-inline mt-4 mb-4" >
+                                            <MDBIcon icon="search" />
+                                            <input className="form-control form-control-sm ml-3 w-75" type="text" placeholder="Find a Book" aria-label="Search"
+                                                value={this.state.query}
+                                                // onSubmit={event => this.setState({ query: event.target.value })}
+                                                onChange={event => this.setState({ query: event.target.value })}
+                                                onKeyPress={event => {
+                                                    if (event.key === 'Enter') {
+                                                        if (!this.state.query) {
+                                                            alert('Please input a name!');
+                                                        } else {
+                                                            this.setState({ catalogShow: true, value: event.target.value })
+                                                        }
+                                                    }
+                                                }} />
+                                        </div>
+                                        <Catalog
+                                            query={this.state.query}
+                                            show={this.state.catalogShow}
+                                            onHide={this.catalogClose}
+                                        />
+                                    </Row>
+                                </div>
+                            </div>
+                        </Col>
                         <DndProvider backend={HTML5Backend}>
+                            <Col className="bookshelf-view">
+                                <div>
+                                    <Bookshelf
+                                        numOfLevels={this.state.numOfShelfLevels}
+                                        numOfBooksPerLevel={this.state.numOfBooksPerLevel}
+                                        books={this.state.books}
+                                        dragHandler={this.dragHandler.bind(this)}
+                                    />
+                                </div>
+                            </Col>
+                            <Col className="storage-view">
+                                <div className={(value === "Student") ? "wrapper" : ""}>
+                                    <div className={(value === "Student") ? "is-disabled" : ""}>
+                                        <Storage
+                                            books={this.state.books}
+                                        />
+                                    </div>
+                                </div>
+                            </Col>
+                        </DndProvider>
+
+                        {/* <DndProvider backend={HTML5Backend}>
                             <SplitPane
                                 split="vertical"
                                 defaultSize="50%"
                                 minSize={100}
                                 maxSize={-100}
                                 style={{ position: "static" }}
-                            // pane1Style={{ backgroundColor: "#A8D0E6" }}
-                            // pane2Style={{ backgroundColor: "#24305E" }}
+                                // pane1Style={{ backgroundColor: "#A8D0E6" }}
+                                // pane2Style={{ backgroundColor: "#24305E" }}
                             >
                                 <div>
-                                    {/* left side */}
                                     <Bookshelf
                                         numOfLevels={this.state.numOfShelfLevels}
                                         numOfBooksPerLevel={this.state.numOfBooksPerLevel}
                                         books={this.state.books}
-                                        dragHandler = {this.dragHandler.bind(this)}
+                                        dragHandler={this.dragHandler.bind(this)}
                                     />
                                 </div>
                                 <div className={(value === "Student") ? "wrapper" : ""}>
                                     <div className={(value === "Student") ? "is-disabled" : ""}>
-                                        {/* right side */}
-                                        <Storage 
+                                        <Storage
                                             books={this.state.books}
                                         />
                                     </div>
                                 </div>
                             </SplitPane>
-                        </DndProvider>
+                        </DndProvider> */}
                     </Row>
                 </Container>
             </div >
