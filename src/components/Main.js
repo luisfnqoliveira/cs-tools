@@ -45,35 +45,48 @@ class Main extends Component {
             numOfShelfLevels: 5,
             numOfBooksPerLevel: 3,
             numOfBins: 4,
-            // books: [
-            //     // location: 0 - storage; 1 - bookshelf --> level,position
-            //     { code: 0, name: "book1", author: "author1", location: 0, level: 0, position: 0 },  
-            //     { code: 1, name: "book2", author: "author2", location: 0, level: 0, position: 0 },
-            //     { code: 2, name: "book3", author: "author3", location: 0, level: 0, position: 0 },
-            //     { code: 3, name: "book4", author: "author4", location: 0, level: 0, position: 0 },
-            //     { code: 4, name: "book5", author: "author1", location: 0, level: 0, position: 0 },  
-            //     { code: 5, name: "book6", author: "author2", location: 0, level: 0, position: 0 },
-            //     { code: 6, name: "book7", author: "author3", location: 0, level: 0, position: 0 },
-            //     { code: 7, name: "book8", author: "author4", location: 0, level: 0, position: 0 },
-            //     { code: 8, name: "book9", author: "author1", location: 0, level: 0, position: 0 },  
-            //     { code: 9, name: "book10", author: "author2", location: 0, level: 0, position: 0 },
-            //     { code: 10, name: "book11", author: "author3", location: 0, level: 0, position: 0 },
-            //     { code: 11, name: "book12", author: "author4", location: 0, level: 0, position: 0 }
-            // ],
-            books: allStorage(),
+            books: allStorage(), // location: 0-storage; 1-bookshelf
             query: ''
         }
     }
 
-    dragHandler = (item, toLocation, toLevel, toPosition) => {
-        console.log(item);
+    // dragHandler = (item, toLocation, toBin, toLevel, toPosition) => {
+    //     let booksCopy = [...this.state.books];
+    //     let bookDragged = booksCopy.filter(book => book.code === item.code);
+    //     let index = booksCopy.indexOf(bookDragged[0]);
+    //     bookDragged[0].location = toLocation;
+    //     bookDragged[0].bin = toBin;
+    //     bookDragged[0].level = toLevel;
+    //     bookDragged[0].position = toPosition;
+    //     booksCopy[index] = bookDragged[0];
+    //     this.setState({ books: booksCopy });
+
+
+    //     var storedBooks = getStoredBooks();
+    //     for (var i = 0; i < storedBooks.length; i++){
+    //         if (storedBooks[i].code === item.code) {
+    //             storedBooks[i].name = item.name;
+    //             storedBooks[i].location = toLocation;
+    //             storedBooks[i].bin = toBin;
+    //             storedBooks[i].level = toLevel;
+    //             storedBooks[i].position = toPosition
+    //         }
+    //     }
+
+    //     var storedBooksJson = JSON.stringify(storedBooks);
+    //     console.log("storedBooksJson", storedBooksJson)
+    //     localStorage.setItem("STORED_BOOK_KEY", storedBooksJson);
+    //     window.location.reload();
+    // }
+    dragHandler = (item, toLocation, toBin, toLevel, toPosition) => {
         let booksCopy = [...this.state.books];
         let bookDragged = booksCopy.filter(book => book.code === item.code);
         let index = booksCopy.indexOf(bookDragged[0]);
         bookDragged[0].location = toLocation;
+        bookDragged[0].bin = toBin;
         bookDragged[0].level = toLevel;
         bookDragged[0].position = toPosition;
-        booksCopy[i] = bookDragged[0];
+        booksCopy[index] = bookDragged[0];
         this.setState({ books: booksCopy });
 
         var is_empty = 0;
@@ -94,9 +107,11 @@ class Main extends Component {
                     }
                     storedBooks[i].name = item.name;
                     storedBooks[i].location = toLocation;
+                    storedBooks[i].bin = toBin;
                     storedBooks[i].level = toLevel;
                     storedBooks[i].position = toPosition
                 }
+
                 var storedBooksJson = JSON.stringify(storedBooks);
                 console.log("storedBooksJson", storedBooksJson)
                 localStorage.setItem("STORED_BOOK_KEY", storedBooksJson);
@@ -110,76 +125,76 @@ class Main extends Component {
         }
     }
 
-    catalogClose = () => this.setState({ catalogShow: false });
+        catalogClose = () => this.setState({ catalogShow: false });
 
-    render() {
-        const value = this.props.value;
-        const { lib } = this.state;
+        render() {
+            const value = this.props.value;
+            const { lib } = this.state;
 
-        return (
-            <div className="main" >
-                <Container fluid="lg">
-                    <Row>
-                        <Col>
-                            <div className="search-monitor">
-                                <div className="search-container">
-                                    <Row>
-                                        <p>Search a Book in the Library</p>
-                                    </Row>
-                                    <Row>
-                                        <div className="form-inline mt-4 mb-4" >
-                                            <MDBIcon icon="search" />
-                                            <input className="form-control form-control-sm ml-3 w-75" type="text" placeholder="Find a Book" aria-label="Search"
-                                                value={this.state.query}
-                                                // onSubmit={event => this.setState({ query: event.target.value })}
-                                                onChange={event => this.setState({ query: event.target.value })}
-                                                onKeyPress={event => {
-                                                    if (event.key === 'Enter') {
-                                                        if (!this.state.query) {
-                                                            alert('Please input a name!');
-                                                        } else {
-                                                            this.setState({ catalogShow: true, value: event.target.value })
+            return (
+                <div className="main" >
+                    <Container fluid="lg">
+                        <Row>
+                            <Col>
+                                <div className="search-monitor">
+                                    <div className="search-container">
+                                        <Row>
+                                            <p>Search a Book in the Library</p>
+                                        </Row>
+                                        <Row>
+                                            <div className="form-inline mt-4 mb-4" >
+                                                <MDBIcon icon="search" />
+                                                <input className="form-control form-control-sm ml-3 w-75" type="text" placeholder="Find a Book" aria-label="Search"
+                                                    value={this.state.query}
+                                                    // onSubmit={event => this.setState({ query: event.target.value })}
+                                                    onChange={event => this.setState({ query: event.target.value })}
+                                                    onKeyPress={event => {
+                                                        if (event.key === 'Enter') {
+                                                            if (!this.state.query) {
+                                                                alert('Please input a name!');
+                                                            } else {
+                                                                this.setState({ catalogShow: true, value: event.target.value })
+                                                            }
                                                         }
-                                                    }
-                                                }} />
-                                        </div>
-                                        <Catalog
-                                            query={this.state.query}
-                                            show={this.state.catalogShow}
-                                            onHide={this.catalogClose}
-                                        />
-                                    </Row>
-                                </div>
-                            </div>
-                        </Col>
-                        <DndProvider backend={HTML5Backend}>
-                            <Col className="bookshelf-view">
-                                <div>
-                                    <Bookshelf
-                                        numOfLevels={this.state.numOfShelfLevels}
-                                        numOfBooksPerLevel={this.state.numOfBooksPerLevel}
-                                        books={this.state.books}
-                                        dragHandler={this.dragHandler.bind(this)}
-                                    />
-                                </div>
-                            </Col>
-                            <Col className="storage-view">
-                                <div className={(value === "Student") ? "wrapper" : ""}>
-                                    <div className={(value === "Student") ? "is-disabled" : ""}>
-                                        <Storage
-                                            books={this.state.books}
-                                            numOfBins={this.state.numOfBins}
-                                            dragHandler={this.dragHandler.bind(this)}
-                                        />
+                                                    }} />
+                                            </div>
+                                            <Catalog
+                                                query={this.state.query}
+                                                show={this.state.catalogShow}
+                                                onHide={this.catalogClose}
+                                            />
+                                        </Row>
                                     </div>
                                 </div>
                             </Col>
-                        </DndProvider>
-                    </Row>
-                </Container>
-            </div >
-        );
+                            <DndProvider backend={HTML5Backend}>
+                                <Col className="bookshelf-view">
+                                    <div>
+                                        <Bookshelf
+                                            numOfLevels={this.state.numOfShelfLevels}
+                                            numOfBooksPerLevel={this.state.numOfBooksPerLevel}
+                                            books={this.state.books}
+                                            dragHandler={this.dragHandler.bind(this)}
+                                        />
+                                    </div>
+                                </Col>
+                                <Col className="storage-view">
+                                    <div className={(value === "Student") ? "wrapper" : ""}>
+                                        <div className={(value === "Student") ? "is-disabled" : ""}>
+                                            <Storage
+                                                books={this.state.books}
+                                                numOfBins={this.state.numOfBins}
+                                                dragHandler={this.dragHandler.bind(this)}
+                                            />
+                                        </div>
+                                    </div>
+                                </Col>
+                            </DndProvider>
+                        </Row>
+                    </Container>
+                </div >
+            );
+        }
     }
-}
 
-export default Main;
+    export default Main;

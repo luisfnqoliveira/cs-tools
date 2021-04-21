@@ -6,9 +6,10 @@ import { ItemTypes } from '../utilities/items.js';
 
 function Bin(props) {
     const toStorage = 0;
+    const toBin = props.binId;
     const [{ isOver }, drop] = useDrop({
         accept: ItemTypes.BOOK,
-        drop: (item, monitor) => props.dragHandler(item, toStorage, 0, 0),
+        drop: (item, monitor) => props.dragHandler(item, toStorage, toBin, 0, 0),
         collect: monitor => ({
             isOver: !!monitor.isOver()
         })
@@ -37,6 +38,8 @@ function Bin(props) {
                                     location={i.location}
                                     level={i.level}
                                     position={i.position}
+                                    created_date={i.created_date}
+                                    frequency={i.frequency}
                                 />
                             </div>
                         );

@@ -43,7 +43,7 @@ function storeBook(name) {
       level: 0,
       position: 0,
       created_date: today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate(),
-      frequency: 1
+      frequency: 0
     };
     storedBooks.push(bookObj);
     const storedBooksJson = JSON.stringify(storedBooks);
