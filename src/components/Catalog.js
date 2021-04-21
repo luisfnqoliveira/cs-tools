@@ -34,6 +34,7 @@ function storeBook(name) {
   } else {
     // store the book
     var uniqid = require('uniqid');
+    var today = new Date();   
     const bookObj = {
       code: uniqid(),
       name: name,
@@ -41,6 +42,8 @@ function storeBook(name) {
       bin: getRandomIntInclusive(1,4),  // store to bin randomly
       level: 0,
       position: 0,
+      created_date: today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate(),
+      frequency: 1
     };
     storedBooks.push(bookObj);
     const storedBooksJson = JSON.stringify(storedBooks);
@@ -62,10 +65,10 @@ export function Catalog(props) {
       const books = getStoredBooks();
       const found = books.find(book => book.name === props.query);
       if (found) {
-        setLocation(found.location, found.bin, found.level, found.position);
-        setLevel(found.location, found.bin, found.level, found.position);
-        setPosition(found.location, found.bin, found.level, found.position);
-        setBin(found.location, found.bin, found.level, found.position);
+        setLocation(found.location);
+        setLevel(found.level);
+        setPosition(found.position);
+        setBin(found.bin);
       }
     }
   }, [props.show, props.query]);

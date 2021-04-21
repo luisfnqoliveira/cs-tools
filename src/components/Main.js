@@ -92,14 +92,19 @@ class Main extends Component {
         var is_empty = 0;
         var storedBooks = getStoredBooks();
         for (var i = 0; i < storedBooks.length; i++) {
-            if (storedBooks[i].level === toLevel && storedBooks[i].position === toPosition && storedBooks[i] && storedBooks[i].location ===1) {
-                is_empty = 1;
+            if (storedBooks[i].name != item.name && toLocation === 1) {
+                if (storedBooks[i].level === toLevel && storedBooks[i].position === toPosition) {
+                    is_empty = 1;
+                }
             }
         }
 
         if (is_empty === 0) {
             for (var i = 0; i < storedBooks.length; i++) {
                 if (storedBooks[i].code === item.code) {
+                    if (storedBooks[i].location === 0 && toLocation === 1) {
+                        storedBooks[i].frequency += 1;
+                    }
                     storedBooks[i].name = item.name;
                     storedBooks[i].location = toLocation;
                     storedBooks[i].bin = toBin;
@@ -110,9 +115,14 @@ class Main extends Component {
                 var storedBooksJson = JSON.stringify(storedBooks);
                 console.log("storedBooksJson", storedBooksJson)
                 localStorage.setItem("STORED_BOOK_KEY", storedBooksJson);
+                window.location.reload();
             }
         }
-        window.location.reload();
+        else if (is_empty === 1) {
+            alert("Not Empty!");
+            // window.location.href='';
+            window.location.reload();
+        }
     }
 
         catalogClose = () => this.setState({ catalogShow: false });
