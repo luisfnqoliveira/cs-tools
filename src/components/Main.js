@@ -76,21 +76,38 @@ class Main extends Component {
         booksCopy[i] = bookDragged[0];
         this.setState({ books: booksCopy });
 
-
+        var is_empty = 0;
         var storedBooks = getStoredBooks();
-        for (var i = 0; i < storedBooks.length; i++){
-            if (storedBooks[i].code === item.code) {
-                storedBooks[i].name = item.name;
-                storedBooks[i].location = toLocation;
-                storedBooks[i].level = toLevel;
-                storedBooks[i].position = toPosition
+        for (var i = 0; i < storedBooks.length; i++) {
+            if (storedBooks[i].name != item.name && toLocation === 1) {
+                if (storedBooks[i].level === toLevel && storedBooks[i].position === toPosition) {
+                    is_empty = 1;
+                }
             }
         }
-        
-        var storedBooksJson = JSON.stringify(storedBooks);
-        console.log("storedBooksJson", storedBooksJson)
-        localStorage.setItem("STORED_BOOK_KEY", storedBooksJson);
-        window.location.reload();
+
+        if (is_empty === 0) {
+            for (var i = 0; i < storedBooks.length; i++) {
+                if (storedBooks[i].code === item.code) {
+                    if (storedBooks[i].location === 0 && toLocation === 1) {
+                        storedBooks[i].frequency += 1;
+                    }
+                    storedBooks[i].name = item.name;
+                    storedBooks[i].location = toLocation;
+                    storedBooks[i].level = toLevel;
+                    storedBooks[i].position = toPosition
+                }
+                var storedBooksJson = JSON.stringify(storedBooks);
+                console.log("storedBooksJson", storedBooksJson)
+                localStorage.setItem("STORED_BOOK_KEY", storedBooksJson);
+                window.location.reload();
+            }
+        }
+        else if (is_empty === 1) {
+            alert("Not Empty!");
+            // window.location.href='';
+            window.location.reload();
+        }
     }
 
     catalogClose = () => this.setState({ catalogShow: false });
@@ -151,7 +168,7 @@ class Main extends Component {
                                     <div className={(value === "Student") ? "is-disabled" : ""}>
                                         <Storage
                                             books={this.state.books}
-                                            numOfBins= {this.state.numOfBins}
+                                            numOfBins={this.state.numOfBins}
                                             dragHandler={this.dragHandler.bind(this)}
                                         />
                                     </div>
