@@ -85,7 +85,7 @@ class Main extends Component {
                 }
 
                 var storedBooksJson = JSON.stringify(storedBooks);
-                console.log("storedBooksJson", storedBooksJson)
+                // console.log("storedBooksJson", storedBooksJson)
                 localStorage.setItem("STORED_BOOK_KEY", storedBooksJson);
                 window.location.reload();
             }
@@ -97,77 +97,96 @@ class Main extends Component {
         }
     }
 
-        catalogClose = () => this.setState({ catalogShow: false });
+    dbclick = () => {
+        document.ondblclick = logDoubleClick;
+        function logDoubleClick(e) {
+            if (e.target.draggable === true) {
+                console.log("e", e.target.offsetParent.innerText);
+                let book_name = e.target.offsetParent.innerText;
+                let data = sessionStorage.getItem('STORED_BOOK_KEY');
 
-        render() {
-            const value = this.props.value;
-            const { lib } = this.state;
-
-            return (
-                <div className="main" >
-                    <Container fluid="lg">
-                        <Row>
-                            <Col>
-                                <div className="search-monitor">
-                                    <div className="search-container">
-                                        <Row>
-                                            <h6>Search a Book in the Library</h6>
-                                        </Row>
-                                        <Row>
-                                            <div className="form-inline mt-4 mb-4" >
-                                                <MDBIcon icon="search" />
-                                                <input className="form-control form-control-sm ml-3 w-75" type="text" placeholder="Find a Book" aria-label="Search"
-                                                    value={this.state.query}
-                                                    // onSubmit={event => this.setState({ query: event.target.value })}
-                                                    onChange={event => this.setState({ query: event.target.value })}
-                                                    onKeyPress={event => {
-                                                        if (event.key === 'Enter') {
-                                                            if (!this.state.query) {
-                                                                alert('Please input a name!');
-                                                            } else {
-                                                                this.setState({ catalogShow: true, value: event.target.value })
-                                                            }
-                                                        }
-                                                    }} />
-                                            </div>
-                                            <Catalog
-                                                query={this.state.query}
-                                                show={this.state.catalogShow}
-                                                onHide={this.catalogClose}
-                                                numOfBins={this.state.numOfBins}
-                                            />
-                                        </Row>
-                                    </div>
-                                </div>
-                            </Col>
-                            <DndProvider backend={HTML5Backend}>
-                                <Col className="bookshelf-view">
-                                    <div>
-                                        <Bookshelf
-                                            numOfLevels={this.state.numOfShelfLevels}
-                                            numOfBooksPerLevel={this.state.numOfBooksPerLevel}
-                                            books={this.state.books}
-                                            dragHandler={this.dragHandler.bind(this)}
-                                        />
-                                    </div>
-                                </Col>
-                                <Col className="storage-view">
-                                    <div className={(value === "Student") ? "wrapper" : ""}>
-                                        <div className={(value === "Student") ? "is-disabled" : ""}>
-                                            <Storage
-                                                books={this.state.books}
-                                                numOfBins={this.state.numOfBins}
-                                                dragHandler={this.dragHandler.bind(this)}
-                                            />
-                                        </div>
-                                    </div>
-                                </Col>
-                            </DndProvider>
-                        </Row>
-                    </Container>
-                </div >
-            );
+                if (data === book_name) {
+                    alert("You choose right");
+                }
+                else {
+                    alert("Please choose again");
+                }
+            }
         }
     }
 
-    export default Main;
+    catalogClose = () => this.setState({ catalogShow: false });
+
+    render() {
+        const value = this.props.value;
+        const { lib } = this.state;
+
+        return (
+            <div className="main" >
+                <Container fluid="lg">
+                    <Row>
+                        <Col>
+                            <div className="search-monitor">
+                                <div className="search-container">
+                                    <Row>
+                                        <h6>Search a Book in the Library</h6>
+                                    </Row>
+                                    <Row>
+                                        <div className="form-inline mt-4 mb-4" >
+                                            <MDBIcon icon="search" />
+                                            <input className="form-control form-control-sm ml-3 w-75" type="text" placeholder="Find a Book" aria-label="Search"
+                                                value={this.state.query}
+                                                // onSubmit={event => this.setState({ query: event.target.value })}
+                                                onChange={event => this.setState({ query: event.target.value })}
+                                                onKeyPress={event => {
+                                                    if (event.key === 'Enter') {
+                                                        if (!this.state.query) {
+                                                            alert('Please input a name!');
+                                                        } else {
+                                                            this.setState({ catalogShow: true, value: event.target.value })
+                                                        }
+                                                    }
+                                                }} />
+                                        </div>
+                                        <Catalog
+                                            query={this.state.query}
+                                            show={this.state.catalogShow}
+                                            onHide={this.catalogClose}
+                                            numOfBins={this.state.numOfBins}
+                                        />
+                                    </Row>
+                                </div>
+                            </div>
+                        </Col>
+                        <DndProvider backend={HTML5Backend}>
+                            <Col className="bookshelf-view">
+                                <div>
+                                    <Bookshelf
+                                        numOfLevels={this.state.numOfShelfLevels}
+                                        numOfBooksPerLevel={this.state.numOfBooksPerLevel}
+                                        books={this.state.books}
+                                        dragHandler={this.dragHandler.bind(this)}
+                                        dbclick={this.dbclick()}
+                                    />
+                                </div>
+                            </Col>
+                            <Col className="storage-view">
+                                <div className={(value === "Student") ? "wrapper" : ""}>
+                                    <div className={(value === "Student") ? "is-disabled" : ""}>
+                                        <Storage
+                                            books={this.state.books}
+                                            numOfBins={this.state.numOfBins}
+                                            dragHandler={this.dragHandler.bind(this)}
+                                        />
+                                    </div>
+                                </div>
+                            </Col>
+                        </DndProvider>
+                    </Row>
+                </Container>
+            </div >
+        );
+    }
+}
+
+export default Main;

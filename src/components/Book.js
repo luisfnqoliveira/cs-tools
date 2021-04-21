@@ -31,6 +31,7 @@ function Book(props) {
 
     return (
         <div ref={drag}>
+            <p id="dbclick">
             <Popover content={content} title={props.name} mouseEnterDelay={2}>
                 <Card
                     hoverable
@@ -42,6 +43,7 @@ function Book(props) {
                     />
                 </Card>
             </Popover>
+            </p>
         </div>
     );
 }

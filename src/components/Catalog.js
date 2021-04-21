@@ -30,7 +30,7 @@ function storeBook(name, numOfBins) {
     return book.name === name;
   })
   if (found) {
-
+    sessionStorage.setItem(STORED_BOOK_KEY, name);
   } else {
     // store the book
     var uniqid = require('uniqid');

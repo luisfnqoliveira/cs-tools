@@ -15,16 +15,16 @@ function Bin(props) {
         })
     })
 
-    console.log(props.books);
+    // console.log(props.books);
     var content = (<div className="book-container"></div>);
-    console.log(props.binId);
+    // console.log(props.binId);
     const binTitle = "Bin " + props.binId;
     if (Object.keys(props.books).length === 0 && props.books.constructor === Object) {
 
     } else {
         // TODO: not only for location == 0, also need to seperate them by different bins
         let storageBook = props.books.filter(book => book.location === 0);
-        console.log(storageBook)
+        // console.log(storageBook)
         content = (
             <div className="book-container">
                 {

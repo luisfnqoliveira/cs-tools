@@ -27,20 +27,20 @@ function BookStand(props) {
     }
     else {
         const shelfBook = books.filter(book => book.location === 1);
-        console.log(shelfBook);
+        // console.log(shelfBook);
         return (
             <Tooltip placement="bottom" title={positionIntro}>
                 <div className="bookstand" ref={drop}>
                     {shelfBook.map(i => {
                         if (i.level === props.level && i.position === props.position) {
-                            return (<Book code={i.code} 
-                                        name={i.name}
-                                        author={i.author}
-                                        location={i.location}
-                                        level={i.level}
-                                        position={i.position}
-                                        created_date={i.created_date}
-                                        frequency={i.frequency}
+                            return (<Book code={i.code}
+                                name={i.name}
+                                author={i.author}
+                                location={i.location}
+                                level={i.level}
+                                position={i.position}
+                                created_date={i.created_date}
+                                frequency={i.frequency}
                             />)
                         }
                     })}
