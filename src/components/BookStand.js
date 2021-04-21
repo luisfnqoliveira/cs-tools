@@ -38,6 +38,8 @@ function BookStand(props) {
                                         location={i.location}
                                         level={i.level}
                                         position={i.position}
+                                        created_date={i.created_date}
+                                        frequency={i.frequency}
                             />)
                         }
                     })}
