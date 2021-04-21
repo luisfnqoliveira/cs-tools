@@ -18,7 +18,7 @@ class Storage extends Component {
                     // do we need to limit number of books in each bin? 
     
                     // filter books in different bins, still need to check
-                    books: {},
+                    books: [],
                 }];
             }
         } else{
