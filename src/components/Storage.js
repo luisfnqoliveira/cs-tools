@@ -1,36 +1,54 @@
 import React, { Component } from 'react';
-import { Popover } from 'antd';
-import Book from './Book';
+import Bin from './Bin';
 
 class Storage extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            books: this.props.books,
-        }
+    state = {
+
     }
 
     render() {
-        const content = (
-            <div className="book-container">
+        const { numOfBins } = this.props;
+        const { books } = this.props;
+        let bins = [];
+        // check if books array is empty
+        if (Object.keys(this.props.books).length === 0 && this.props.books.constructor === Object) {
+            for (let i = 0; i < numOfBins; i++) {
+                bins = [...bins, {
+                    binId: i + 1,
+                    // do we need to limit number of books in each bin? 
+    
+                    // filter books in different bins, still need to check
+                    books: [],
+                }];
+            }
+        } else{
+            for (let i = 0; i < numOfBins; i++) {
+                const binBooks = books.filter(book => book.bin === i + 1);
+                bins = [...bins, {
+                    binId: i + 1,
+                    // do we need to limit number of books in each bin? 
+    
+                    // filter books in different bins, still need to check
+                    books: binBooks,
+                }];
+            }
+        }
+
+        return (
+            <div className="storage">
                 {
-                    this.state.books.map(i => {
+                    bins.map(i => {
                         return (
-                            <div className='book-align-block'> 
-                                <Book 
-                                    title = {i.name}
-                                    author = {i.author}
-                                />
-                            </div>
-                        );
+                            <Bin
+                                binId={i.binId}
+                                key={i.binId}
+                                books= {i.books}
+                                dragHandler={this.props.dragHandler} />
+                        )
                     })
                 }
+                <h5>Book Storage</h5>
             </div>
-        );
-        return (
-            <Popover content={content} placement="bottomRight" title="Book Storage" trigger="click">
-                <div className="storage"></div>
-            </Popover>
         );
     }
 }

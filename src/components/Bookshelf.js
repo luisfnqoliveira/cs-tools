@@ -4,7 +4,7 @@ import SingleBookCase from './SingleBookCase';
 class Bookshelf extends Component {
 
     state = {
-        
+
     }
 
     render() {
@@ -14,7 +14,8 @@ class Bookshelf extends Component {
         for (let i = 0; i < numOfLevels; i++) {
             bookcases = [...bookcases, {
                 level: i + 1,
-                numOfBooks: numOfBooksPerLevel
+                numOfBooks: numOfBooksPerLevel,
+                books: this.props.books
             }];
         }
         return (
@@ -22,10 +23,15 @@ class Bookshelf extends Component {
                 {
                     bookcases.map(i => {
                         return (
-                            <SingleBookCase level={i.level} key={i.level} numOfBooksPerLevel={i.numOfBooks} />
+                            <SingleBookCase level={i.level} 
+                                            key={i.level} 
+                                            numOfBooksPerLevel={i.numOfBooks} 
+                                            books={i.books}
+                                            dragHandler = {this.props.dragHandler}/>
                         )
                     })
                 }
+
             </div>
         );
     }
