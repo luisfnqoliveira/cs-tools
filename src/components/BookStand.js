@@ -7,9 +7,10 @@ import Book from './Book.js';
 function BookStand(props) {
     const positionIntro = "Position " + props.position;
     const toShelf = 1;
+    const toBin = 0;
     const [{ isOver }, drop] = useDrop({
         accept: ItemTypes.BOOK,
-        drop: (item, monitor) => props.dragHandler(item, toShelf, props.level, props.position),
+        drop: (item, monitor) => props.dragHandler(item, toShelf, toBin, props.level, props.position),
         collect: monitor => ({
             isOver: !!monitor.isOver()
         })

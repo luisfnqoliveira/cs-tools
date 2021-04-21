@@ -13,7 +13,6 @@ class SingleBookCase extends Component {
                 position: i + 1,
                 level: this.props.level,
                 books: this.props.books,
-                //isEmpty: 0, // 0- empty, 1- hasBook
             }];
         }
         return (
@@ -29,7 +28,6 @@ class SingleBookCase extends Component {
                                         level={i.level}
                                         books={i.books}
                                         dragHandler = {this.props.dragHandler}
-                                        //isEmpty = {i.isEmpty}
                                     />
                                 </div>
                             )
