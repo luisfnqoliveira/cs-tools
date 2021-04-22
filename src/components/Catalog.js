@@ -34,17 +34,16 @@ function storeBook(name, numOfBins) {
   } else {
     // store the book
     var uniqid = require('uniqid');
-    var today = new Date();   
     const bookObj = {
       code: uniqid(),
       name: name,
       location: 0,
-      bin: getRandomIntInclusive(1,numOfBins),  // store to bin randomly
+      bin: getRandomIntInclusive(1, numOfBins),  // store to bin randomly
       level: 0,
       position: 0,
-      created_date: today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate(),
+      created_date: 0,
       frequency: 0,
-      last_borrowed: new Date(),
+      last_borrowed: 0,
     };
     storedBooks.push(bookObj);
     const storedBooksJson = JSON.stringify(storedBooks);
@@ -72,7 +71,7 @@ export function Catalog(props) {
         setBin(found.bin);
       }
     }
-  }, [props.show, props.query]);
+  }, [props.show, props.query, props.numOfBins]);
 
 
 

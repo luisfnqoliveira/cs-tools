@@ -24,13 +24,12 @@ function getStoredBooks() {
 
 function allStorage() {
     var archive = {};
-    {
-        Object.entries(localStorage).map(([key, valueJSON]) => {
-            const value = JSON.parse(valueJSON);
-            archive = value;
-        }
-        )
-    }
+
+    Object.entries(localStorage).map(([key, valueJSON]) => {
+        const value = JSON.parse(valueJSON);
+        archive = value;
+    });
+
     return (archive)
 }
 
@@ -62,6 +61,7 @@ class Main extends Component {
         this.setState({ books: booksCopy });
 
         var is_empty = 0;
+        var shelf_book = 1;
         var storedBooks = getStoredBooks();
         for (var i = 0; i < storedBooks.length; i++) {
             if (storedBooks[i].name !== item.name && toLocation === 1) {
@@ -69,9 +69,14 @@ class Main extends Component {
                     is_empty = 1;
                 }
             }
-            if (i === this.state.numOfShelfLevels * this.state.numOfBooksPerLevel) {
-                is_empty = 2;
+
+            if (storedBooks[i].location === 1) {
+                shelf_book += 1;
             }
+        }
+
+        if (toLocation === 1 && shelf_book > this.state.numOfShelfLevels * this.state.numOfBooksPerLevel) {
+            is_empty = 2;
         }
 
         if (is_empty === 0) {
@@ -79,7 +84,7 @@ class Main extends Component {
                 if (storedBooks[i].code === item.code) {
                     if (storedBooks[i].location === 0 && toLocation === 1) {
                         var today = new Date();
-                        storedBooks[i].created_date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
+                        storedBooks[i].created_date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
                     }
                     storedBooks[i].name = item.name;
                     storedBooks[i].location = toLocation;
@@ -117,11 +122,11 @@ class Main extends Component {
                     alert("You choose right");
 
                     var storedBooks = getStoredBooks();
-                    var today = new Date(); 
+                    var today = new Date();
                     for (var i = 0; i < storedBooks.length; i++) {
                         if (storedBooks[i].name === data) {
                             storedBooks[i].frequency += 1;
-                            storedBooks[i].last_borrowed = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
+                            storedBooks[i].last_borrowed = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate() + ' ' + today.toLocaleTimeString();
                         }
                         var storedBooksJson = JSON.stringify(storedBooks);
                         localStorage.setItem("STORED_BOOK_KEY", storedBooksJson);
