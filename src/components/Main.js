@@ -64,18 +64,22 @@ class Main extends Component {
         var is_empty = 0;
         var storedBooks = getStoredBooks();
         for (var i = 0; i < storedBooks.length; i++) {
-            if (storedBooks[i].name != item.name && toLocation === 1) {
+            if (storedBooks[i].name !== item.name && toLocation === 1) {
                 if (storedBooks[i].level === toLevel && storedBooks[i].position === toPosition) {
                     is_empty = 1;
                 }
             }
+            if (i === this.state.numOfShelfLevels * this.state.numOfBooksPerLevel) {
+                is_empty = 2;
+            }
         }
 
         if (is_empty === 0) {
-            for (var i = 0; i < storedBooks.length; i++) {
+            for (i = 0; i < storedBooks.length; i++) {
                 if (storedBooks[i].code === item.code) {
                     if (storedBooks[i].location === 0 && toLocation === 1) {
-                        storedBooks[i].frequency += 1;
+                        var today = new Date();
+                        storedBooks[i].created_date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
                     }
                     storedBooks[i].name = item.name;
                     storedBooks[i].location = toLocation;
@@ -95,18 +99,35 @@ class Main extends Component {
             // window.location.href='';
             window.location.reload();
         }
+        else {
+            alert("The bookshelf already fulled.")
+            window.location.reload();
+        }
     }
 
     dbclick = () => {
         document.ondblclick = logDoubleClick;
         function logDoubleClick(e) {
             if (e.target.draggable === true) {
-                console.log("e", e.target.offsetParent.innerText);
+                // console.log("e", e.target.offsetParent.innerText);
                 let book_name = e.target.offsetParent.innerText;
                 let data = sessionStorage.getItem('STORED_BOOK_KEY');
 
                 if (data === book_name) {
                     alert("You choose right");
+
+                    var storedBooks = getStoredBooks();
+                    var today = new Date(); 
+                    for (var i = 0; i < storedBooks.length; i++) {
+                        if (storedBooks[i].name === data) {
+                            storedBooks[i].frequency += 1;
+                            storedBooks[i].last_borrowed = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
+                        }
+                        var storedBooksJson = JSON.stringify(storedBooks);
+                        localStorage.setItem("STORED_BOOK_KEY", storedBooksJson);
+                        window.location.reload();
+                    }
+                    sessionStorage.setItem('STORED_BOOK_KEY', '');
                 }
                 else {
                     alert("Please choose again");

@@ -40,6 +40,7 @@ function Bin(props) {
                                     position={i.position}
                                     created_date={i.created_date}
                                     frequency={i.frequency}
+                                    last_borrowed={i.last_borrowed}
                                 />
                             </div>
                         );
