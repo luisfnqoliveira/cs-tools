@@ -34,21 +34,23 @@ function Book(props) {
 
     return (
         <div ref={drag}>
-            <Popover content={content} title={props.name} mouseEnterDelay={2}>
-                <Card
-                    hoverable
-                    style={{ left: 14, width: 70, height: 80 }}
-                    cover={<img alt="bookcover" src={bookcover} />}
-                >
-                    <Meta title={props.name}
-                        description={props.author}
-                        onClick={() => {
-                            if (props.name === props.query)
-                                message.success("You have successfully retrieved " + props.name);
-                        }}
-                    />
-                </Card>
-            </Popover>
+            <Badge count={props.frequency}>
+                <Popover content={content} title={props.name} mouseEnterDelay={2}>
+                    <Card
+                        hoverable
+                        style={{ left: 14, width: 70, height: 80 }}
+                        cover={<img alt="bookcover" src={bookcover} />}
+                    >
+                        <Meta title={props.name}
+                            description={props.author}
+                            onClick={() => {
+                                if (props.name === props.query)
+                                    message.success("You have successfully retrieved " + props.name);
+                            }}
+                        />
+                    </Card>
+                </Popover>
+            </Badge>
         </div>
     );
 }
