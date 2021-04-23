@@ -74,6 +74,8 @@ class Main extends Component {
         var is_empty = 0;
         var shelf_book = 1;
         var storedBooks = getStoredBooks();
+        var numOfShelfLevels = this.numOfShelfLevels;
+        var numOfBooksPerLevel = this.numOfBooksPerLevel;
         for (var i = 0; i < storedBooks.length; i++) {
             if (storedBooks[i].name !== item.name && toLocation === 1) {
                 if (storedBooks[i].level === toLevel && storedBooks[i].position === toPosition) {
@@ -107,9 +109,8 @@ class Main extends Component {
                 var storedBooksJson = JSON.stringify(storedBooks);
                 // console.log("storedBooksJson", storedBooksJson)
                 localStorage.setItem("STORED_BOOK_KEY", storedBooksJson);
-                //message.success("Now you could access " + storedBooks.name + " on Level " + storedBooks.level + " and position " + storedBooks.position);
                 window.location.reload();
-
+                //message.success(storedBooks.name + " is available now. Please search it again in the system.");
             }
         }
         else if (is_empty === 1) {
@@ -118,7 +119,7 @@ class Main extends Component {
             window.location.reload();
         }
         else {
-            alert("The bookshelf already fulled.")
+            alert("The bookshelf is full. Please remove a book from the shelf to storage bin before adding another book to the shelf.");
             window.location.reload();
         }
     }

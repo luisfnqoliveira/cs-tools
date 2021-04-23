@@ -92,8 +92,9 @@ export function Catalog(props) {
     >
       <Modal.Header closeButton
         onClick={() => {
+          window.location.reload();
           if (location === 0) {
-            message.info("Please switch to the Librarian role on the Upper Right Corner to move " + props.query + " from storage bin " + bin + " to bookshelf.", 60);
+            message.info("Please switch to the Librarian role on the Upper Right Corner to move " + props.query + " from storage bin to bookshelf.", 30);
           }
           else if (location === 1) {
             message.info("You can now retrieve the book on level " + level + " and position " + position);
@@ -131,12 +132,14 @@ export function Catalog(props) {
 
         <Button type="button" onClick={() => {
           props.onHide();
+          //window.location.reload();
           if (location === 0) {
-            message.info("Please switch to the Librarian role on the Upper Right Corner to move " + props.query + " from storage bin " + bin + " to bookshelf.", 60);
+            message.info("Please switch to the Librarian role on the Upper Right Corner to move " + props.query + " from storage bin to bookshelf.", 30);
           }
           else if (location === 1) {
             message.info("You can now retrieve the book on level " + level + " and position " + position);
           }
+          //window.location.reload();
         }}>Close</Button>
 
       </Modal.Footer>
