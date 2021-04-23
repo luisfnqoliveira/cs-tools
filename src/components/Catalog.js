@@ -30,27 +30,27 @@ function getRandomIntInclusive(min, max) {
   return Math.floor(Math.random() * (max - min + 1) + min); //The maximum is inclusive and the minimum is inclusive
 }
 
-function storeBook(name) {
+function storeBook(name, numOfBins) {
   console.log('storing book', name);
   const storedBooks = getStoredBooks();
   const found = storedBooks.find(book => {
     return book.name === name;
   })
   if (found) {
-
+    sessionStorage.setItem(STORED_BOOK_KEY, name);
   } else {
     // store the book
     var uniqid = require('uniqid');
-    var today = new Date();
     const bookObj = {
       code: uniqid(),
       name: name,
       location: 0,
-      bin: getRandomIntInclusive(1, 4),  // store to bin randomly
+      bin: getRandomIntInclusive(1, numOfBins),  // store to bin randomly
       level: 0,
       position: 0,
-      created_date: today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate(),
-      frequency: 0
+      created_date: 0,
+      frequency: 0,
+      last_borrowed: 0,
     };
     storedBooks.push(bookObj);
     const storedBooksJson = JSON.stringify(storedBooks);
@@ -68,7 +68,7 @@ export function Catalog(props) {
   // when modal open
   React.useEffect(() => {
     if (props.show) {
-      storeBook(props.query);
+      storeBook(props.query, props.numOfBins);
       const books = getStoredBooks();
       const found = books.find(book => book.name === props.query);
       if (found) {
@@ -78,7 +78,7 @@ export function Catalog(props) {
         setBin(found.bin);
       }
     }
-  }, [props.show, props.query]);
+  }, [props.show, props.query, props.numOfBins]);
 
 
 
@@ -107,10 +107,9 @@ export function Catalog(props) {
           </Modal.Title>
       </Modal.Header>
       <Modal.Body>
-
         <p>
           Book Name: {props.query}
-        </p >
+        </p>
         <p>
           Location: {location === 0 ? 'storage' : 'bookshelf'}
           {/* TODO: check for location to hide level and position*/}
@@ -120,7 +119,7 @@ export function Catalog(props) {
           Level: {level}
           <br />
           Position: {position}
-        </p >
+        </p>
         {/* if ({location} === 1) {
           <p>
             level: {level}

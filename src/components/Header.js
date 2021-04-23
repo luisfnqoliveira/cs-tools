@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import upittLogo from '../assets/images/Upitt_logo_400x400.jpg';
-import { Radio } from "antd";
+import { Radio,Button } from "antd";
 import "../styles/Header.css";
 import "antd/dist/antd.css";
 
@@ -27,19 +27,22 @@ class Role extends Component {
 
 class Header extends Component {
 
-    render() {
-        return ( 
-            <header className = "App-header" >
-                <img src = {upittLogo} alt = 'logo' className = "App-logo" />
-                <p className = "title" >
-                    Memory Paging Practice System
+	render() {
+		return (
+			<header className="App-header" >
+				<img src={upittLogo} alt='logo' className="App-logo" />
+				<p className="title" >
+					Memory Paging Practice System
                 </p>
-                <div className="role-button">
-					<Role value={this.props.value} onChange={this.props.onChange}/>
+				<Button type="default" className="overview-button" onClick={this.props.clickOverview}>
+					Overview
+          		</Button>
+				<div className="role-button">
+					<Role value={this.props.value} onChange={this.props.onChange} />
 				</div>
-            </header>
-        );
-    }
+			</header>
+		);
+	}
 }
 
 export default Header;

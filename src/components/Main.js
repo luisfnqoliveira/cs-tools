@@ -60,34 +60,6 @@ class Main extends Component {
         }
     }
 
-    // dragHandler = (item, toLocation, toBin, toLevel, toPosition) => {
-    //     let booksCopy = [...this.state.books];
-    //     let bookDragged = booksCopy.filter(book => book.code === item.code);
-    //     let index = booksCopy.indexOf(bookDragged[0]);
-    //     bookDragged[0].location = toLocation;
-    //     bookDragged[0].bin = toBin;
-    //     bookDragged[0].level = toLevel;
-    //     bookDragged[0].position = toPosition;
-    //     booksCopy[index] = bookDragged[0];
-    //     this.setState({ books: booksCopy });
-
-
-    //     var storedBooks = getStoredBooks();
-    //     for (var i = 0; i < storedBooks.length; i++){
-    //         if (storedBooks[i].code === item.code) {
-    //             storedBooks[i].name = item.name;
-    //             storedBooks[i].location = toLocation;
-    //             storedBooks[i].bin = toBin;
-    //             storedBooks[i].level = toLevel;
-    //             storedBooks[i].position = toPosition
-    //         }
-    //     }
-
-    //     var storedBooksJson = JSON.stringify(storedBooks);
-    //     console.log("storedBooksJson", storedBooksJson)
-    //     localStorage.setItem("STORED_BOOK_KEY", storedBooksJson);
-    //     window.location.reload();
-    // }
     dragHandler = (item, toLocation, toBin, toLevel, toPosition) => {
         let booksCopy = [...this.state.books];
         let bookDragged = booksCopy.filter(book => book.code === item.code);
@@ -100,20 +72,30 @@ class Main extends Component {
         this.setState({ books: booksCopy });
 
         var is_empty = 0;
+        var shelf_book = 1;
         var storedBooks = getStoredBooks();
         for (var i = 0; i < storedBooks.length; i++) {
-            if (storedBooks[i].name != item.name && toLocation === 1) {
+            if (storedBooks[i].name !== item.name && toLocation === 1) {
                 if (storedBooks[i].level === toLevel && storedBooks[i].position === toPosition) {
                     is_empty = 1;
                 }
             }
+
+            if (storedBooks[i].location === 1) {
+                shelf_book += 1;
+            }
+        }
+
+        if (toLocation === 1 && shelf_book > this.state.numOfShelfLevels * this.state.numOfBooksPerLevel) {
+            is_empty = 2;
         }
 
         if (is_empty === 0) {
-            for (var i = 0; i < storedBooks.length; i++) {
+            for (i = 0; i < storedBooks.length; i++) {
                 if (storedBooks[i].code === item.code) {
                     if (storedBooks[i].location === 0 && toLocation === 1) {
-                        storedBooks[i].frequency += 1;
+                        var today = new Date();
+                        storedBooks[i].created_date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
                     }
                     storedBooks[i].name = item.name;
                     storedBooks[i].location = toLocation;
@@ -123,7 +105,7 @@ class Main extends Component {
                 }
 
                 var storedBooksJson = JSON.stringify(storedBooks);
-                console.log("storedBooksJson", storedBooksJson)
+                // console.log("storedBooksJson", storedBooksJson)
                 localStorage.setItem("STORED_BOOK_KEY", storedBooksJson);
                 //message.success("Now you could access " + storedBooks.name + " on Level " + storedBooks.level + " and position " + storedBooks.position);
                 window.location.reload();
@@ -131,9 +113,44 @@ class Main extends Component {
             }
         }
         else if (is_empty === 1) {
-            alert("This location is not emply! Please choose another location.");
+            alert("Already has book on this position. Please change to another position as a librarian again!");
             // window.location.href='';
             window.location.reload();
+        }
+        else {
+            alert("The bookshelf already fulled.")
+            window.location.reload();
+        }
+    }
+
+    dbclick = () => {
+        document.ondblclick = logDoubleClick;
+        function logDoubleClick(e) {
+            if (e.target.draggable === true) {
+                // console.log("e", e.target.offsetParent.innerText);
+                let book_name = e.target.offsetParent.innerText;
+                let data = sessionStorage.getItem('STORED_BOOK_KEY');
+
+                if (data === book_name) {
+                    alert("You choose right");
+
+                    var storedBooks = getStoredBooks();
+                    var today = new Date();
+                    for (var i = 0; i < storedBooks.length; i++) {
+                        if (storedBooks[i].name === data) {
+                            storedBooks[i].frequency += 1;
+                            storedBooks[i].last_borrowed = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate() + ' ' + today.toLocaleTimeString();
+                        }
+                        var storedBooksJson = JSON.stringify(storedBooks);
+                        localStorage.setItem("STORED_BOOK_KEY", storedBooksJson);
+                        window.location.reload();
+                    }
+                    sessionStorage.setItem('STORED_BOOK_KEY', '');
+                }
+                else {
+                    alert("Please choose again");
+                }
+            }
         }
     }
 
@@ -151,7 +168,7 @@ class Main extends Component {
                             <div className="search-monitor">
                                 <div className="search-container">
                                     <Row>
-                                        <p>Search a Book in the Library</p>
+                                        <h6>Search a Book in the Library</h6>
                                     </Row>
                                     <Row>
                                         <div className="form-inline mt-4 mb-4" >
@@ -174,6 +191,7 @@ class Main extends Component {
                                             query={this.state.query}
                                             show={this.state.catalogShow}
                                             onHide={this.catalogClose}
+                                            numOfBins={this.state.numOfBins}
                                         />
                                     </Row>
                                 </div>
@@ -187,6 +205,7 @@ class Main extends Component {
                                         numOfBooksPerLevel={this.state.numOfBooksPerLevel}
                                         books={this.state.books}
                                         dragHandler={this.dragHandler.bind(this)}
+                                        dbclick={this.dbclick()}
                                     />
                                 </div>
                             </Col>

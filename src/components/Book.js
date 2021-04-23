@@ -1,5 +1,5 @@
 import React from 'react';
-import { Card, Popover } from 'antd';
+import { Card, Popover, Badge } from 'antd';
 import bookcover from '../assets/images/bookCover.jpg';
 import { ItemTypes } from '../utilities/items.js';
 import { useDrag } from 'react-dnd';
@@ -16,7 +16,8 @@ function Book(props) {
             level: props.level,
             position: props.position,
             created_date: props.created_date,
-            frequency: props.frequency
+            frequency: props.frequency,
+            last_borrowed: props.last_borrowed,
         },
         collect: monitor => ({
             isDragging: !!monitor.isDragging(),
@@ -27,6 +28,7 @@ function Book(props) {
         <div>
             <p>Created: {props.created_date}</p>
             <p>Frequency: {props.frequency}</p>
+            <p>Last borrowed: {props.last_borrowed}</p>
         </div>
     );
 

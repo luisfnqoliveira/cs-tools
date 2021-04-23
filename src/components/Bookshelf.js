@@ -28,7 +28,8 @@ class Bookshelf extends Component {
                                 key={i.level}
                                 numOfBooksPerLevel={i.numOfBooks}
                                 books={i.books}
-                                dragHandler={this.props.dragHandler} />
+                                dragHandler={this.props.dragHandler}
+                                dbclick={this.props.dbclick} />
                         )
                     })
                 }

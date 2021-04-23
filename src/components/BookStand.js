@@ -28,7 +28,7 @@ function BookStand(props) {
     }
     else {
         const shelfBook = books.filter(book => book.location === 1);
-        console.log(shelfBook);
+        // console.log(shelfBook);
         return (
             <Tooltip placement="bottom" title={positionIntro}>
                 <div className="bookstand" ref={drop}>
@@ -42,6 +42,7 @@ function BookStand(props) {
                                 position={i.position}
                                 created_date={i.created_date}
                                 frequency={i.frequency}
+                                last_borrowed={i.last_borrowed}
                             />)
                         }
                     })}
