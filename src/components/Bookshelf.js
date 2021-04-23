@@ -20,14 +20,15 @@ class Bookshelf extends Component {
         }
         return (
             <div className="bookshelf">
+                <h5 class="text-center"><strong>Bookshelf</strong></h5>
                 {
                     bookcases.map(i => {
                         return (
-                            <SingleBookCase level={i.level} 
-                                            key={i.level} 
-                                            numOfBooksPerLevel={i.numOfBooks} 
-                                            books={i.books}
-                                            dragHandler = {this.props.dragHandler}/>
+                            <SingleBookCase level={i.level}
+                                key={i.level}
+                                numOfBooksPerLevel={i.numOfBooks}
+                                books={i.books}
+                                dragHandler={this.props.dragHandler} />
                         )
                     })
                 }
