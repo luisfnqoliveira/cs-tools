@@ -105,18 +105,20 @@ class Main extends Component {
                     storedBooks[i].level = toLevel;
                     storedBooks[i].position = toPosition
                 }
-                message.success(item.name + " is available now. Please search it again in the system.");
-
                 var storedBooksJson = JSON.stringify(storedBooks);
                 // console.log("storedBooksJson", storedBooksJson)
                 localStorage.setItem("STORED_BOOK_KEY", storedBooksJson);
                 //window.location.reload();
             }
+            if (toLocation === 1) {
+                //window.location.reload();
+                message.success(item.name + " is available now. Please search it again in the system.");
+            }
         }
         else if (is_empty === 1) {
             alert("A book already exists on this position. Please change to another position as a librarian again!");
             // window.location.href='';
-            //window.location.reload();
+            window.location.reload();
         }
         else {
             alert("The bookshelf is full. Please remove a book from the shelf to storage bin before adding another book to the shelf.");
