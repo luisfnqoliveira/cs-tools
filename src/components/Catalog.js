@@ -1,3 +1,4 @@
+import { message } from 'antd';
 import React from 'react';
 import { Modal, Button } from 'react-bootstrap';
 
@@ -5,12 +6,18 @@ const STORED_BOOK_KEY = 'STORED_BOOK_KEY';
 
 
 function getStoredBooks() {
-  const retrievedBooksString = localStorage.getItem(STORED_BOOK_KEY);
-  if (!retrievedBooksString) {
-    localStorage.setItem(STORED_BOOK_KEY, "[]")
+  try {
+    const retrievedBooksString = localStorage.getItem(STORED_BOOK_KEY);
+    if (!retrievedBooksString) {
+      localStorage.setItem(STORED_BOOK_KEY, "[]")
+      return [];
+    }
+    return JSON.parse(retrievedBooksString);
+  }
+  catch (err) {
+    localStorage.setItem(STORED_BOOK_KEY, '[]');
     return [];
   }
-  return JSON.parse(retrievedBooksString);
 }
 // function updateBook(name, location) {
 //   // TODO
@@ -83,7 +90,17 @@ export function Catalog(props) {
     // aria-labelledby="contained-modal-title-vcenter"
     // centered
     >
-      <Modal.Header className="modal-header" closeButton>
+      <Modal.Header closeButton
+        onClick={() => {
+          window.location.reload();
+          if (location === 0) {
+            message.info("Please switch to the Librarian role on the Upper Right Corner to move " + props.query + " from storage bin to bookshelf.", 30);
+          }
+          else if (location === 1) {
+            message.info("You can now retrieve the book on level " + level + " and position " + position);
+          }
+        }}
+      >
         <Modal.Title
         // id="contained-modal-title-vcenter"
         >
@@ -91,7 +108,6 @@ export function Catalog(props) {
           </Modal.Title>
       </Modal.Header>
       <Modal.Body>
-        {/* <h4>Library Catalog Card</h4> */}
         <p>
           Book Name: {props.query}
         </p>
@@ -114,7 +130,18 @@ export function Catalog(props) {
       </Modal.Body>
       <Modal.Footer>
 
-        <Button type="button" onClick={() => { props.onHide(); window.location.reload(); }}>Close</Button>
+        <Button type="button" onClick={() => {
+          props.onHide();
+          //window.location.reload();
+          if (location === 0) {
+            message.info("Please switch to the Librarian role on the Upper Right Corner to move " + props.query + " from storage bin to bookshelf.", 30);
+          }
+          else if (location === 1) {
+            message.info("You can now retrieve the book on level " + level + " and position " + position);
+          }
+          //window.location.reload();
+        }}>Close</Button>
+
       </Modal.Footer>
     </Modal>
 

@@ -12,25 +12,36 @@ import { Catalog } from './Catalog.js';
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import Storage from './Storage';
+import { message } from 'antd';
 
 function getStoredBooks() {
-    const retrievedBooksString = localStorage.getItem('STORED_BOOK_KEY');
-    if (!retrievedBooksString) {
-        localStorage.setItem('STORED_BOOK_KEY', "[]")
+    try {
+        const retrievedBooksString = localStorage.getItem('STORED_BOOK_KEY');
+        if (!retrievedBooksString) {
+            localStorage.setItem('STORED_BOOK_KEY', "[]")
+            return [];
+        }
+        return JSON.parse(retrievedBooksString);
+    } catch (err) {
         return [];
     }
-    return JSON.parse(retrievedBooksString);
 }
 
 function allStorage() {
-    var archive = {};
-
-    Object.entries(localStorage).map(([key, valueJSON]) => {
-        const value = JSON.parse(valueJSON);
-        archive = value;
-    });
-
-    return (archive)
+    try {
+        var archive = {};
+        {
+            Object.entries(localStorage).map(([key, valueJSON]) => {
+                const value = JSON.parse(valueJSON);
+                archive = value;
+            }
+            )
+        }
+        return (archive)
+    }
+    catch (err) {
+        return [];
+    }
 }
 
 class Main extends Component {
@@ -63,6 +74,8 @@ class Main extends Component {
         var is_empty = 0;
         var shelf_book = 1;
         var storedBooks = getStoredBooks();
+        var numOfShelfLevels = this.numOfShelfLevels;
+        var numOfBooksPerLevel = this.numOfBooksPerLevel;
         for (var i = 0; i < storedBooks.length; i++) {
             if (storedBooks[i].name !== item.name && toLocation === 1) {
                 if (storedBooks[i].level === toLevel && storedBooks[i].position === toPosition) {
@@ -92,21 +105,22 @@ class Main extends Component {
                     storedBooks[i].level = toLevel;
                     storedBooks[i].position = toPosition
                 }
+                message.success(item.name + " is available now. Please search it again in the system.");
 
                 var storedBooksJson = JSON.stringify(storedBooks);
                 // console.log("storedBooksJson", storedBooksJson)
                 localStorage.setItem("STORED_BOOK_KEY", storedBooksJson);
-                window.location.reload();
+                //window.location.reload();
             }
         }
         else if (is_empty === 1) {
-            alert("Already has book on this position. Please change to another position as librarian role again!");
+            alert("A book already exists on this position. Please change to another position as a librarian again!");
             // window.location.href='';
-            window.location.reload();
+            //window.location.reload();
         }
         else {
-            alert("The bookshelf already fulled.")
-            window.location.reload();
+            alert("The bookshelf is full. Please remove a book from the shelf to storage bin before adding another book to the shelf.");
+            //window.location.reload();
         }
     }
 
@@ -142,6 +156,14 @@ class Main extends Component {
     }
 
     catalogClose = () => this.setState({ catalogShow: false });
+
+    componentDidUpdate(prevProps, prevStates) {
+        if (this.state.catalogShow !== prevStates.catalogShow) {
+            this.setState({
+                books: allStorage(),
+            });
+        }
+    }
 
     render() {
         const value = this.props.value;

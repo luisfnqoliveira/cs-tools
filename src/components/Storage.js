@@ -16,18 +16,18 @@ class Storage extends Component {
                 bins = [...bins, {
                     binId: i + 1,
                     // do we need to limit number of books in each bin? 
-    
+
                     // filter books in different bins, still need to check
                     books: [],
                 }];
             }
-        } else{
+        } else {
             for (let i = 0; i < numOfBins; i++) {
                 const binBooks = books.filter(book => book.bin === i + 1);
                 bins = [...bins, {
                     binId: i + 1,
                     // do we need to limit number of books in each bin? 
-    
+
                     // filter books in different bins, still need to check
                     books: binBooks,
                 }];
@@ -36,18 +36,19 @@ class Storage extends Component {
 
         return (
             <div className="storage">
+                <h5><strong>Book Storage</strong></h5>
                 {
                     bins.map(i => {
                         return (
                             <Bin
                                 binId={i.binId}
                                 key={i.binId}
-                                books= {i.books}
+                                books={i.books}
                                 dragHandler={this.props.dragHandler} />
                         )
                     })
                 }
-                <h5>Book Storage</h5>
+
             </div>
         );
     }

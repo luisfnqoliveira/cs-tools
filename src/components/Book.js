@@ -3,6 +3,7 @@ import { Card, Popover, Badge } from 'antd';
 import bookcover from '../assets/images/bookCover.jpg';
 import { ItemTypes } from '../utilities/items.js';
 import { useDrag } from 'react-dnd';
+import { message } from 'antd';
 
 function Book(props) {
     const { Meta } = Card;
@@ -33,19 +34,21 @@ function Book(props) {
 
     return (
         <div ref={drag}>
-            <Badge count={props.frequency}>
-                <Popover content={content} title={props.name} mouseEnterDelay={2}>
-                    <Card
-                        hoverable
-                        style={{ left: 14, width: 70, height: 80 }}
-                        cover={<img alt="bookcover" src={bookcover} />}
-                    >
-                        <Meta title={props.name}
-                            description={props.author}
-                        />
-                    </Card>
-                </Popover>
-            </Badge>
+            <Popover content={content} title={props.name} mouseEnterDelay={2}>
+                <Card
+                    hoverable
+                    style={{ left: 14, width: 70, height: 80 }}
+                    cover={<img alt="bookcover" src={bookcover} />}
+                >
+                    <Meta title={props.name}
+                        description={props.author}
+                        onClick={() => {
+                            if (props.name === props.query)
+                                message.success("You have successfully retrieved " + props.name);
+                        }}
+                    />
+                </Card>
+            </Popover>
         </div>
     );
 }
