@@ -14,3 +14,7 @@
     padding-top: 3px;
 }
 
+.ant-badge-count {
+    right: -10px;
+}
+

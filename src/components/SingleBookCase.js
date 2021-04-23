@@ -27,8 +27,7 @@ class SingleBookCase extends Component {
                                         key={i.position}
                                         level={i.level}
                                         books={i.books}
-                                        dragHandler = {this.props.dragHandler}
-                                    />
+                                        dragHandler = {this.props.dragHandler}/>
                                 </div>
                             )
                         })

@@ -8,3 +8,23 @@
   position: relative;
   /* padding-bottom: 30px; */
 }
+
+.ant-drawer-body {
+  flex-grow: 1;
+  padding: 20px;
+  overflow: auto;
+  font-size: 16px;
+}
+
+.ant-drawer-header {
+  position: relative;
+  padding: 16px 20px;
+}
+
+.ant-drawer-title {
+  margin: 0;
+  color: rgba(0, 0, 0, 0.85);
+  font-weight: 500;
+  font-size: 20px;
+  line-height: 22px;
+}
