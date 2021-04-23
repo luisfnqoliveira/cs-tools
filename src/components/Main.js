@@ -116,7 +116,7 @@ class Main extends Component {
             }
         }
         else if (is_empty === 1) {
-            alert("A book already exists on this position. Please change to another position as a librarian again!");
+            alert("A book already exists on this position. Please choose another position as a librarian again!");
             // window.location.href='';
             window.location.reload();
         }
