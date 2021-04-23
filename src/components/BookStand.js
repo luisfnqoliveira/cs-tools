@@ -34,7 +34,9 @@ function BookStand(props) {
                 <div className="bookstand" ref={drop}>
                     {shelfBook.map(i => {
                         if (i.level === props.level && i.position === props.position) {
-                            return (<Book code={i.code}
+                            return (<Book 
+                                key={i.code}
+                                code={i.code}
                                 name={i.name}
                                 author={i.author}
                                 location={i.location}

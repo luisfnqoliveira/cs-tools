@@ -56,6 +56,13 @@ class App extends React.Component {
             <li>Page table is the catalog that maps a book name to level number and position number.</li>
             <li>Operating system is the librarian in charge of organizing the books.</li>
           </ul>
+
+          <h5>Bookshelf Function Instruction</h5>
+          <p>For each book,</p>
+          <ul>
+            <li>Mouse over 2 seconds for the book details.</li>
+            <li>Double click for retriving the book.</li>
+          </ul>
         </Drawer>
         <Main value={value} />
         <Footer />

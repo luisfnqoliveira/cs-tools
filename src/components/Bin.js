@@ -32,6 +32,7 @@ function Bin(props) {
                         return (
                             <div className='book-align-block'>
                                 <Book
+                                    key={i.code}
                                     code={i.code}
                                     name={i.name}
                                     author={i.author}
