@@ -65,6 +65,8 @@ export function Catalog(props) {
   const [position, setPosition] = React.useState();
   const [bin, setBin] = React.useState();
 
+  //var binId;
+
   // when modal open
   React.useEffect(() => {
     if (props.show) {
@@ -76,6 +78,7 @@ export function Catalog(props) {
         setLevel(found.level);
         setPosition(found.position);
         setBin(found.bin);
+        //binId = found.bin;
       }
     }
   }, [props.show, props.query, props.numOfBins]);
@@ -92,12 +95,13 @@ export function Catalog(props) {
     >
       <Modal.Header closeButton
         onClick={() => {
-          window.location.reload();
+          //window.location.reload();
           if (location === 0) {
             message.info("Please switch to the Librarian role on the Upper Right Corner to move " + props.query + " from storage bin to bookshelf.", 30);
           }
           else if (location === 1) {
             message.info("You can now retrieve the book on level " + level + " and position " + position);
+            message.warn("Please double click on the book to retrieve");
           }
         }}
       >
@@ -138,6 +142,7 @@ export function Catalog(props) {
           }
           else if (location === 1) {
             message.info("You can now retrieve the book on level " + level + " and position " + position);
+            message.warn("Please double click on the book to retrieve");
           }
           //window.location.reload();
         }}>Close</Button>
