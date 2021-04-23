@@ -3,6 +3,7 @@ import { Card, Popover } from 'antd';
 import bookcover from '../assets/images/bookCover.jpg';
 import { ItemTypes } from '../utilities/items.js';
 import { useDrag } from 'react-dnd';
+import { message } from 'antd';
 
 function Book(props) {
     const { Meta } = Card;
@@ -39,6 +40,10 @@ function Book(props) {
                 >
                     <Meta title={props.name}
                         description={props.author}
+                        onClick={() => {
+                            if (props.name === props.query)
+                                message.success("You have successfully retrieved " + props.name);
+                        }}
                     />
                 </Card>
             </Popover>
