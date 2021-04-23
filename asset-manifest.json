@@ -1,0 +1,31 @@
+{
+  "files": {
+    "main.css": "/cs-tools/static/css/main.eb7c3d04.chunk.css",
+    "main.js": "/cs-tools/static/js/main.1caf3fa1.chunk.js",
+    "main.js.map": "/cs-tools/static/js/main.1caf3fa1.chunk.js.map",
+    "runtime-main.js": "/cs-tools/static/js/runtime-main.a574df0c.js",
+    "runtime-main.js.map": "/cs-tools/static/js/runtime-main.a574df0c.js.map",
+    "static/css/2.c52f0220.chunk.css": "/cs-tools/static/css/2.c52f0220.chunk.css",
+    "static/js/2.54d9fe9f.chunk.js": "/cs-tools/static/js/2.54d9fe9f.chunk.js",
+    "static/js/2.54d9fe9f.chunk.js.map": "/cs-tools/static/js/2.54d9fe9f.chunk.js.map",
+    "static/js/3.41569364.chunk.js": "/cs-tools/static/js/3.41569364.chunk.js",
+    "static/js/3.41569364.chunk.js.map": "/cs-tools/static/js/3.41569364.chunk.js.map",
+    "index.html": "/cs-tools/index.html",
+    "static/css/2.c52f0220.chunk.css.map": "/cs-tools/static/css/2.c52f0220.chunk.css.map",
+    "static/css/main.eb7c3d04.chunk.css.map": "/cs-tools/static/css/main.eb7c3d04.chunk.css.map",
+    "static/js/2.54d9fe9f.chunk.js.LICENSE.txt": "/cs-tools/static/js/2.54d9fe9f.chunk.js.LICENSE.txt",
+    "static/media/Upitt_logo_400x400.8afe9141.jpg": "/cs-tools/static/media/Upitt_logo_400x400.8afe9141.jpg",
+    "static/media/mdb.css": "/cs-tools/static/media/arrow_right.0897f985.svg",
+    "static/media/index.css": "/cs-tools/static/media/singleLayerBookcase.6988cd96.jpg",
+    "static/media/bookCover.6a39f467.jpg": "/cs-tools/static/media/bookCover.6a39f467.jpg",
+    "static/media/all.min.css": "/cs-tools/static/media/fa-solid-900.efbd5d20.eot",
+    "static/media/Main.css": "/cs-tools/static/media/monitor.2e3f35ad.png"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.a574df0c.js",
+    "static/css/2.c52f0220.chunk.css",
+    "static/js/2.54d9fe9f.chunk.js",
+    "static/css/main.eb7c3d04.chunk.css",
+    "static/js/main.1caf3fa1.chunk.js"
+  ]
+}
