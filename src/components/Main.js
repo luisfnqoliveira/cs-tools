@@ -105,22 +105,22 @@ class Main extends Component {
                     storedBooks[i].level = toLevel;
                     storedBooks[i].position = toPosition
                 }
+                message.success(item.name + " is available now. Please search it again in the system.");
 
                 var storedBooksJson = JSON.stringify(storedBooks);
                 // console.log("storedBooksJson", storedBooksJson)
                 localStorage.setItem("STORED_BOOK_KEY", storedBooksJson);
-                window.location.reload();
-                //message.success(storedBooks.name + " is available now. Please search it again in the system.");
+                //window.location.reload();
             }
         }
         else if (is_empty === 1) {
-            alert("Already has book on this position. Please change to another position as a librarian again!");
+            alert("A book already exists on this position. Please change to another position as a librarian again!");
             // window.location.href='';
-            window.location.reload();
+            //window.location.reload();
         }
         else {
             alert("The bookshelf is full. Please remove a book from the shelf to storage bin before adding another book to the shelf.");
-            window.location.reload();
+            //window.location.reload();
         }
     }
 
@@ -156,6 +156,14 @@ class Main extends Component {
     }
 
     catalogClose = () => this.setState({ catalogShow: false });
+
+    componentDidUpdate(prevProps, prevStates) {
+        if (this.state.catalogShow !== prevStates.catalogShow) {
+            this.setState({
+                books: allStorage(),
+            });
+        }
+    }
 
     render() {
         const value = this.props.value;
