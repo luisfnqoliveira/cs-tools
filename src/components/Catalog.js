@@ -168,6 +168,5 @@ export function Catalog(props) {
 
     //   </Modal.Footer>
     // </Modal>
-
   );
 }
