@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import upittLogo from '../assets/images/Upitt_logo_400x400.jpg';
-import { Radio,Button } from "antd";
+import { Radio } from "antd";
 import "../styles/Header.css";
 import "antd/dist/antd.css";
 
@@ -34,11 +34,11 @@ class Header extends Component {
 				<p className="title" >
 					Memory Paging Practice System
                 </p>
-				<Button type="default" className="overview-button" onClick={this.props.clickOverview}>
-					Overview
-          		</Button>
 				<div className="role-button">
 					<Role value={this.props.value} onChange={this.props.onChange} />
+				</div>
+				<div className="overview-button">
+					<a style={{color: "white"}} onClick={this.props.clickOverview}>Overview</a>
 				</div>
 			</header>
 		);

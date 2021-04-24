@@ -18,7 +18,7 @@ class App extends React.Component {
   }
 
   clickOverview = (e) => {
-    console.log('overview button clicked', e.target.value);
+    // console.log('overview button clicked', e.target.value);
     this.showDrawer();
   }
 
@@ -42,19 +42,19 @@ class App extends React.Component {
         <Drawer
           title="Introduction"
           placement="right"
-          width="400px"
+          width="500px"
           closable={false}
           onClose={this.onClose}
           visible={this.state.visible}
         >
           <h5>Memory Paging vs. Library Analogy</h5>
           <ul>
-            <li>A page is a book on the bookshelf.</li>
-            <li>Virtual memory is the list of names of books available.</li>
-            <li>Physical memory is the bookshelf with level numbers and position numbers as 'addresses'.</li>
-            <li>Swap space is the basement book storage where unpopular books are kept.</li>
-            <li>Page table is the catalog that maps a book name to level number and position number.</li>
-            <li>Operating system is the librarian in charge of organizing the books.</li>
+            <li>A <strong>page</strong> is a <strong>book</strong> on the bookshelf.</li>
+            <li><strong>Virtual memory</strong> is the list of names of books available.</li>
+            <li><strong>Physical memory</strong> is the <strong>bookshelf</strong> with level numbers and position numbers as 'addresses'.</li>
+            <li><strong>Swap space</strong> is the basement <strong>book storage</strong> where unpopular books are kept.</li>
+            <li><strong>Page table</strong> is the <strong>catalog card</strong> that maps a book name to level number and position number.</li>
+            <li><strong>Operating system</strong> is the <strong>librarian</strong> in charge of organizing the books.</li>
           </ul>
 
           <h5>Bookshelf Function Instruction</h5>
