@@ -97,7 +97,7 @@ export function Catalog(props) {
         onClick={() => {
           //window.location.reload();
           if (location === 0) {
-            message.info("Please switch to the Librarian role on the Upper Right Corner to move " + props.query + " from storage bin to bookshelf.", 30);
+            message.info("Please switch to the Librarian role on the Upper Right Corner to move " + props.query + " from storage bin to bookshelf.", 10);
           }
           else if (location === 1) {
             message.info("You can now retrieve the book on level " + level + " and position " + position);
