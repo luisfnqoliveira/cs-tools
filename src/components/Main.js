@@ -56,7 +56,8 @@ class Main extends Component {
             numOfBooksPerLevel: 3,
             numOfBins: 4,
             books: allStorage(), // location: 0-storage; 1-bookshelf
-            query: ''
+            query: '',
+            error: 0
         }
     }
 
@@ -98,6 +99,7 @@ class Main extends Component {
                     if (storedBooks[i].location === 0 && toLocation === 1) {
                         var today = new Date();
                         storedBooks[i].created_date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
+                        sessionStorage.setItem("STORED_BOOK_KEY", item.name);
                     }
                     storedBooks[i].name = item.name;
                     storedBooks[i].location = toLocation;
@@ -108,21 +110,18 @@ class Main extends Component {
                 var storedBooksJson = JSON.stringify(storedBooks);
                 // console.log("storedBooksJson", storedBooksJson)
                 localStorage.setItem("STORED_BOOK_KEY", storedBooksJson);
-                //window.location.reload();
             }
             if (toLocation === 1) {
-                //window.location.reload();
                 message.success(item.name + " is available now. Please search it again in the system.");
             }
         }
         else if (is_empty === 1) {
-            alert("A book already exists on this position. Please choose another position as a librarian again!");
-            // window.location.href='';
-            window.location.reload();
+            message.error("A book already exists on this position. Please choose another position as a librarian again!");
+            this.setState({ error: 1 });
         }
         else {
-            alert("The bookshelf is full. Please remove a book from the shelf to storage bin before adding another book to the shelf.");
-            //window.location.reload();
+            message.error("The bookshelf is full. Please remove a book from the shelf to storage bin before adding another book to the shelf.");
+            this.setState({ error: 1 });
         }
     }
 
@@ -135,7 +134,7 @@ class Main extends Component {
                 let data = sessionStorage.getItem('STORED_BOOK_KEY');
 
                 if (data === book_name) {
-                    alert("You choose right");
+                    message.success("You choose right");
 
                     var storedBooks = getStoredBooks();
                     var today = new Date();
@@ -146,12 +145,12 @@ class Main extends Component {
                         }
                         var storedBooksJson = JSON.stringify(storedBooks);
                         localStorage.setItem("STORED_BOOK_KEY", storedBooksJson);
-                        window.location.reload();
                     }
                     sessionStorage.setItem('STORED_BOOK_KEY', '');
+                    window.location.reload();
                 }
                 else {
-                    alert("Please choose again");
+                    message.warning("Please choose again");
                 }
             }
         }
@@ -160,6 +159,13 @@ class Main extends Component {
     catalogClose = () => this.setState({ catalogShow: false });
 
     componentDidUpdate(prevProps, prevStates) {
+        if (this.state.error !== prevStates.error) {
+            this.setState({
+                books: allStorage(),
+            });
+            this.setState({error: 0});
+        }
+
         if (this.state.catalogShow !== prevStates.catalogShow) {
             this.setState({
                 books: allStorage(),
