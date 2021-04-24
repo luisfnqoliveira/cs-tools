@@ -13,6 +13,11 @@ import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import Storage from './Storage';
 import { message } from 'antd';
+import { Button, Tooltip } from 'antd';
+import { SearchOutlined } from '@ant-design/icons';
+import { Text } from 'react';
+
+
 
 function getStoredBooks() {
     try {
@@ -56,7 +61,8 @@ class Main extends Component {
             numOfBooksPerLevel: 3,
             numOfBins: 4,
             books: allStorage(), // location: 0-storage; 1-bookshelf
-            query: ''
+            query: '',
+            error: 0
         }
     }
 
@@ -164,7 +170,15 @@ class Main extends Component {
             this.setState({
                 books: allStorage(),
             });
+            this.catalogClose();
         }
+        // if (this.state.error !== prevStates.error) {
+        //     this.setState({
+        //         books: allStorage(),
+        //     });
+        // }
+        // console.log(this.state.catalogShow);
+
     }
 
     render() {
@@ -179,14 +193,16 @@ class Main extends Component {
                             <div className="search-monitor">
                                 <div className="search-container">
                                     <Row>
-                                        <h6>Search a Book in the Library</h6>
+                                        Press Enter after Search
                                     </Row>
                                     <Row>
                                         <div className="form-inline mt-4 mb-4" >
-                                            <MDBIcon icon="search" />
-                                            <input className="form-control form-control-sm ml-3 w-75" type="text" placeholder="Find a Book" aria-label="Search"
+                                            <input className="form-control-sm" type="text" placeholder="Find a Book" aria-label="Search"
                                                 value={this.state.query}
                                                 // onSubmit={event => this.setState({ query: event.target.value })}
+                                                onClick={event => {
+                                                    message.info("You can enter any book you want")
+                                                }}
                                                 onChange={event => this.setState({ query: event.target.value })}
                                                 onKeyPress={event => {
                                                     if (event.key === 'Enter') {
@@ -197,14 +213,38 @@ class Main extends Component {
                                                         }
                                                     }
                                                 }} />
+                                            {/* <Button
+                                                value={this.state.query}
+                                                // {...console.log(this.state.query)}
+                                                onChange={event => this.setState({ query: event.target.value })}
+                                                onClick={event => {
+                                                    if (!this.state.query) {
+                                                        alert('Please input a name!');
+                                                    } else {
+                                                        this.setState({ catalogShow: true, value: event.target.value })
+                                                    }
+
+                                                }}
+                                            >Search</Button> */}
+
+
                                         </div>
+
+
+                                    </Row>
+
+                                    <Row>
+                                        <strong>Catalog Card</strong>
+                                    </Row>
+                                    <Row>
                                         <Catalog
-                                            query={this.state.query}
+                                            query={this.state.value}
                                             show={this.state.catalogShow}
                                             onHide={this.catalogClose}
                                             numOfBins={this.state.numOfBins}
                                         />
                                     </Row>
+
                                 </div>
                             </div>
                         </Col>
