@@ -4,7 +4,6 @@ import { Modal, Button } from 'antd';
 
 const STORED_BOOK_KEY = 'STORED_BOOK_KEY';
 
-
 function getStoredBooks() {
   try {
     const retrievedBooksString = localStorage.getItem(STORED_BOOK_KEY);
@@ -19,9 +18,6 @@ function getStoredBooks() {
     return [];
   }
 }
-// function updateBook(name, location) {
-//   // TODO
-// }
 
 // getting a random integer between two values inclusively
 function getRandomIntInclusive(min, max) {
@@ -65,8 +61,6 @@ export function Catalog(props) {
   const [position, setPosition] = React.useState();
   const [bin, setBin] = React.useState();
 
-  //var binId;
-
   // when modal open
   React.useEffect(() => {
     if (props.show) {
@@ -78,8 +72,6 @@ export function Catalog(props) {
         setLevel(found.level);
         setPosition(found.position);
         setBin(found.bin);
-        //binId = found.bin;
-        // }
       }
     }
   }, [props.show, props.query, props.numOfBins]);
@@ -94,7 +86,6 @@ export function Catalog(props) {
       {"\n"}
       <Button type="primary" onClick={() => {
         //props.onHide();
-        //window.location.reload();
         if (location === 0) {
           message.info("Please switch to the Librarian role on the Upper Right Corner to move " + props.query + " from storage bin to bookshelf.");
         }
@@ -102,7 +93,6 @@ export function Catalog(props) {
           message.info("You can now retrieve the book on level " + level + " and position " + position);
           message.warn("Please double click on the book to retrieve");
         }
-        //window.location.reload();
       }}>Retrieve this Book</Button>
     </pre>
   );
