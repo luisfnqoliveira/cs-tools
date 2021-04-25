@@ -4,7 +4,6 @@ import { Modal, Button } from 'antd';
 
 const STORED_BOOK_KEY = 'STORED_BOOK_KEY';
 
-
 function getStoredBooks() {
   try {
     const retrievedBooksString = localStorage.getItem(STORED_BOOK_KEY);
@@ -19,9 +18,6 @@ function getStoredBooks() {
     return [];
   }
 }
-// function updateBook(name, location) {
-//   // TODO
-// }
 
 // getting a random integer between two values inclusively
 function getRandomIntInclusive(min, max) {
@@ -65,8 +61,6 @@ export function Catalog(props) {
   const [position, setPosition] = React.useState();
   const [bin, setBin] = React.useState();
 
-  //var binId;
-
   // when modal open
   React.useEffect(() => {
     if (props.show) {
@@ -78,23 +72,20 @@ export function Catalog(props) {
         setLevel(found.level);
         setPosition(found.position);
         setBin(found.bin);
-        //binId = found.bin;
-        // }
       }
     }
   }, [props.show, props.query, props.numOfBins]);
 
   return (
     <pre>
-      Book Name: {props.query}{"\n"}
-      Location: {location === 0 ? 'storage' : location === 1 ? 'bookshelf' : ''}{"\n"}
-    Storage Bin: {bin} {"\n"}
-    Level: {level} {"\n"}
-    Position: {position} {"\n"}
+      <u>Book Name</u>: {props.query}{"\n"}
+      <u>Location</u>: {location === 0 ? 'storage' : location === 1 ? 'bookshelf' : ''}{"\n"}
+      <u>Storage Bin</u>: {bin} {"\n"}
+      <u>Level</u>: {level} {"\n"}
+      <u>Position</u>: {position} {"\n"}
       {"\n"}
       <Button type="primary" onClick={() => {
         //props.onHide();
-        //window.location.reload();
         if (location === 0) {
           message.info("Please switch to the Librarian role on the Upper Right Corner to move " + props.query + " from storage bin to bookshelf.");
         }
@@ -102,71 +93,7 @@ export function Catalog(props) {
           message.info("You can now retrieve the book on level " + level + " and position " + position);
           message.warn("Please double click on the book to retrieve");
         }
-        //window.location.reload();
       }}>Retrieve this Book</Button>
     </pre>
-    // <Modal
-    //   {...props}
-    //   // size="lg"
-    //   dialogClassName='custom-dialog'
-    // // aria-labelledby="contained-modal-title-vcenter"
-    // // centered
-    // >
-    //   <Modal.Header closeButton
-    //     onClick={() => {
-    //       //window.location.reload();
-    //       if (location === 0) {
-    //         message.info("Please switch to the Librarian role on the Upper Right Corner to move " + props.query + " from storage bin to bookshelf.", 10);
-    //       }
-    //       else if (location === 1) {
-    //         message.info("You can now retrieve the book on level " + level + " and position " + position);
-    //         message.warn("Please double click on the book to retrieve");
-    //       }
-    //     }}
-    //   >
-    //     <Modal.Title
-    //     // id="contained-modal-title-vcenter"
-    //     >
-    //       Library Catalog
-    //       </Modal.Title>
-    //   </Modal.Header>
-    //   <Modal.Body>
-    //     <p>
-    //       Book Name: {props.query}
-    //     </p>
-    //     <p>
-    //       Location: {location === 0 ? 'storage' : 'bookshelf'}
-    //       {/* TODO: check for location to hide level and position*/}
-    //       <br />
-    //       Storage Bin: {bin}
-    //       <br />
-    //       Level: {level}
-    //       <br />
-    //       Position: {position}
-    //     </p>
-    //     {/* if ({location} === 1) {
-    //       <p>
-    //         level: {level}
-    //         position: {position}
-    //       </p>
-    //     } */}
-    //   </Modal.Body>
-    //   <Modal.Footer>
-
-    //     <Button type="button" onClick={() => {
-    //       props.onHide();
-    //       //window.location.reload();
-    //       if (location === 0) {
-    //         message.info("Please switch to the Librarian role on the Upper Right Corner to move " + props.query + " from storage bin to bookshelf.", 30);
-    //       }
-    //       else if (location === 1) {
-    //         message.info("You can now retrieve the book on level " + level + " and position " + position);
-    //         message.warn("Please double click on the book to retrieve");
-    //       }
-    //       //window.location.reload();
-    //     }}>Close</Button>
-
-    //   </Modal.Footer>
-    // </Modal>
   );
 }

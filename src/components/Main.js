@@ -7,16 +7,11 @@ import Container from 'react-bootstrap/Container';
 import '../App.js';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
-import { MDBCol, MDBIcon, MDBBtn } from "mdbreact";
 import { Catalog } from './Catalog.js';
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import Storage from './Storage';
 import { message } from 'antd';
-import { Button, Tooltip } from 'antd';
-import { SearchOutlined } from '@ant-design/icons';
-import { Text } from 'react';
-
 
 
 function getStoredBooks() {
@@ -35,13 +30,11 @@ function getStoredBooks() {
 function allStorage() {
     try {
         var archive = {};
-        {
-            Object.entries(localStorage).map(([key, valueJSON]) => {
-                const value = JSON.parse(valueJSON);
-                archive = value;
-            }
-            )
+        Object.entries(localStorage).map(([key, valueJSON]) => {
+            const value = JSON.parse(valueJSON);
+            archive = value;
         }
+        )
         return (archive)
     }
     catch (err) {
@@ -54,6 +47,7 @@ class Main extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            role: this.props.role,
             value: '',
             lib: [],
             catalogShow: false,
@@ -80,8 +74,6 @@ class Main extends Component {
         var is_empty = 0;
         var shelf_book = 1;
         var storedBooks = getStoredBooks();
-        var numOfShelfLevels = this.numOfShelfLevels;
-        var numOfBooksPerLevel = this.numOfBooksPerLevel;
         for (var i = 0; i < storedBooks.length; i++) {
             if (storedBooks[i].name !== item.name && toLocation === 1) {
                 if (storedBooks[i].level === toLevel && storedBooks[i].position === toPosition) {
@@ -113,7 +105,6 @@ class Main extends Component {
                     storedBooks[i].position = toPosition
                 }
                 var storedBooksJson = JSON.stringify(storedBooks);
-                // console.log("storedBooksJson", storedBooksJson)
                 localStorage.setItem("STORED_BOOK_KEY", storedBooksJson);
             }
             if (toLocation === 1) {
@@ -131,15 +122,14 @@ class Main extends Component {
     }
 
     dbclick = () => {
-        document.ondblclick = logDoubleClick;
-        function logDoubleClick(e) {
+        document.ondblclick = DoubleClick;
+        function DoubleClick(e) {
             if (e.target.draggable === true) {
-                // console.log("e", e.target.offsetParent.innerText);
                 let book_name = e.target.offsetParent.innerText;
                 let data = sessionStorage.getItem('STORED_BOOK_KEY');
 
                 if (data === book_name) {
-                    message.success("You choose right");
+                    alert("You have successfully retrieved " + data);
 
                     var storedBooks = getStoredBooks();
                     var today = new Date();
@@ -168,7 +158,7 @@ class Main extends Component {
             this.setState({
                 books: allStorage(),
             });
-            this.setState({error: 0});
+            this.setState({ error: 0 });
         }
 
         if (this.state.catalogShow !== prevStates.catalogShow) {
@@ -177,17 +167,10 @@ class Main extends Component {
             });
             this.catalogClose();
         }
-        // if (this.state.error !== prevStates.error) {
-        //     this.setState({
-        //         books: allStorage(),
-        //     });
-        // }
-        // console.log(this.state.catalogShow);
-
     }
 
     render() {
-        const value = this.props.value;
+        const role = this.props.role;
         const { lib } = this.state;
 
         return (
@@ -195,61 +178,48 @@ class Main extends Component {
                 <Container fluid="lg">
                     <Row>
                         <Col>
-                            <div className="search-monitor">
-                                <div className="search-container">
-                                    <Row>
-                                        Press Enter after Search
-                                    </Row>
-                                    <Row>
-                                        <div className="form-inline mt-4 mb-4" >
-                                            <input className="form-control-sm" type="text" placeholder="Find a Book" aria-label="Search"
-                                                value={this.state.query}
-                                                // onSubmit={event => this.setState({ query: event.target.value })}
-                                                onClick={event => {
-                                                    message.info("You can enter any book you want")
-                                                }}
-                                                onChange={event => this.setState({ query: event.target.value })}
-                                                onKeyPress={event => {
-                                                    if (event.key === 'Enter') {
-                                                        if (!this.state.query) {
-                                                            alert('Please input a name!');
-                                                        } else {
-                                                            this.setState({ catalogShow: true, value: event.target.value })
-                                                        }
-                                                    }
-                                                }} />
-                                            {/* <Button
-                                                value={this.state.query}
-                                                // {...console.log(this.state.query)}
-                                                onChange={event => this.setState({ query: event.target.value })}
-                                                onClick={event => {
-                                                    if (!this.state.query) {
-                                                        alert('Please input a name!');
-                                                    } else {
-                                                        this.setState({ catalogShow: true, value: event.target.value })
-                                                    }
-
-                                                }}
-                                            >Search</Button> */}
-
+                            <h5 className="computer-title"><strong>Catelog Computer</strong></h5>
+                            <div className={(role === "Librarian") ? "wrapper" : ""}>
+                                <div className={(role === "Librarian") ? "is-disabled" : ""}>
+                                    <div className="search-monitor">
+                                        <div className="search-container">
+                                            <Row>
+                                                Press Enter after Search
+                                            </Row>
+                                            <Row>
+                                                <div className="form-inline mt-4 mb-4" >
+                                                    <input className="form-control-sm" type="text" placeholder="Find a Book" aria-label="Search"
+                                                        value={this.state.query}
+                                                        // onSubmit={event => this.setState({ query: event.target.value })}
+                                                        onClick={event => {
+                                                            message.info("You can enter any book you want")
+                                                        }}
+                                                        onChange={event => this.setState({ query: event.target.value })}
+                                                        onKeyPress={event => {
+                                                            if (event.key === 'Enter') {
+                                                                if (!this.state.query) {
+                                                                    alert('Please input a name!');
+                                                                } else {
+                                                                    this.setState({ catalogShow: true, value: event.target.value })
+                                                                }
+                                                            }
+                                                        }} />
+                                                </div>
+                                            </Row>
+                                            <Row>
+                                                <strong>Catalog Card</strong>
+                                            </Row>
+                                            <Row>
+                                                <Catalog
+                                                    query={this.state.value}
+                                                    show={this.state.catalogShow}
+                                                    onHide={this.catalogClose}
+                                                    numOfBins={this.state.numOfBins}
+                                                />
+                                            </Row>
 
                                         </div>
-
-
-                                    </Row>
-
-                                    <Row>
-                                        <strong>Catalog Card</strong>
-                                    </Row>
-                                    <Row>
-                                        <Catalog
-                                            query={this.state.value}
-                                            show={this.state.catalogShow}
-                                            onHide={this.catalogClose}
-                                            numOfBins={this.state.numOfBins}
-                                        />
-                                    </Row>
-
+                                    </div>
                                 </div>
                             </div>
                         </Col>
@@ -266,8 +236,8 @@ class Main extends Component {
                                 </div>
                             </Col>
                             <Col className="storage-view">
-                                <div className={(value === "Student") ? "wrapper" : ""}>
-                                    <div className={(value === "Student") ? "is-disabled" : ""}>
+                                <div className={(role === "Student") ? "wrapper" : ""}>
+                                    <div className={(role === "Student") ? "is-disabled" : ""}>
                                         <Storage
                                             books={this.state.books}
                                             numOfBins={this.state.numOfBins}
