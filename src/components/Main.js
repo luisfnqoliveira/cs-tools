@@ -49,6 +49,7 @@ class Main extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            role: this.props.role,
             value: '',
             lib: [],
             catalogShow: false,
@@ -168,7 +169,7 @@ class Main extends Component {
     }
 
     render() {
-        const value = this.props.value;
+        const role = this.props.role;
         const { lib } = this.state;
 
         return (
@@ -176,35 +177,39 @@ class Main extends Component {
                 <Container fluid="lg">
                     <Row>
                         <Col>
-                            <div className="search-monitor">
-                                <div className="search-container">
-                                    <Row>
-                                        <h6>Search a Book in the Library</h6>
-                                    </Row>
-                                    <Row>
-                                        <div className="form-inline mt-4 mb-4" >
-                                            <MDBIcon icon="search" />
-                                            <input className="form-control form-control-sm ml-3 w-75" type="text" placeholder="Find a Book" aria-label="Search"
-                                                value={this.state.query}
-                                                // onSubmit={event => this.setState({ query: event.target.value })}
-                                                onChange={event => this.setState({ query: event.target.value })}
-                                                onKeyPress={event => {
-                                                    if (event.key === 'Enter') {
-                                                        if (!this.state.query) {
-                                                            alert('Please input a name!');
-                                                        } else {
-                                                            this.setState({ catalogShow: true, value: event.target.value })
-                                                        }
-                                                    }
-                                                }} />
+                            <div className={(role === "Librarian") ? "wrapper" : ""}>
+                                <div className={(role === "Librarian") ? "is-disabled" : ""}>
+                                    <div className="search-monitor">
+                                        <div className="search-container">
+                                            <Row>
+                                                <h6>Search a Book in the Library</h6>
+                                            </Row>
+                                            <Row>
+                                                <div className="form-inline mt-4 mb-4" >
+                                                    <MDBIcon icon="search" />
+                                                    <input className="form-control form-control-sm ml-3 w-75" type="text" placeholder="Find a Book" aria-label="Search"
+                                                        value={this.state.query}
+                                                        // onSubmit={event => this.setState({ query: event.target.value })}
+                                                        onChange={event => this.setState({ query: event.target.value })}
+                                                        onKeyPress={event => {
+                                                            if (event.key === 'Enter') {
+                                                                if (!this.state.query) {
+                                                                    alert('Please input a name!');
+                                                                } else {
+                                                                    this.setState({ catalogShow: true, value: event.target.value })
+                                                                }
+                                                            }
+                                                        }} />
+                                                </div>
+                                                <Catalog
+                                                    query={this.state.query}
+                                                    show={this.state.catalogShow}
+                                                    onHide={this.catalogClose}
+                                                    numOfBins={this.state.numOfBins}
+                                                />
+                                            </Row>
                                         </div>
-                                        <Catalog
-                                            query={this.state.query}
-                                            show={this.state.catalogShow}
-                                            onHide={this.catalogClose}
-                                            numOfBins={this.state.numOfBins}
-                                        />
-                                    </Row>
+                                    </div>
                                 </div>
                             </div>
                         </Col>
@@ -221,8 +226,8 @@ class Main extends Component {
                                 </div>
                             </Col>
                             <Col className="storage-view">
-                                <div className={(value === "Student") ? "wrapper" : ""}>
-                                    <div className={(value === "Student") ? "is-disabled" : ""}>
+                                <div className={(role === "Student") ? "wrapper" : ""}>
+                                    <div className={(role === "Student") ? "is-disabled" : ""}>
                                         <Storage
                                             books={this.state.books}
                                             numOfBins={this.state.numOfBins}

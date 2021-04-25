@@ -12,12 +12,11 @@ const roles = [
 class Role extends Component {
 
 	render() {
-		const value = this.props.value;
 		return (
 			<Radio.Group
 				options={roles}
 				onChange={this.props.onChange}
-				value={value}
+				value={this.props.role}
 				optionType="button"
 				buttonStyle="solid"
 			/>
@@ -38,7 +37,7 @@ class Header extends Component {
 					Overview
           		</Button>
 				<div className="role-button">
-					<Role value={this.props.value} onChange={this.props.onChange} />
+					<Role role={this.props.role} onChange={this.props.onChange} />
 				</div>
 			</header>
 		);

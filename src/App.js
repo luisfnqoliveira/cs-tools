@@ -8,13 +8,13 @@ import "./App.css";
 class App extends React.Component {
 
   state = {
-    value: "Student",
+    role: "Student",
     visible: false
   };
 
   handleValueChange = (e) => {
     console.log('role button checked', e.target.value);
-    this.setState({ value: e.target.value })
+    this.setState({ role: e.target.value })
   }
 
   clickOverview = (e) => {
@@ -35,10 +35,9 @@ class App extends React.Component {
   };
 
   render() {
-    const value = this.state.value;
     return (
       <div className="App">
-        <Header value={value} onChange={this.handleValueChange.bind(this)} clickOverview={this.clickOverview.bind(this)} />
+        <Header role={this.state.role} onChange={this.handleValueChange.bind(this)} clickOverview={this.clickOverview.bind(this)} />
         <Drawer
           title="Introduction"
           placement="right"
@@ -64,7 +63,7 @@ class App extends React.Component {
             <li>Double click for retriving the book.</li>
           </ul>
         </Drawer>
-        <Main value={value} />
+        <Main role={this.state.role} />
         <Footer />
       </div>
     );
