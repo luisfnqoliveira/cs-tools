@@ -7,16 +7,11 @@ import Container from 'react-bootstrap/Container';
 import '../App.js';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
-import { MDBCol, MDBIcon, MDBBtn } from "mdbreact";
 import { Catalog } from './Catalog.js';
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import Storage from './Storage';
 import { message } from 'antd';
-import { Button, Tooltip } from 'antd';
-import { SearchOutlined } from '@ant-design/icons';
-import { Text } from 'react';
-
 
 
 function getStoredBooks() {
@@ -35,13 +30,11 @@ function getStoredBooks() {
 function allStorage() {
     try {
         var archive = {};
-        {
-            Object.entries(localStorage).map(([key, valueJSON]) => {
-                const value = JSON.parse(valueJSON);
-                archive = value;
-            }
-            )
+        Object.entries(localStorage).map(([key, valueJSON]) => {
+            const value = JSON.parse(valueJSON);
+            archive = value;
         }
+        )
         return (archive)
     }
     catch (err) {
@@ -81,8 +74,6 @@ class Main extends Component {
         var is_empty = 0;
         var shelf_book = 1;
         var storedBooks = getStoredBooks();
-        var numOfShelfLevels = this.numOfShelfLevels;
-        var numOfBooksPerLevel = this.numOfBooksPerLevel;
         for (var i = 0; i < storedBooks.length; i++) {
             if (storedBooks[i].name !== item.name && toLocation === 1) {
                 if (storedBooks[i].level === toLevel && storedBooks[i].position === toPosition) {
@@ -135,7 +126,6 @@ class Main extends Component {
         document.ondblclick = logDoubleClick;
         function logDoubleClick(e) {
             if (e.target.draggable === true) {
-                // console.log("e", e.target.offsetParent.innerText);
                 let book_name = e.target.offsetParent.innerText;
                 let data = sessionStorage.getItem('STORED_BOOK_KEY');
 
@@ -178,13 +168,6 @@ class Main extends Component {
             });
             this.catalogClose();
         }
-        // if (this.state.error !== prevStates.error) {
-        //     this.setState({
-        //         books: allStorage(),
-        //     });
-        // }
-        // console.log(this.state.catalogShow);
-
     }
 
     render() {
@@ -203,7 +186,7 @@ class Main extends Component {
                                         <div className="search-container">
                                             <Row>
                                                 Press Enter after Search
-                                    </Row>
+                                            </Row>
                                             <Row>
                                                 <div className="form-inline mt-4 mb-4" >
                                                     <input className="form-control-sm" type="text" placeholder="Find a Book" aria-label="Search"
@@ -223,10 +206,7 @@ class Main extends Component {
                                                             }
                                                         }} />
                                                 </div>
-
-
                                             </Row>
-
                                             <Row>
                                                 <strong>Catalog Card</strong>
                                             </Row>

@@ -48,7 +48,6 @@ class Storage extends Component {
                         )
                     })
                 }
-
             </div>
         );
     }
