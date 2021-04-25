@@ -5,6 +5,11 @@
     /* margin-top: auto; */
 }
 
+.computer-title {
+  margin-top: 20px;
+  text-align: center;
+}
+
 .search-monitor {
   background-image: url(../assets/images/monitor.png);
   padding-top: 20px;

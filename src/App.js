@@ -50,7 +50,7 @@ class App extends React.Component {
           <h5>Memory Paging vs. Library Analogy</h5>
           <ul>
             <li>A <strong>page</strong> is a <strong>book</strong> on the bookshelf.</li>
-            <li><strong>Virtual memory</strong> is the list of names of books available.</li>
+            <li><strong>Virtual memory</strong> is the <strong>catelog computer</strong> with list of names of books available.</li>
             <li><strong>Physical memory</strong> is the <strong>bookshelf</strong> with level numbers and position numbers as 'addresses'.</li>
             <li><strong>Swap space</strong> is the basement <strong>book storage</strong> where unpopular books are kept.</li>
             <li><strong>Page table</strong> is the <strong>catalog card</strong> that maps a book name to level number and position number.</li>

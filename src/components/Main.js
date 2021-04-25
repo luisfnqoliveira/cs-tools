@@ -195,6 +195,7 @@ class Main extends Component {
                 <Container fluid="lg">
                     <Row>
                         <Col>
+                            <h5 className="computer-title"><strong>Catelog Computer</strong></h5>
                             <div className="search-monitor">
                                 <div className="search-container">
                                     <Row>
