@@ -1,14 +1,6 @@
-.custom-dialog {
-    margin-left: 13.5% !important;
-    margin-top: 208px !important;
-}
-
-.modal-dialog {
-    width: 17% !important;
-}
-
-.modal-header {
-    font-size: 1.2rem!important;
+pre {
+    width: 240px;
+    white-space: pre-wrap;
 }
 
 p {

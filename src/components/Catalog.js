@@ -86,11 +86,11 @@ export function Catalog(props) {
 
   return (
     <pre>
-      Book Name: {props.query}{"\n"}
-      Location: {location === 0 ? 'storage' : location === 1 ? 'bookshelf' : ''}{"\n"}
-    Storage Bin: {bin} {"\n"}
-    Level: {level} {"\n"}
-    Position: {position} {"\n"}
+      <u>Book Name</u>: {props.query}{"\n"}
+      <u>Location</u>: {location === 0 ? 'storage' : location === 1 ? 'bookshelf' : ''}{"\n"}
+      <u>Storage Bin</u>: {bin} {"\n"}
+      <u>Level</u>: {level} {"\n"}
+      <u>Position</u>: {position} {"\n"}
       {"\n"}
       <Button type="primary" onClick={() => {
         //props.onHide();
