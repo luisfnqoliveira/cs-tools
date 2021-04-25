@@ -13,6 +13,11 @@ import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import Storage from './Storage';
 import { message } from 'antd';
+import { Button, Tooltip } from 'antd';
+import { SearchOutlined } from '@ant-design/icons';
+import { Text } from 'react';
+
+
 
 function getStoredBooks() {
     try {
@@ -57,7 +62,8 @@ class Main extends Component {
             numOfBooksPerLevel: 3,
             numOfBins: 4,
             books: allStorage(), // location: 0-storage; 1-bookshelf
-            query: ''
+            query: '',
+            error: 0
         }
     }
 
@@ -99,6 +105,7 @@ class Main extends Component {
                     if (storedBooks[i].location === 0 && toLocation === 1) {
                         var today = new Date();
                         storedBooks[i].created_date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
+                        sessionStorage.setItem("STORED_BOOK_KEY", item.name);
                     }
                     storedBooks[i].name = item.name;
                     storedBooks[i].location = toLocation;
@@ -109,21 +116,18 @@ class Main extends Component {
                 var storedBooksJson = JSON.stringify(storedBooks);
                 // console.log("storedBooksJson", storedBooksJson)
                 localStorage.setItem("STORED_BOOK_KEY", storedBooksJson);
-                //window.location.reload();
             }
             if (toLocation === 1) {
-                //window.location.reload();
                 message.success(item.name + " is available now. Please search it again in the system.");
             }
         }
         else if (is_empty === 1) {
-            alert("A book already exists on this position. Please choose another position as a librarian again!");
-            // window.location.href='';
-            window.location.reload();
+            message.error("A book already exists on this position. Please choose another position as a librarian again!");
+            this.setState({ error: 1 });
         }
         else {
-            alert("The bookshelf is full. Please remove a book from the shelf to storage bin before adding another book to the shelf.");
-            //window.location.reload();
+            message.error("The bookshelf is full. Please remove a book from the shelf to storage bin before adding another book to the shelf.");
+            this.setState({ error: 1 });
         }
     }
 
@@ -136,7 +140,7 @@ class Main extends Component {
                 let data = sessionStorage.getItem('STORED_BOOK_KEY');
 
                 if (data === book_name) {
-                    alert("You choose right");
+                    message.success("You choose right");
 
                     var storedBooks = getStoredBooks();
                     var today = new Date();
@@ -147,12 +151,12 @@ class Main extends Component {
                         }
                         var storedBooksJson = JSON.stringify(storedBooks);
                         localStorage.setItem("STORED_BOOK_KEY", storedBooksJson);
-                        window.location.reload();
                     }
                     sessionStorage.setItem('STORED_BOOK_KEY', '');
+                    window.location.reload();
                 }
                 else {
-                    alert("Please choose again");
+                    message.warning("Please choose again");
                 }
             }
         }
@@ -161,11 +165,26 @@ class Main extends Component {
     catalogClose = () => this.setState({ catalogShow: false });
 
     componentDidUpdate(prevProps, prevStates) {
+        if (this.state.error !== prevStates.error) {
+            this.setState({
+                books: allStorage(),
+            });
+            this.setState({ error: 0 });
+        }
+
         if (this.state.catalogShow !== prevStates.catalogShow) {
             this.setState({
                 books: allStorage(),
             });
+            this.catalogClose();
         }
+        // if (this.state.error !== prevStates.error) {
+        //     this.setState({
+        //         books: allStorage(),
+        //     });
+        // }
+        // console.log(this.state.catalogShow);
+
     }
 
     render() {
@@ -177,19 +196,22 @@ class Main extends Component {
                 <Container fluid="lg">
                     <Row>
                         <Col>
+                            <h5 className="computer-title"><strong>Catelog Computer</strong></h5>
                             <div className={(role === "Librarian") ? "wrapper" : ""}>
                                 <div className={(role === "Librarian") ? "is-disabled" : ""}>
                                     <div className="search-monitor">
                                         <div className="search-container">
                                             <Row>
-                                                <h6>Search a Book in the Library</h6>
-                                            </Row>
+                                                Press Enter after Search
+                                    </Row>
                                             <Row>
                                                 <div className="form-inline mt-4 mb-4" >
-                                                    <MDBIcon icon="search" />
-                                                    <input className="form-control form-control-sm ml-3 w-75" type="text" placeholder="Find a Book" aria-label="Search"
+                                                    <input className="form-control-sm" type="text" placeholder="Find a Book" aria-label="Search"
                                                         value={this.state.query}
                                                         // onSubmit={event => this.setState({ query: event.target.value })}
+                                                        onClick={event => {
+                                                            message.info("You can enter any book you want")
+                                                        }}
                                                         onChange={event => this.setState({ query: event.target.value })}
                                                         onKeyPress={event => {
                                                             if (event.key === 'Enter') {
@@ -201,13 +223,22 @@ class Main extends Component {
                                                             }
                                                         }} />
                                                 </div>
+
+
+                                            </Row>
+
+                                            <Row>
+                                                <strong>Catalog Card</strong>
+                                            </Row>
+                                            <Row>
                                                 <Catalog
-                                                    query={this.state.query}
+                                                    query={this.state.value}
                                                     show={this.state.catalogShow}
                                                     onHide={this.catalogClose}
                                                     numOfBins={this.state.numOfBins}
                                                 />
                                             </Row>
+
                                         </div>
                                     </div>
                                 </div>
