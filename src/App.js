@@ -61,6 +61,7 @@ class App extends React.Component {
           <ul>
             <li>Mouse over 2 seconds for the book details.</li>
             <li>Double click for retriving the book.</li>
+            <li>The red badge at the corner indicates its retrieve frequency.</li>
           </ul>
         </Drawer>
         <Main role={this.state.role} />
