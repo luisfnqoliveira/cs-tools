@@ -54,6 +54,7 @@ class Main extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            role: this.props.role,
             value: '',
             lib: [],
             catalogShow: false,
@@ -168,7 +169,7 @@ class Main extends Component {
             this.setState({
                 books: allStorage(),
             });
-            this.setState({error: 0});
+            this.setState({ error: 0 });
         }
 
         if (this.state.catalogShow !== prevStates.catalogShow) {
@@ -187,7 +188,7 @@ class Main extends Component {
     }
 
     render() {
-        const value = this.props.value;
+        const role = this.props.role;
         const { lib } = this.state;
 
         return (
@@ -196,46 +197,50 @@ class Main extends Component {
                     <Row>
                         <Col>
                             <h5 className="computer-title"><strong>Catelog Computer</strong></h5>
-                            <div className="search-monitor">
-                                <div className="search-container">
-                                    <Row>
-                                        Press Enter after Search
+                            <div className={(role === "Librarian") ? "wrapper" : ""}>
+                                <div className={(role === "Librarian") ? "is-disabled" : ""}>
+                                    <div className="search-monitor">
+                                        <div className="search-container">
+                                            <Row>
+                                                Press Enter after Search
                                     </Row>
-                                    <Row>
-                                        <div className="form-inline mt-4 mb-4" >
-                                            <input className="form-control-sm" type="text" placeholder="Find a Book" aria-label="Search"
-                                                value={this.state.query}
-                                                // onSubmit={event => this.setState({ query: event.target.value })}
-                                                onClick={event => {
-                                                    message.info("You can enter any book you want")
-                                                }}
-                                                onChange={event => this.setState({ query: event.target.value })}
-                                                onKeyPress={event => {
-                                                    if (event.key === 'Enter') {
-                                                        if (!this.state.query) {
-                                                            alert('Please input a name!');
-                                                        } else {
-                                                            this.setState({ catalogShow: true, value: event.target.value })
-                                                        }
-                                                    }
-                                                }} />
+                                            <Row>
+                                                <div className="form-inline mt-4 mb-4" >
+                                                    <input className="form-control-sm" type="text" placeholder="Find a Book" aria-label="Search"
+                                                        value={this.state.query}
+                                                        // onSubmit={event => this.setState({ query: event.target.value })}
+                                                        onClick={event => {
+                                                            message.info("You can enter any book you want")
+                                                        }}
+                                                        onChange={event => this.setState({ query: event.target.value })}
+                                                        onKeyPress={event => {
+                                                            if (event.key === 'Enter') {
+                                                                if (!this.state.query) {
+                                                                    alert('Please input a name!');
+                                                                } else {
+                                                                    this.setState({ catalogShow: true, value: event.target.value })
+                                                                }
+                                                            }
+                                                        }} />
+                                                </div>
+
+
+                                            </Row>
+
+                                            <Row>
+                                                <strong>Catalog Card</strong>
+                                            </Row>
+                                            <Row>
+                                                <Catalog
+                                                    query={this.state.value}
+                                                    show={this.state.catalogShow}
+                                                    onHide={this.catalogClose}
+                                                    numOfBins={this.state.numOfBins}
+                                                />
+                                            </Row>
+
                                         </div>
-
-
-                                    </Row>
-
-                                    <Row>
-                                        <strong>Catalog Card</strong>
-                                    </Row>
-                                    <Row>
-                                        <Catalog
-                                            query={this.state.value}
-                                            show={this.state.catalogShow}
-                                            onHide={this.catalogClose}
-                                            numOfBins={this.state.numOfBins}
-                                        />
-                                    </Row>
-
+                                    </div>
                                 </div>
                             </div>
                         </Col>
@@ -252,8 +257,8 @@ class Main extends Component {
                                 </div>
                             </Col>
                             <Col className="storage-view">
-                                <div className={(value === "Student") ? "wrapper" : ""}>
-                                    <div className={(value === "Student") ? "is-disabled" : ""}>
+                                <div className={(role === "Student") ? "wrapper" : ""}>
+                                    <div className={(role === "Student") ? "is-disabled" : ""}>
                                         <Storage
                                             books={this.state.books}
                                             numOfBins={this.state.numOfBins}
