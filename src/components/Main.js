@@ -178,7 +178,7 @@ class Main extends Component {
                 <Container fluid="lg">
                     <Row>
                         <Col>
-                            <h5 className="computer-title"><strong>Catelog Computer</strong></h5>
+                            <h5 className="computer-title"><strong>Catalog Computer</strong></h5>
                             <div className={(role === "Librarian") ? "wrapper" : ""}>
                                 <div className={(role === "Librarian") ? "is-disabled" : ""}>
                                     <div className="search-monitor">
