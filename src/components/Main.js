@@ -105,7 +105,6 @@ class Main extends Component {
                     storedBooks[i].position = toPosition
                 }
                 var storedBooksJson = JSON.stringify(storedBooks);
-                // console.log("storedBooksJson", storedBooksJson)
                 localStorage.setItem("STORED_BOOK_KEY", storedBooksJson);
             }
             if (toLocation === 1) {
@@ -123,14 +122,14 @@ class Main extends Component {
     }
 
     dbclick = () => {
-        document.ondblclick = logDoubleClick;
-        function logDoubleClick(e) {
+        document.ondblclick = DoubleClick;
+        function DoubleClick(e) {
             if (e.target.draggable === true) {
                 let book_name = e.target.offsetParent.innerText;
                 let data = sessionStorage.getItem('STORED_BOOK_KEY');
 
                 if (data === book_name) {
-                    message.success("You choose right");
+                    alert("You have successfully retrieved " + data);
 
                     var storedBooks = getStoredBooks();
                     var today = new Date();
