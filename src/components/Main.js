@@ -218,21 +218,6 @@ class Main extends Component {
                                                         }
                                                     }
                                                 }} />
-                                            {/* <Button
-                                                value={this.state.query}
-                                                // {...console.log(this.state.query)}
-                                                onChange={event => this.setState({ query: event.target.value })}
-                                                onClick={event => {
-                                                    if (!this.state.query) {
-                                                        alert('Please input a name!');
-                                                    } else {
-                                                        this.setState({ catalogShow: true, value: event.target.value })
-                                                    }
-
-                                                }}
-                                            >Search</Button> */}
-
-
                                         </div>
 
 

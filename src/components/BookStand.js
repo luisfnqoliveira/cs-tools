@@ -3,7 +3,6 @@ import { Tooltip } from 'antd';
 import { useDrop } from 'react-dnd';
 import { ItemTypes } from '../utilities/items.js';
 import Book from './Book.js';
-import { message } from 'antd';
 
 function BookStand(props) {
     const positionIntro = "Position " + props.position;
@@ -67,16 +66,5 @@ function BookStand(props) {
         );
     }
 }
-// class BookStand extends Component {
-
-//     render() {
-//         const positionIntro = "Position " + this.props.position;
-//         return (
-//             <Tooltip placement="bottom" title={positionIntro}>
-//                 <div className="bookstand" ref={drop}></div>
-//             </Tooltip>
-//         );
-//     }
-// }
 
 export default BookStand;

@@ -34,11 +34,11 @@ class Header extends Component {
 				<p className="title" >
 					Memory Paging Practice System
                 </p>
-				<div className="role-button">
-					<Role value={this.props.value} onChange={this.props.onChange} />
-				</div>
 				<div className="overview-button">
 					<a style={{color: "white"}} onClick={this.props.clickOverview}>Overview</a>
+				</div>
+				<div className="role-button">
+					<Role value={this.props.value} onChange={this.props.onChange} />
 				</div>
 			</header>
 		);
