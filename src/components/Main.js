@@ -108,7 +108,7 @@ class Main extends Component {
                 localStorage.setItem("STORED_BOOK_KEY", storedBooksJson);
             }
             if (toLocation === 1) {
-                message.success(item.name + " is available now. Please search it again in the system.");
+                message.success(item.name + " is available on bookshelf now. Please switch back to student and double click to access.");
             }
         }
         else if (is_empty === 1) {
@@ -116,7 +116,8 @@ class Main extends Component {
             this.setState({ error: 1 });
         }
         else {
-            message.error("The bookshelf is full. Please remove a book from the shelf to storage bin before adding another book to the shelf.");
+            message.error("The bookshelf is full. Please remove a book from the shelf to storage bin before adding another book to the shelf.", 15);
+            message.info("You can remove the book with least frequency.", 15);
             this.setState({ error: 1 });
         }
     }
