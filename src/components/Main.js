@@ -108,7 +108,8 @@ class Main extends Component {
                 localStorage.setItem("STORED_BOOK_KEY", storedBooksJson);
             }
             if (toLocation === 1) {
-                message.success(item.name + " is available on bookshelf now. Please switch back to student and double click to access.");
+                message.success(item.name + " is available on bookshelf now. Please double click to access.");
+                this.props.handleRoleChange("Student");
             }
         }
         else if (is_empty === 1) {
@@ -216,6 +217,8 @@ class Main extends Component {
                                                     show={this.state.catalogShow}
                                                     onHide={this.catalogClose}
                                                     numOfBins={this.state.numOfBins}
+                                                    role={this.props.role}
+                                                    handleRoleChange={this.props.handleRoleChange}
                                                 />
                                             </Row>
 

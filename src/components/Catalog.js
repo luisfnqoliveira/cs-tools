@@ -87,7 +87,8 @@ export function Catalog(props) {
       <Button type="primary" onClick={() => {
         //props.onHide();
         if (location === 0) {
-          message.info("Please switch to the Librarian role on the Upper Right Corner to move " + props.query + " from storage bin to bookshelf.");
+          message.info("Please move " + props.query + " from storage bin to bookshelf.");
+          props.handleRoleChange("Librarian");
         }
         else if (location === 1) {
           message.info("You can now retrieve the book on level " + level + " and position " + position);

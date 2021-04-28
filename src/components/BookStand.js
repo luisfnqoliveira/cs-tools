@@ -27,7 +27,6 @@ function BookStand(props) {
     }
     else {
         const shelfBook = books.filter(book => book.location === 1);
-        // console.log(shelfBook);
         return (
             <Tooltip placement="bottom" title={positionIntro}>
                 <div className="bookstand" ref={drop}>
@@ -47,20 +46,6 @@ function BookStand(props) {
                             />)
                         }
                     })}
-                    {/* {isOver && (
-                    <div
-                        style={{
-                            position: 'absolute',
-                            top: 0,
-                            left: 0,
-                            height: '100%',
-                            width: '100%',
-                            zIndex: 1,
-                            opacity: 0.5,
-                            backgroundColor: 'yellow',
-                        }}
-                    />
-                )} */}
                 </div>
             </Tooltip>
         );

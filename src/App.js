@@ -17,6 +17,10 @@ class App extends React.Component {
     this.setState({ role: e.target.value })
   }
 
+  handleRoleChange(role) {
+    this.setState({ role: role})
+  }
+
   clickOverview = (e) => {
     // console.log('overview button clicked', e.target.value);
     this.showDrawer();
@@ -64,7 +68,7 @@ class App extends React.Component {
             <li>The red badge at the corner indicates its retrieve frequency.</li>
           </ul>
         </Drawer>
-        <Main role={this.state.role} />
+        <Main role={this.state.role} handleRoleChange={this.handleRoleChange.bind(this)}/>
         <Footer />
       </div>
     );
