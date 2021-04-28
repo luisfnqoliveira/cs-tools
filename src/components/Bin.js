@@ -15,9 +15,7 @@ function Bin(props) {
         })
     })
 
-    // console.log(props.books);
     var content = (<div className="book-container"></div>);
-    // console.log(props.binId);
     const binTitle = "Bin " + props.binId;
     if (Object.keys(props.books).length === 0 && props.books.constructor === Object) {
 
