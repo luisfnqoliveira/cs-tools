@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-// import SplitPane from "react-split-pane";
 import Bookshelf from './Bookshelf';
 import "../styles/Main.css";
 import "antd/dist/antd.css";
@@ -11,8 +10,7 @@ import { Catalog } from './Catalog.js';
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import Storage from './Storage';
-import { message } from 'antd';
-
+import { message, Button } from 'antd';
 
 function getStoredBooks() {
     try {
@@ -56,7 +54,8 @@ class Main extends Component {
             numOfBins: 4,
             books: allStorage(), // location: 0-storage; 1-bookshelf
             query: '',
-            error: 0
+            error: 0,
+            steps: []
         }
     }
 
@@ -171,6 +170,13 @@ class Main extends Component {
         }
     }
 
+    // addStep(step) {
+    //     var joined = this.state.steps.concat(step);
+    //     this.setState({
+    //         steps: joined
+    //     });
+    // }
+
     render() {
         const role = this.props.role;
         const { lib } = this.state;
@@ -251,6 +257,37 @@ class Main extends Component {
                                 </div>
                             </Col>
                         </DndProvider>
+                    </Row>
+                    <Row>
+                        <Col>
+                            <Button
+                                type="primary"
+                                href={`data:text/json;charset=utf-8,${encodeURIComponent(
+                                    JSON.stringify(this.state.steps)
+                                )}`}
+                                download="steps.json"
+                            >
+                                {`Download Json`}
+                            </Button>
+                            <Button type="primary" onClick={() => {
+                                var currentStep = this.state.books;
+                                // if (this.state.steps[this.state.steps.length - 1] !== this.state.books) {
+                                //     this.state.steps.push(this.state.books);
+                                // }
+                                var updatedSteps = [].concat(this.state.steps, currentStep);
+                                console.log(updatedSteps);
+                                this.setState({ steps: updatedSteps });
+                            }}>Record Steps</Button>
+                            <Button type="primary" onClick={() => {
+                                this.setState({ steps: [] });
+                            }}>Clear Steps</Button>
+                            {/* Reset Library */}
+                            <Button type="primary" onClick={() => {
+                                localStorage.setItem("STORED_BOOK_KEY", "[]");
+                                this.setState({ books: [] });
+                                this.props.handleRoleChange("Student");
+                            }}>Reset</Button>
+                        </Col>
                     </Row>
                 </Container>
             </div >
