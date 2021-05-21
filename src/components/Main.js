@@ -40,6 +40,19 @@ function allStorage() {
     }
 }
 
+function getStoredSteps() {
+    try {
+        const retrievedStepsString = localStorage.getItem('STORED_STEP_KEY');
+        if (!retrievedStepsString) {
+            localStorage.setItem('STORED_STEP_KEY', "[]")
+            return [];
+        }
+        return JSON.parse(retrievedStepsString);
+    } catch (err) {
+        return [];
+    }
+}
+
 class Main extends Component {
 
     constructor(props) {
@@ -57,7 +70,8 @@ class Main extends Component {
             query: '',
             error: 0,
             steps: [],
-            files: ""
+            files: "",
+            pointer: 0
         }
     }
 
@@ -182,14 +196,24 @@ class Main extends Component {
         };
     };
 
-    handleClick = e => {
+    handleClickUpload = e => {
         this.hiddenFileInput.current.click();
+    }
+
+    handleClickRecord = () => {
+        const storedSteps = getStoredSteps();
+        var currentStep = this.state.books;
+        storedSteps.push(currentStep);
+        const storedStepsJson = JSON.stringify(storedSteps);
+        localStorage.setItem('STORED_STEP_KEY', storedStepsJson);
     }
 
     render() {
         const role = this.props.role;
         const { lib } = this.state;
-        var pointer = 0;
+        var pointer = this.state.pointer;
+        console.log(localStorage.getItem('STORED_STEP_KEY'));
+        console.log(this.state.books);
 
         return (
             <div className="main" >
@@ -272,15 +296,19 @@ class Main extends Component {
                         <Col>
                             <Button type="primary" onClick={() => {
                                 const fileContent = this.state.files;
-                                if(fileContent && pointer > 0) {
-                                    pointer -= 1;
-                                    this.setState({books: fileContent[pointer]})
+                                if (fileContent && pointer > 0) {
+                                    this.setState((state) => {
+                                        return {
+                                            pointer: state.pointer - 1
+                                        };
+                                    });
+                                    this.setState({ books: fileContent[pointer] })
+                                    console.log("click previous" + pointer)
                                 }
                             }}>Previous</Button>
                             <Button type="primary"
-                                onClick={this.handleClick}>
+                                onClick={this.handleClickUpload}>
                                 {`Upload Json`}
-                                {console.log(this.state.files)}
                             </Button>
                             <input type="file"
                                 ref={this.hiddenFileInput}
@@ -289,23 +317,28 @@ class Main extends Component {
                             />
                             <Button type="primary" onClick={() => {
                                 const fileContent = this.state.files;
-                                console.log(fileContent.length);
-                                console.log(fileContent[pointer])
-                                if(fileContent && pointer < fileContent.length) {
-                                    pointer += 1;
-                                    this.setState({books: fileContent[pointer]})
+                                console.log(fileContent);
+                                if (fileContent && pointer < fileContent.length) {
+                                    console.log("click next" + pointer)
+                                    this.setState((state) => {
+                                        return {
+                                            pointer: state.pointer + 1
+                                        };
+                                    });
+                                    this.setState({ books: fileContent[pointer] })
                                 }
                             }}>Next</Button>
                             <Button
                                 type="primary"
                                 href={`data:text/json;charset=utf-8,${encodeURIComponent(
-                                    JSON.stringify(this.state.steps)
+                                    // JSON.stringify(this.state.steps)
+                                    JSON.stringify(JSON.parse(localStorage.getItem(`STORED_STEP_KEY`)))
                                 )}`}
                                 download="steps.json"
                             >
                                 {`Download Json`}
                             </Button>
-                            <Button type="primary" onClick={() => {
+                            {/* <Button type="primary" onClick={() => {
                                 var currentStep = this.state.books;
                                 var recordedStep = this.state.steps;
                                 // if (this.state.steps[this.state.steps.length - 1] !== this.state.books) {
@@ -314,9 +347,10 @@ class Main extends Component {
                                 recordedStep.push(currentStep);
                                 console.log(recordedStep);
                                 this.setState({ steps: recordedStep });
-                            }}>Record Steps</Button>
+                            }}>Record Steps</Button> */}
+                            <Button type="primary" onClick={this.handleClickRecord}>Record Steps</Button>
                             <Button type="primary" onClick={() => {
-                                this.setState({ steps: [] });
+                                localStorage.setItem("STORED_STEP_KEY", "[]");
                             }}>Clear Steps</Button>
                             {/* Reset Library */}
                             <Button type="primary" onClick={() => {
