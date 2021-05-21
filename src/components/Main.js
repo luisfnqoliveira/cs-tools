@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, useState } from 'react';
 import Bookshelf from './Bookshelf';
 import "../styles/Main.css";
 import "antd/dist/antd.css";
@@ -44,6 +44,7 @@ class Main extends Component {
 
     constructor(props) {
         super(props);
+        this.hiddenFileInput = React.createRef();
         this.state = {
             role: this.props.role,
             value: '',
@@ -55,7 +56,8 @@ class Main extends Component {
             books: allStorage(), // location: 0-storage; 1-bookshelf
             query: '',
             error: 0,
-            steps: []
+            steps: [],
+            files: ""
         }
     }
 
@@ -170,16 +172,24 @@ class Main extends Component {
         }
     }
 
-    // addStep(step) {
-    //     var joined = this.state.steps.concat(step);
-    //     this.setState({
-    //         steps: joined
-    //     });
-    // }
+    handleUpload = e => {
+        const fileReader = new FileReader();
+        fileReader.readAsText(e.target.files[0], "UTF-8");
+        fileReader.onload = e => {
+            this.setState({
+                files: JSON.parse(e.target.result)
+            });
+        };
+    };
+
+    handleClick = e => {
+        this.hiddenFileInput.current.click();
+    }
 
     render() {
         const role = this.props.role;
         const { lib } = this.state;
+        var pointer = 0;
 
         return (
             <div className="main" >
@@ -260,6 +270,32 @@ class Main extends Component {
                     </Row>
                     <Row>
                         <Col>
+                            <Button type="primary" onClick={() => {
+                                const fileContent = this.state.files;
+                                if(fileContent && pointer > 0) {
+                                    pointer -= 1;
+                                    this.setState({books: fileContent[pointer]})
+                                }
+                            }}>Previous</Button>
+                            <Button type="primary"
+                                onClick={this.handleClick}>
+                                {`Upload Json`}
+                                {console.log(this.state.files)}
+                            </Button>
+                            <input type="file"
+                                ref={this.hiddenFileInput}
+                                onChange={this.handleUpload}
+                                style={{ display: 'none' }}
+                            />
+                            <Button type="primary" onClick={() => {
+                                const fileContent = this.state.files;
+                                console.log(fileContent.length);
+                                console.log(fileContent[pointer])
+                                if(fileContent && pointer < fileContent.length) {
+                                    pointer += 1;
+                                    this.setState({books: fileContent[pointer]})
+                                }
+                            }}>Next</Button>
                             <Button
                                 type="primary"
                                 href={`data:text/json;charset=utf-8,${encodeURIComponent(
@@ -271,12 +307,13 @@ class Main extends Component {
                             </Button>
                             <Button type="primary" onClick={() => {
                                 var currentStep = this.state.books;
+                                var recordedStep = this.state.steps;
                                 // if (this.state.steps[this.state.steps.length - 1] !== this.state.books) {
                                 //     this.state.steps.push(this.state.books);
                                 // }
-                                var updatedSteps = [].concat(this.state.steps, currentStep);
-                                console.log(updatedSteps);
-                                this.setState({ steps: updatedSteps });
+                                recordedStep.push(currentStep);
+                                console.log(recordedStep);
+                                this.setState({ steps: recordedStep });
                             }}>Record Steps</Button>
                             <Button type="primary" onClick={() => {
                                 this.setState({ steps: [] });
