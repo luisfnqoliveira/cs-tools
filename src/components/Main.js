@@ -1,5 +1,4 @@
-import React, { Component } from 'react';
-// import SplitPane from "react-split-pane";
+import React, { Component, useState } from 'react';
 import Bookshelf from './Bookshelf';
 import "../styles/Main.css";
 import "antd/dist/antd.css";
@@ -11,8 +10,7 @@ import { Catalog } from './Catalog.js';
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import Storage from './Storage';
-import { message } from 'antd';
-
+import { message, Button } from 'antd';
 
 function getStoredBooks() {
     try {
@@ -42,10 +40,24 @@ function allStorage() {
     }
 }
 
+function getStoredSteps() {
+    try {
+        const retrievedStepsString = localStorage.getItem('STORED_STEP_KEY');
+        if (!retrievedStepsString) {
+            localStorage.setItem('STORED_STEP_KEY', "[]")
+            return [];
+        }
+        return JSON.parse(retrievedStepsString);
+    } catch (err) {
+        return [];
+    }
+}
+
 class Main extends Component {
 
     constructor(props) {
         super(props);
+        this.hiddenFileInput = React.createRef();
         this.state = {
             role: this.props.role,
             value: '',
@@ -56,7 +68,10 @@ class Main extends Component {
             numOfBins: 4,
             books: allStorage(), // location: 0-storage; 1-bookshelf
             query: '',
-            error: 0
+            error: 0,
+            steps: [],
+            files: "",
+            pointer: 0
         }
     }
 
@@ -171,9 +186,34 @@ class Main extends Component {
         }
     }
 
+    handleUpload = e => {
+        const fileReader = new FileReader();
+        fileReader.readAsText(e.target.files[0], "UTF-8");
+        fileReader.onload = e => {
+            this.setState({
+                files: JSON.parse(e.target.result)
+            });
+        };
+    };
+
+    handleClickUpload = e => {
+        this.hiddenFileInput.current.click();
+    }
+
+    handleClickRecord = () => {
+        const storedSteps = getStoredSteps();
+        var currentStep = this.state.books;
+        storedSteps.push(currentStep);
+        const storedStepsJson = JSON.stringify(storedSteps);
+        localStorage.setItem('STORED_STEP_KEY', storedStepsJson);
+    }
+
     render() {
         const role = this.props.role;
         const { lib } = this.state;
+        var pointer = this.state.pointer;
+        console.log(localStorage.getItem('STORED_STEP_KEY'));
+        console.log(this.state.books);
 
         return (
             <div className="main" >
@@ -251,6 +291,74 @@ class Main extends Component {
                                 </div>
                             </Col>
                         </DndProvider>
+                    </Row>
+                    <Row>
+                        <Col>
+                            <Button type="primary" onClick={() => {
+                                const fileContent = this.state.files;
+                                if (fileContent && pointer > 0) {
+                                    this.setState((state) => {
+                                        return {
+                                            pointer: state.pointer - 1
+                                        };
+                                    });
+                                    this.setState({ books: fileContent[pointer] })
+                                    console.log("click previous" + pointer)
+                                }
+                            }}>Previous</Button>
+                            <Button type="primary"
+                                onClick={this.handleClickUpload}>
+                                {`Upload Json`}
+                            </Button>
+                            <input type="file"
+                                ref={this.hiddenFileInput}
+                                onChange={this.handleUpload}
+                                style={{ display: 'none' }}
+                            />
+                            <Button type="primary" onClick={() => {
+                                const fileContent = this.state.files;
+                                console.log(fileContent);
+                                if (fileContent && pointer < fileContent.length) {
+                                    console.log("click next" + pointer)
+                                    this.setState((state) => {
+                                        return {
+                                            pointer: state.pointer + 1
+                                        };
+                                    });
+                                    this.setState({ books: fileContent[pointer] })
+                                }
+                            }}>Next</Button>
+                            <Button
+                                type="primary"
+                                href={`data:text/json;charset=utf-8,${encodeURIComponent(
+                                    // JSON.stringify(this.state.steps)
+                                    JSON.stringify(JSON.parse(localStorage.getItem(`STORED_STEP_KEY`)))
+                                )}`}
+                                download="steps.json"
+                            >
+                                {`Download Json`}
+                            </Button>
+                            {/* <Button type="primary" onClick={() => {
+                                var currentStep = this.state.books;
+                                var recordedStep = this.state.steps;
+                                // if (this.state.steps[this.state.steps.length - 1] !== this.state.books) {
+                                //     this.state.steps.push(this.state.books);
+                                // }
+                                recordedStep.push(currentStep);
+                                console.log(recordedStep);
+                                this.setState({ steps: recordedStep });
+                            }}>Record Steps</Button> */}
+                            <Button type="primary" onClick={this.handleClickRecord}>Record Steps</Button>
+                            <Button type="primary" onClick={() => {
+                                localStorage.setItem("STORED_STEP_KEY", "[]");
+                            }}>Clear Steps</Button>
+                            {/* Reset Library */}
+                            <Button type="primary" onClick={() => {
+                                localStorage.setItem("STORED_BOOK_KEY", "[]");
+                                this.setState({ books: [] });
+                                this.props.handleRoleChange("Student");
+                            }}>Reset</Button>
+                        </Col>
                     </Row>
                 </Container>
             </div >
