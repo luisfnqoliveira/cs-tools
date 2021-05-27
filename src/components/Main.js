@@ -71,7 +71,8 @@ class Main extends Component {
             books: allStorage(), // location: 0-storage; 1-bookshelf
             query: '',
             error: 0,
-            steps: JSON.parse(localStorage.getItem('STORED_STEP_KEY')),
+            // steps: JSON.parse(localStorage.getItem('STORED_STEP_KEY')),
+            steps: getStoredSteps(),
             files: "",
             pointer: 0
         }
@@ -365,24 +366,26 @@ class Main extends Component {
                         </Col>
                     </Row>
                     <br />
-                    <p>Step Info</p>
+                    <h3>Step Info</h3>
                     <List
                         dataSource={this.state.steps}
+                        bordered
                         renderItem={step => (
-                            <Card title={step.id}>
+                            // <Card title={step.id}>
                                 <List.Item key={step.id}>
+                                    <h4>Step {this.state.steps.indexOf(step) + 1}</h4>
                                     {step.map(book => (
-                                        <Card type="inner"
-                                            title={book.name}>
-                                            {(book.location === 0 ? "storage: bin" + book.bin : "bookshelf: level" + book.level + "; position" + book.position)}
-                                        </Card>
+                                        // <Card type="inner"
+                                        //     title={book.name}>
+                                        //     {(book.location === 0 ? "storage: bin" + book.bin : "bookshelf: level" + book.level + "; position" + book.position)}
+                                        // </Card>
                                         // <List.Item.Meta
                                         //     title={book.name}
                                         //     description={(book.location === 0 ? "storage: bin" + book.bin : "bookshelf: level" + book.level + "; position" + book.position)} />
-                                        // // <p>{book.name + (book.location === 0 ? "storage: bin" + book.bin : "bookshelf: level" + book.level + "; position" + book.position)}</p>
+                                        <p><strong>{book.name}</strong> {(book.location === 0 ? "storage: bin" + book.bin : "bookshelf: level" + book.level + "; position" + book.position)}</p>
                                     ))}
                                 </List.Item>
-                            </Card>
+                            // </Card>
                         )} />
                 </Container>
             </div >

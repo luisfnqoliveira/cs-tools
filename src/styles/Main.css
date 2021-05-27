@@ -31,3 +31,7 @@
   .wrapper {
     cursor: not-allowed;
   }
+
+  .ant-list-item {
+    display: block;
+  }
