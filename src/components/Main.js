@@ -10,7 +10,7 @@ import { Catalog } from './Catalog.js';
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import Storage from './Storage';
-import { message, Button } from 'antd';
+import { message, Button, List, Card } from 'antd';
 
 function getStoredBooks() {
     try {
@@ -71,7 +71,7 @@ class Main extends Component {
             books: allStorage(), // location: 0-storage; 1-bookshelf
             query: '',
             error: 0,
-            steps: localStorage.getItem('STORED_STEP_KEY'),
+            steps: JSON.parse(localStorage.getItem('STORED_STEP_KEY')),
             files: "",
             pointer: 0
         }
@@ -364,6 +364,26 @@ class Main extends Component {
                             }}>Reset</Button>
                         </Col>
                     </Row>
+                    <br />
+                    <p>Step Info</p>
+                    <List
+                        dataSource={this.state.steps}
+                        renderItem={step => (
+                            <Card title={step.id}>
+                                <List.Item key={step.id}>
+                                    {step.map(book => (
+                                        <Card type="inner"
+                                            title={book.name}>
+                                            {(book.location === 0 ? "storage: bin" + book.bin : "bookshelf: level" + book.level + "; position" + book.position)}
+                                        </Card>
+                                        // <List.Item.Meta
+                                        //     title={book.name}
+                                        //     description={(book.location === 0 ? "storage: bin" + book.bin : "bookshelf: level" + book.level + "; position" + book.position)} />
+                                        // // <p>{book.name + (book.location === 0 ? "storage: bin" + book.bin : "bookshelf: level" + book.level + "; position" + book.position)}</p>
+                                    ))}
+                                </List.Item>
+                            </Card>
+                        )} />
                 </Container>
             </div >
         );
