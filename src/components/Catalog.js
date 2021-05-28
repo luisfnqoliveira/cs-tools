@@ -26,6 +26,8 @@ function getRandomIntInclusive(min, max) {
   return Math.floor(Math.random() * (max - min + 1) + min); //The maximum is inclusive and the minimum is inclusive
 }
 
+const today = new Date();
+
 function storeBook(name, numOfBins) {
   console.log('storing book', name);
   const storedBooks = getStoredBooks();
@@ -44,7 +46,7 @@ function storeBook(name, numOfBins) {
       bin: getRandomIntInclusive(1, numOfBins),  // store to bin randomly
       level: 0,
       position: 0,
-      created_date: 0,
+      created_date: today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate() + ' ' + today.getHours() + ':' + today.getMinutes() + ':' + today.getSeconds(),
       frequency: 0,
       last_borrowed: 0,
     };
