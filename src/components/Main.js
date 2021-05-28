@@ -10,7 +10,7 @@ import { Catalog } from './Catalog.js';
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import Storage from './Storage';
-import { message, Button, List, Card } from 'antd';
+import { message, Button, List, Select, Popconfirm } from 'antd';
 
 function getStoredBooks() {
     try {
@@ -60,6 +60,8 @@ class Main extends Component {
         this.hiddenFileInput = React.createRef();
         this.handleClickNext = this.handleClickNext.bind(this);
         this.handleClickPrevious = this.handleClickPrevious.bind(this);
+        this.handleSelectChange = this.handleSelectChange.bind(this);
+        this.handleConfirm = this.handleConfirm.bind(this);
         this.state = {
             role: this.props.role,
             value: '',
@@ -71,10 +73,10 @@ class Main extends Component {
             books: allStorage(), // location: 0-storage; 1-bookshelf
             query: '',
             error: 0,
-            // steps: JSON.parse(localStorage.getItem('STORED_STEP_KEY')),
             steps: getStoredSteps(),
             files: "",
-            pointer: 0
+            pointer: 0,
+            undoStep: null
         }
     }
 
@@ -190,19 +192,16 @@ class Main extends Component {
     }
 
     handleUpload = e => {
-        // this.setState({
-        //     pointer: 0
-        // }, () => {
-        //     this.handleUpload(e).then(() => this.setState({ pointer: this.state.pointer + 1 }))
-        // })
         const fileReader = new FileReader();
         fileReader.readAsText(e.target.files[0], "UTF-8");
         fileReader.onload = e => {
             this.setState({
                 files: JSON.parse(e.target.result),
-                books: JSON.parse(e.target.result)[0]
+                books: JSON.parse(e.target.result)[0],
+                steps: JSON.parse(e.target.result)
             });
             localStorage.setItem('STORED_BOOK_KEY', JSON.stringify(JSON.parse(e.target.result)[0]))
+            localStorage.setItem('STORED_STEP_KEY', JSON.stringify(JSON.parse(e.target.result)))
         };
     };
 
@@ -214,10 +213,12 @@ class Main extends Component {
         const storedSteps = getStoredSteps();
         var currentStep = this.state.books;
         if (JSON.stringify(storedSteps[storedSteps.length - 1]) === JSON.stringify(currentStep)) {
-            console.log("Duplicate operation")
+            console.log("Duplicate step")
+            message.error("Duplicate step")
         }
         else {
             console.log("Step added");
+            message.success("Step added")
             storedSteps.push(currentStep);
         }
         const storedStepsJson = JSON.stringify(storedSteps);
@@ -251,8 +252,38 @@ class Main extends Component {
         }
     }
 
+    handleSelectChange(value) {
+        console.log(`selected ${value}`);
+        this.setState({ undoStep: value })
+    }
+
+    handleConfirm = () => {
+        if (this.state.undoStep !== null && this.state.undoStep > 1) {
+            this.setState({
+                steps: this.state.steps.slice(0, this.state.undoStep-1),
+                books: this.state.steps[this.state.undoStep-2]
+            })
+            localStorage.setItem('STORED_STEP_KEY', JSON.stringify(this.state.steps.slice(0, this.state.undoStep-1)))
+            localStorage.setItem('STORED_BOOK_KEY', JSON.stringify(this.state.steps[this.state.undoStep-2]))
+            message.success('Step '+this.state.undoStep+' and all the following steps have been removed. Now you can redo the recording from there.');
+        }
+        else if (this.state.undoStep === 1) {
+            this.setState({
+                steps: [],
+                books: []
+            })
+            localStorage.setItem('STORED_STEP_KEY', '[]')
+            localStorage.setItem('STORED_BOOK_KEY', '[]')
+        }
+        else {
+            message.error('Step value cannot be empty! Please try again to select a step.');
+        }
+
+    };
+
     render() {
         const role = this.props.role;
+        const { Option } = Select;
 
         return (
             <div className="main" >
@@ -356,6 +387,7 @@ class Main extends Component {
                             <Button type="primary" onClick={this.handleClickRecord}>Record Steps</Button>
                             <Button type="primary" onClick={() => {
                                 localStorage.setItem("STORED_STEP_KEY", "[]");
+                                this.setState({steps: []})
                             }}>Clear Steps</Button>
                             {/* Reset Library */}
                             <Button type="primary" onClick={() => {
@@ -363,6 +395,18 @@ class Main extends Component {
                                 this.setState({ books: [] });
                                 this.props.handleRoleChange("Student");
                             }}>Reset</Button>
+                            <Select placeholder="Select a step" style={{ width: 120 }} onChange={this.handleSelectChange}>
+                                {this.state.steps.map(step => (
+                                    <Option value={this.state.steps.indexOf(step) + 1}>{this.state.steps.indexOf(step) + 1}</Option>
+                                ))}
+                            </Select>
+                            <Popconfirm
+                                title={"Are you sure to undo step " + this.state.undoStep + " and all the following steps?"}
+                                onConfirm={this.handleConfirm}
+                                okText="Yes"
+                                cancelText="No">
+                                <Button>Undo</Button>
+                            </Popconfirm>
                         </Col>
                     </Row>
                     <br />
@@ -372,19 +416,19 @@ class Main extends Component {
                         bordered
                         renderItem={step => (
                             // <Card title={step.id}>
-                                <List.Item key={step.id}>
-                                    <h4>Step {this.state.steps.indexOf(step) + 1}</h4>
-                                    {step.map(book => (
-                                        // <Card type="inner"
-                                        //     title={book.name}>
-                                        //     {(book.location === 0 ? "storage: bin" + book.bin : "bookshelf: level" + book.level + "; position" + book.position)}
-                                        // </Card>
-                                        // <List.Item.Meta
-                                        //     title={book.name}
-                                        //     description={(book.location === 0 ? "storage: bin" + book.bin : "bookshelf: level" + book.level + "; position" + book.position)} />
-                                        <p><strong>{book.name}</strong> {(book.location === 0 ? "storage: bin" + book.bin : "bookshelf: level" + book.level + "; position" + book.position)}</p>
-                                    ))}
-                                </List.Item>
+                            <List.Item key={step.id}>
+                                <h4>Step {this.state.steps.indexOf(step) + 1}</h4>
+                                {step.map(book => (
+                                    // <Card type="inner"
+                                    //     title={book.name}>
+                                    //     {(book.location === 0 ? "storage: bin" + book.bin : "bookshelf: level" + book.level + "; position" + book.position)}
+                                    // </Card>
+                                    // <List.Item.Meta
+                                    //     title={book.name}
+                                    //     description={(book.location === 0 ? "storage: bin" + book.bin : "bookshelf: level" + book.level + "; position" + book.position)} />
+                                    <p><strong>{book.name}</strong> {(book.location === 0 ? "storage: bin" + book.bin : "bookshelf: level" + book.level + "; position" + book.position)}</p>
+                                ))}
+                            </List.Item>
                             // </Card>
                         )} />
                 </Container>
