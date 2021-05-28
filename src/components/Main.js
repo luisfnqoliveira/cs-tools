@@ -10,7 +10,8 @@ import { Catalog } from './Catalog.js';
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import Storage from './Storage';
-import { message, Button, List, Select, Popconfirm } from 'antd';
+import { message, Button, List, Tooltip, Select, Popconfirm } from 'antd';
+import InfiniteScroll from 'react-infinite-scroller';
 
 function getStoredBooks() {
     try {
@@ -60,6 +61,7 @@ class Main extends Component {
         this.hiddenFileInput = React.createRef();
         this.handleClickNext = this.handleClickNext.bind(this);
         this.handleClickPrevious = this.handleClickPrevious.bind(this);
+        this.handleClickShowSteps = this.handleClickShowSteps.bind(this);
         this.handleSelectChange = this.handleSelectChange.bind(this);
         this.handleConfirm = this.handleConfirm.bind(this);
         this.state = {
@@ -76,6 +78,11 @@ class Main extends Component {
             steps: getStoredSteps(),
             files: "",
             pointer: 0,
+            isToggleOn: false,
+            display: 'none',
+            disableNext: false,
+            loading: false,
+            hasMore: true,
             undoStep: null
         }
     }
@@ -230,7 +237,8 @@ class Main extends Component {
         const fileContent = this.state.files;
         if (fileContent && this.state.pointer > 0) {
             this.setState((prevState) => ({
-                pointer: prevState.pointer - 1
+                pointer: prevState.pointer - 1,
+                disableNext: false
             }), function () {
                 this.setState({ books: fileContent[this.state.pointer] })
                 localStorage.setItem('STORED_BOOK_KEY', JSON.stringify(fileContent[this.state.pointer]))
@@ -243,15 +251,41 @@ class Main extends Component {
         const fileContent = this.state.files;
         if (fileContent && this.state.pointer < fileContent.length - 1) {
             this.setState((prevState) => ({
-                pointer: prevState.pointer + 1
+                pointer: prevState.pointer + 1,
             }), function () {
                 console.log("Next clicked" + this.state.pointer)
                 this.setState({ books: fileContent[this.state.pointer] })
                 localStorage.setItem('STORED_BOOK_KEY', JSON.stringify(fileContent[this.state.pointer]))
             });
         }
+        if (this.state.pointer >= fileContent.length - 2) {
+            this.setState((prevState) => ({
+                disableNext: !prevState.disableNext
+            }))
+        }
     }
 
+    handleClickShowSteps() {
+        this.setState(prevState => ({
+            isToggleOn: !prevState.isToggleOn,
+            display: prevState.isToggleOn ? 'none' : 'block'
+        }));
+    }
+
+    handleInfiniteOnLoad = () => {
+        let { steps } = this.state;
+        this.setState({
+            loading: true,
+        });
+        if (steps.length > 15) {
+            message.warning('Infinite List loaded all');
+            this.setState({
+                hasMore: false,
+                loading: false,
+            });
+            return;
+        }
+    }
     handleSelectChange(value) {
         console.log(`selected ${value}`);
         this.setState({ undoStep: value })
@@ -260,12 +294,12 @@ class Main extends Component {
     handleConfirm = () => {
         if (this.state.undoStep !== null && this.state.undoStep > 1) {
             this.setState({
-                steps: this.state.steps.slice(0, this.state.undoStep-1),
-                books: this.state.steps[this.state.undoStep-2]
+                steps: this.state.steps.slice(0, this.state.undoStep - 1),
+                books: this.state.steps[this.state.undoStep - 2]
             })
-            localStorage.setItem('STORED_STEP_KEY', JSON.stringify(this.state.steps.slice(0, this.state.undoStep-1)))
-            localStorage.setItem('STORED_BOOK_KEY', JSON.stringify(this.state.steps[this.state.undoStep-2]))
-            message.success('Step '+this.state.undoStep+' and all the following steps have been removed. Now you can redo the recording from there.');
+            localStorage.setItem('STORED_STEP_KEY', JSON.stringify(this.state.steps.slice(0, this.state.undoStep - 1)))
+            localStorage.setItem('STORED_BOOK_KEY', JSON.stringify(this.state.steps[this.state.undoStep - 2]))
+            message.success('Step ' + this.state.undoStep + ' and all the following steps have been removed. Now you can redo the recording from there.');
         }
         else if (this.state.undoStep === 1) {
             this.setState({
@@ -287,7 +321,7 @@ class Main extends Component {
 
         return (
             <div className="main" >
-                <Container fluid="lg">
+                <Container fluid="xxl">
                     <Row>
                         <Col>
                             <h5 className="computer-title"><strong>Catalog Computer</strong></h5>
@@ -360,41 +394,42 @@ class Main extends Component {
                                 </div>
                             </Col>
                         </DndProvider>
+                        <Col style={{ display: this.state.display }}>
+                            <h5 className="computer-title"><strong>Steps Info</strong></h5>
+                            <div className="demo-infinite-container">
+                                <InfiniteScroll
+                                    initialLoad={false}
+                                    pageStart={0}
+                                    loadMore={this.handleInfiniteOnLoad}
+                                    hasMore={!this.state.loading && this.state.hasMore}
+                                    useWindow={false}
+                                >
+                                    <List
+                                        dataSource={this.state.steps}
+                                        bordered
+                                        renderItem={step => (
+                                            // <Card title={step.id}>
+                                            <List.Item key={step.id}>
+                                                <h5>Step {this.state.steps.indexOf(step) + 1}: </h5>
+                                                {step.map(book => (
+                                                    // <Card type="inner"
+                                                    //     title={book.name}>
+                                                    //     {(book.location === 0 ? "storage: bin" + book.bin : "bookshelf: level" + book.level + "; position" + book.position)}
+                                                    // </Card>
+                                                    // <List.Item.Meta
+                                                    //     title={book.name}
+                                                    //     description={(book.location === 0 ? "storage: bin" + book.bin : "bookshelf: level" + book.level + "; position" + book.position)} />
+                                                    <p><strong>{book.name}</strong> {(book.location === 0 ? "storage: bin" + book.bin : "bookshelf: level" + book.level + "; position" + book.position)}</p>
+                                                ))}
+                                            </List.Item>
+                                            // </Card>
+                                        )} />
+                                </InfiniteScroll>
+                            </div>
+                        </Col>
                     </Row>
                     <Row>
-                        <Col>
-                            <Button type="primary" onClick={this.handleClickPrevious}>Previous</Button>
-                            <Button type="primary"
-                                onClick={this.handleClickUpload}>
-                                Upload Json
-                            </Button>
-                            <input type="file"
-                                ref={this.hiddenFileInput}
-                                onChange={this.handleUpload}
-                                style={{ display: 'none' }}
-                            />
-                            <Button type="primary" onClick={this.handleClickNext}>Next</Button>
-                            <Button
-                                type="primary"
-                                href={`data:text/json;charset=utf-8,${encodeURIComponent(
-                                    JSON.stringify(this.state.steps)
-                                    // JSON.stringify(JSON.parse(localStorage.getItem(`STORED_STEP_KEY`)))
-                                )}`}
-                                download="steps.json"
-                            >
-                                Download Json
-                            </Button>
-                            <Button type="primary" onClick={this.handleClickRecord}>Record Steps</Button>
-                            <Button type="primary" onClick={() => {
-                                localStorage.setItem("STORED_STEP_KEY", "[]");
-                                this.setState({steps: []})
-                            }}>Clear Steps</Button>
-                            {/* Reset Library */}
-                            <Button type="primary" onClick={() => {
-                                localStorage.setItem("STORED_BOOK_KEY", "[]");
-                                this.setState({ books: [] });
-                                this.props.handleRoleChange("Student");
-                            }}>Reset</Button>
+                        <Col md={{ span: 6, offset: 3 }}>
                             <Select placeholder="Select a step" style={{ width: 120 }} onChange={this.handleSelectChange}>
                                 {this.state.steps.map(step => (
                                     <Option value={this.state.steps.indexOf(step) + 1}>{this.state.steps.indexOf(step) + 1}</Option>
@@ -409,28 +444,59 @@ class Main extends Component {
                             </Popconfirm>
                         </Col>
                     </Row>
-                    <br />
-                    <h3>Step Info</h3>
-                    <List
-                        dataSource={this.state.steps}
-                        bordered
-                        renderItem={step => (
-                            // <Card title={step.id}>
-                            <List.Item key={step.id}>
-                                <h4>Step {this.state.steps.indexOf(step) + 1}</h4>
-                                {step.map(book => (
-                                    // <Card type="inner"
-                                    //     title={book.name}>
-                                    //     {(book.location === 0 ? "storage: bin" + book.bin : "bookshelf: level" + book.level + "; position" + book.position)}
-                                    // </Card>
-                                    // <List.Item.Meta
-                                    //     title={book.name}
-                                    //     description={(book.location === 0 ? "storage: bin" + book.bin : "bookshelf: level" + book.level + "; position" + book.position)} />
-                                    <p><strong>{book.name}</strong> {(book.location === 0 ? "storage: bin" + book.bin : "bookshelf: level" + book.level + "; position" + book.position)}</p>
-                                ))}
-                            </List.Item>
-                            // </Card>
-                        )} />
+                    <Row>
+                        <Col>
+                            <Button type="primary"
+                                onClick={this.handleClickPrevious}
+                                disabled={this.state.pointer === 0 ? true : false}>
+                                Previous
+                            </Button>
+                            <Button type="primary"
+                                onClick={this.handleClickUpload}>
+                                Upload Json
+                            </Button>
+                            <input type="file"
+                                ref={this.hiddenFileInput}
+                                onChange={this.handleUpload}
+                                style={{ display: 'none' }}
+                            />
+                            <Button type="primary"
+                                onClick={this.handleClickNext}
+                                disabled={this.state.disableNext}>
+                                Next
+                            </Button>
+                        </Col>
+                        <Col>
+                            <Button
+                                type="primary"
+                                href={`data:text/json;charset=utf-8,${encodeURIComponent(
+                                    JSON.stringify(this.state.steps)
+                                    // JSON.stringify(JSON.parse(localStorage.getItem(`STORED_STEP_KEY`)))
+                                )}`}
+                                download="steps.json"
+                            >
+                                Download Json
+                            </Button>
+                            <Tooltip placement="bottom" title="Have any confusion? Check user manual from overview button.">
+                                <Button type="primary" onClick={this.handleClickRecord}>Record Step</Button>
+                            </Tooltip>
+                            <Button type="primary" onClick={() => {
+                                localStorage.setItem("STORED_STEP_KEY", "[]");
+                                this.setState({ steps: [] })
+                            }}>Clear all Steps</Button>
+                        </Col>
+                        <Col>
+                            {/* Reset Library */}
+                            <Button type="primary" onClick={() => {
+                                localStorage.setItem("STORED_BOOK_KEY", "[]");
+                                this.setState({ books: [] });
+                                this.props.handleRoleChange("Student");
+                            }}>Reset Library</Button>
+                            <Button type="primary" onClick={this.handleClickShowSteps}>
+                                {this.state.isToggleOn ? 'Hide Steps Info' : 'Show Steps Info'}
+                            </Button>
+                        </Col>
+                    </Row>
                 </Container>
             </div >
         );

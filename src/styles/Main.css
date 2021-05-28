@@ -2,7 +2,9 @@
     width: 100%;
     flex: 1 0 auto;
     display: flex;
-    /* margin-top: auto; */
+    padding-left: 5%;
+    padding-right: 5%;
+    justify-content: space-evenly;
 }
 
 .computer-title {
@@ -35,3 +37,27 @@
   .ant-list-item {
     display: block;
   }
+
+  .ant-btn-primary {
+    margin-left: 5px;
+    margin-right: 5px;
+  }
+
+  .demo-infinite-container {
+    height: 600px;
+    /* padding: 8px 24px; */
+    overflow: auto;
+    /* border: 1px solid #e8e8e8; */
+    /* border-radius: 4px; */
+  }
+.offset-md-3 {
+    margin-left: 40%;
+}
+
+.row{
+  margin-bottom: 5px;
+}
+
+.ant-select-selector {
+  width: 101%;
+}
