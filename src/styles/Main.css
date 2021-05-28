@@ -50,3 +50,14 @@
     /* border: 1px solid #e8e8e8; */
     /* border-radius: 4px; */
   }
+.offset-md-3 {
+    margin-left: 40%;
+}
+
+.row{
+  margin-bottom: 5px;
+}
+
+.ant-select-selector {
+  width: 101%;
+}
