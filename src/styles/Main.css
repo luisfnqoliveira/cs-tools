@@ -50,8 +50,9 @@
     /* border: 1px solid #e8e8e8; */
     /* border-radius: 4px; */
   }
+
 .offset-md-3 {
-    margin-left: 40%;
+    margin-left: 40%!important
 }
 
 .row{
@@ -59,5 +60,5 @@
 }
 
 .ant-select-selector {
-  width: 101%;
+  width: 101%!important;
 }

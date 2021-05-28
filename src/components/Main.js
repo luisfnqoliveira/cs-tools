@@ -209,6 +209,7 @@ class Main extends Component {
             });
             localStorage.setItem('STORED_BOOK_KEY', JSON.stringify(JSON.parse(e.target.result)[0]))
             localStorage.setItem('STORED_STEP_KEY', JSON.stringify(JSON.parse(e.target.result)))
+            message.success("The Json file has uploaded successfully!")
         };
     };
 
@@ -242,7 +243,7 @@ class Main extends Component {
             }), function () {
                 this.setState({ books: fileContent[this.state.pointer] })
                 localStorage.setItem('STORED_BOOK_KEY', JSON.stringify(fileContent[this.state.pointer]))
-                console.log("Previous clicked" + this.state.pointer)
+                message.success("Previous clicked! You are at step " + (this.state.pointer+1))
             });
         }
     }
@@ -253,9 +254,9 @@ class Main extends Component {
             this.setState((prevState) => ({
                 pointer: prevState.pointer + 1,
             }), function () {
-                console.log("Next clicked" + this.state.pointer)
                 this.setState({ books: fileContent[this.state.pointer] })
                 localStorage.setItem('STORED_BOOK_KEY', JSON.stringify(fileContent[this.state.pointer]))
+                message.success("Next clicked! You are at step " + (this.state.pointer+1))
             });
         }
         if (this.state.pointer >= fileContent.length - 2) {
