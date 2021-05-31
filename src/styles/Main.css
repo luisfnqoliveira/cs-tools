@@ -62,3 +62,7 @@
 .ant-select-selector {
   width: 101%!important;
 }
+
+.ant-input-number {
+  width: 60px;
+}

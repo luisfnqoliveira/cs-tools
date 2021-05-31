@@ -10,7 +10,7 @@ import { Catalog } from './Catalog.js';
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import Storage from './Storage';
-import { message, Button, List, Tooltip, Select, Popconfirm } from 'antd';
+import { message, Button, List, Tooltip, Select, Popconfirm, InputNumber } from 'antd';
 import InfiniteScroll from 'react-infinite-scroller';
 
 function getStoredBooks() {
@@ -71,6 +71,10 @@ class Main extends Component {
             catalogShow: false,
             numOfShelfLevels: 5,
             numOfBooksPerLevel: 3,
+            bookcaseHeight: '120px',
+            bookcaseWidth: '340px',
+            bookstandMarginTop: '30px',
+            bookstandMarginLeft: '5px',
             numOfBins: 4,
             books: allStorage(), // location: 0-storage; 1-bookshelf
             query: '',
@@ -243,7 +247,7 @@ class Main extends Component {
             }), function () {
                 this.setState({ books: fileContent[this.state.pointer] })
                 localStorage.setItem('STORED_BOOK_KEY', JSON.stringify(fileContent[this.state.pointer]))
-                message.success("Previous clicked! You are at step " + (this.state.pointer+1))
+                message.success("Previous clicked! You are at step " + (this.state.pointer + 1))
             });
         }
     }
@@ -256,7 +260,7 @@ class Main extends Component {
             }), function () {
                 this.setState({ books: fileContent[this.state.pointer] })
                 localStorage.setItem('STORED_BOOK_KEY', JSON.stringify(fileContent[this.state.pointer]))
-                message.success("Next clicked! You are at step " + (this.state.pointer+1))
+                message.success("Next clicked! You are at step " + (this.state.pointer + 1))
             });
         }
         if (this.state.pointer >= fileContent.length - 2) {
@@ -316,6 +320,39 @@ class Main extends Component {
 
     };
 
+    onChangeLevelInput = value => {
+        this.setState({
+            numOfShelfLevels: value,
+        });
+    };
+
+    onChangePositionInput = value => {
+        if (value === 4) {
+            this.setState({
+                numOfBooksPerLevel: value,
+                bookcaseHeight: '165px',
+                bookcaseWidth: '475px',
+                bookstandMarginTop: '60px'
+            });
+        } else if (value === 5) {
+            this.setState({
+                numOfBooksPerLevel: value,
+                bookcaseHeight: '200px',
+                bookcaseWidth: '567px',
+                bookstandMarginTop: '90px',
+                bookstandMarginLeft: '3px',
+            });
+        } else {
+            this.setState({
+                numOfBooksPerLevel: value,
+                bookcaseHeight: '120px',
+                bookcaseWidth: '340px',
+                bookstandMarginTop: '30px',
+                bookstandMarginLeft: '5px',
+            });
+        }
+    };
+
     render() {
         const role = this.props.role;
         const { Option } = Select;
@@ -373,10 +410,17 @@ class Main extends Component {
                         </Col>
                         <DndProvider backend={HTML5Backend}>
                             <Col className="bookshelf-view">
+                                <h5 className="computer-title"><strong>Bookshelf</strong></h5>
+                                <p><strong>Number of levels:</strong>  <InputNumber min={1} max={8} value={this.state.numOfShelfLevels} onChange={this.onChangeLevelInput} /> (Min: 1, Max: 8)</p>
+                                <p><strong>Number of positions per level:</strong> <InputNumber min={3} max={5} value={this.state.numOfBooksPerLevel} onChange={this.onChangePositionInput} /> (Min: 3, Max: 5)</p>
                                 <div>
                                     <Bookshelf
                                         numOfLevels={this.state.numOfShelfLevels}
                                         numOfBooksPerLevel={this.state.numOfBooksPerLevel}
+                                        bookcaseHeight={this.state.bookcaseHeight}
+                                        bookcaseWidth={this.state.bookcaseWidth}
+                                        bookstandMarginTop={this.state.bookstandMarginTop}
+                                        bookstandMarginLeft={this.state.bookstandMarginLeft}
                                         books={this.state.books}
                                         dragHandler={this.dragHandler.bind(this)}
                                         dbclick={this.dbclick()}

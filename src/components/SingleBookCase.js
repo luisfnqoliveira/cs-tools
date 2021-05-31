@@ -13,21 +13,36 @@ class SingleBookCase extends Component {
                 position: i + 1,
                 level: this.props.level,
                 books: this.props.books,
+                bookstandMarginTop: this.props.bookstandMarginTop,
+                bookstandMarginLeft: this.props.bookstandMarginLeft
             }];
         }
+
+        let bookcaseSize = {
+            height: this.props.bookcaseHeight,
+            width: this.props.bookcaseWidth,
+        }
+
         return (
             <Tooltip placement="leftTop" title={levelIntro}>
-                <div className="bookcase">
+                <div className="bookcase" style={bookcaseSize}>
                     {
                         bookstands.map(i => {
+                            let bookstandMargin = {
+                                marginTop: i.bookstandMarginTop,
+                                marginLeft: i.bookstandMarginLeft
+                            }
                             return (
-                                <div className="single">
-                                    <BookStand 
+                                <div className="single" style={bookstandMargin}>
+                                    <BookStand
                                         position={i.position}
                                         key={i.position}
                                         level={i.level}
                                         books={i.books}
-                                        dragHandler = {this.props.dragHandler}/>
+                                        bookcaseHeight={i.bookcaseHeight}
+                                        bookcaseWidth={i.bookcaseWidth}
+                                        bookstandMarginTop={i.bookstandMarginTop}
+                                        dragHandler={this.props.dragHandler} />
                                 </div>
                             )
                         })
