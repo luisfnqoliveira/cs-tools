@@ -121,8 +121,8 @@ class Main extends Component {
             for (i = 0; i < storedBooks.length; i++) {
                 if (storedBooks[i].code === item.code) {
                     if (storedBooks[i].location === 0 && toLocation === 1) {
-                        var today = new Date();
-                        storedBooks[i].created_date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
+                        // var today = new Date();
+                        // storedBooks[i].created_date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
                         sessionStorage.setItem("STORED_BOOK_KEY", item.name);
                     }
                     storedBooks[i].name = item.name;

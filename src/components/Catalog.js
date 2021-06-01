@@ -1,6 +1,6 @@
 import { message } from 'antd';
 import React from 'react';
-import { Modal, Button } from 'antd';
+import { Button } from 'antd';
 
 const STORED_BOOK_KEY = 'STORED_BOOK_KEY';
 
