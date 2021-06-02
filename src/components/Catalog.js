@@ -66,7 +66,9 @@ export function Catalog(props) {
   // when modal open
   React.useEffect(() => {
     if (props.show) {
-      storeBook(props.query, props.numOfBins);
+      if (props.isEnter) {
+        storeBook(props.query, props.numOfBins);
+      }
       const books = getStoredBooks();
       const found = books.find(book => book.name === props.query);
       if (found) {
@@ -74,9 +76,12 @@ export function Catalog(props) {
         setLevel(found.level);
         setPosition(found.position);
         setBin(found.bin);
+        if (found.location === 0 && (props.isEnter)) {
+          props.handleFaultsIncrement();
+        }
       }
     }
-  }, [props.show, props.query, props.numOfBins]);
+  }, [props.show, props.query, props.numOfBins, props.isEnter]);
 
   return (
     <pre>

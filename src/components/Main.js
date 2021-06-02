@@ -10,7 +10,7 @@ import { Catalog } from './Catalog.js';
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import Storage from './Storage';
-import { message, Button, List, Tooltip, Select, Popconfirm } from 'antd';
+import { message, Button, List, Tooltip, Select, Popconfirm, Statistic, Card } from 'antd';
 import InfiniteScroll from 'react-infinite-scroller';
 
 function getStoredBooks() {
@@ -69,6 +69,7 @@ class Main extends Component {
             value: '',
             lib: [],
             catalogShow: false,
+            isEnter: false,
             numOfShelfLevels: 5,
             numOfBooksPerLevel: 3,
             numOfBins: 4,
@@ -83,7 +84,8 @@ class Main extends Component {
             disableNext: false,
             loading: false,
             hasMore: true,
-            undoStep: null
+            undoStep: null,
+            pageFaults: 0
         }
     }
 
@@ -133,6 +135,7 @@ class Main extends Component {
                 }
                 var storedBooksJson = JSON.stringify(storedBooks);
                 localStorage.setItem("STORED_BOOK_KEY", storedBooksJson);
+                this.setState({catalogShow: true})
             }
             if (toLocation === 1) {
                 message.success(item.name + " is available on bookshelf now. Please double click to access.");
@@ -165,7 +168,7 @@ class Main extends Component {
                     for (var i = 0; i < storedBooks.length; i++) {
                         if (storedBooks[i].name === data) {
                             storedBooks[i].frequency += 1;
-                            storedBooks[i].last_borrowed = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate() + ' ' + today.toLocaleTimeString();
+                            storedBooks[i].last_borrowed = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate() + ' ' + today.getHours() + ':' + today.getMinutes() + ':' + today.getSeconds();
                         }
                         var storedBooksJson = JSON.stringify(storedBooks);
                         localStorage.setItem("STORED_BOOK_KEY", storedBooksJson);
@@ -195,6 +198,10 @@ class Main extends Component {
                 books: allStorage(),
             });
             this.catalogClose();
+        }
+        
+        if (this.state.isEnter !== prevStates.isEnter) {
+            this.setState({isEnter: false})
         }
     }
 
@@ -243,7 +250,7 @@ class Main extends Component {
             }), function () {
                 this.setState({ books: fileContent[this.state.pointer] })
                 localStorage.setItem('STORED_BOOK_KEY', JSON.stringify(fileContent[this.state.pointer]))
-                message.success("Previous clicked! You are at step " + (this.state.pointer+1))
+                message.success("Previous clicked! You are at step " + (this.state.pointer + 1))
             });
         }
     }
@@ -256,7 +263,7 @@ class Main extends Component {
             }), function () {
                 this.setState({ books: fileContent[this.state.pointer] })
                 localStorage.setItem('STORED_BOOK_KEY', JSON.stringify(fileContent[this.state.pointer]))
-                message.success("Next clicked! You are at step " + (this.state.pointer+1))
+                message.success("Next clicked! You are at step " + (this.state.pointer + 1))
             });
         }
         if (this.state.pointer >= fileContent.length - 2) {
@@ -316,6 +323,12 @@ class Main extends Component {
 
     };
 
+    handleFaultsIncrement = () => {
+        this.setState((prevState) => ({
+            pageFaults: prevState.pageFaults + 1,
+        }))
+    }
+
     render() {
         const role = this.props.role;
         const { Option } = Select;
@@ -347,7 +360,7 @@ class Main extends Component {
                                                                 if (!this.state.query) {
                                                                     alert('Please input a name!');
                                                                 } else {
-                                                                    this.setState({ catalogShow: true, value: event.target.value })
+                                                                    this.setState({ catalogShow: true, value: event.target.value, isEnter: true})
                                                                 }
                                                             }
                                                         }} />
@@ -360,10 +373,11 @@ class Main extends Component {
                                                 <Catalog
                                                     query={this.state.value}
                                                     show={this.state.catalogShow}
+                                                    isEnter={this.state.isEnter}
                                                     onHide={this.catalogClose}
                                                     numOfBins={this.state.numOfBins}
-                                                    role={this.props.role}
                                                     handleRoleChange={this.props.handleRoleChange}
+                                                    handleFaultsIncrement={this.handleFaultsIncrement.bind(this)}
                                                 />
                                             </Row>
                                         </div>
@@ -490,13 +504,25 @@ class Main extends Component {
                             {/* Reset Library */}
                             <Button type="primary" onClick={() => {
                                 localStorage.setItem("STORED_BOOK_KEY", "[]");
-                                this.setState({ books: [] });
+                                this.setState({
+                                    books: [],
+                                });
+                                // this.setState({catalogShow: true})
                                 this.props.handleRoleChange("Student");
                             }}>Reset Library</Button>
                             <Button type="primary" onClick={this.handleClickShowSteps}>
                                 {this.state.isToggleOn ? 'Hide Steps Info' : 'Show Steps Info'}
                             </Button>
                         </Col>
+                    </Row>
+                    <Row>
+                        <Card>
+                            <Statistic
+                                title="Page Faults"
+                                value={this.state.pageFaults}
+                                valueStyle={{ color: '#3f8600' }}
+                            />
+                        </Card>
                     </Row>
                 </Container>
             </div >
