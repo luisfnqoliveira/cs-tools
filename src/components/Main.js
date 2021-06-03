@@ -26,20 +26,20 @@ function getStoredBooks() {
     }
 }
 
-function allStorage() {
-    try {
-        var archive = {};
-        Object.entries(localStorage).map(([key, valueJSON]) => {
-            const value = JSON.parse(valueJSON);
-            archive = value;
-        }
-        )
-        return (archive)
-    }
-    catch (err) {
-        return [];
-    }
-}
+// function allStorage() {
+//     try {
+//         var archive = {};
+//         Object.entries(localStorage).map(([key, valueJSON]) => {
+//             const value = JSON.parse(valueJSON);
+//             archive = value;
+//         }
+//         )
+//         return (archive)
+//     }
+//     catch (err) {
+//         return [];
+//     }
+// }
 
 function getStoredSteps() {
     try {
@@ -49,6 +49,19 @@ function getStoredSteps() {
             return [];
         }
         return JSON.parse(retrievedStepsString);
+    } catch (err) {
+        return [];
+    }
+}
+
+function getStoredFaults() {
+    try {
+        const retrivedNumOfFaults = localStorage.getItem('STORED_FAULTS_KEY');
+        if (!retrivedNumOfFaults) {
+            localStorage.setItem('STORED_FAULTS_KEY', 0)
+            return 0;
+        }
+        return JSON.parse(retrivedNumOfFaults);
     } catch (err) {
         return [];
     }
@@ -125,7 +138,7 @@ class Main extends Component {
             loading: false,
             hasMore: true,
             undoStep: null,
-            pageFaults: 0
+            pageFaults: getStoredFaults()
         }
     }
 
@@ -208,6 +221,7 @@ class Main extends Component {
                     for (var i = 0; i < storedBooks.length; i++) {
                         if (storedBooks[i].name === data) {
                             storedBooks[i].frequency += 1;
+                            // this.updateFrequency(storedBooks[i].frequency);
                             storedBooks[i].last_borrowed = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate() + ' ' + today.getHours() + ':' + today.getMinutes() + ':' + today.getSeconds();
                         }
                         var storedBooksJson = JSON.stringify(storedBooks);
@@ -228,14 +242,14 @@ class Main extends Component {
     componentDidUpdate(prevProps, prevStates) {
         if (this.state.error !== prevStates.error) {
             this.setState({
-                books: allStorage(),
+                books: getStoredBooks(),
             });
             this.setState({ error: 0 });
         }
 
         if (this.state.catalogShow !== prevStates.catalogShow) {
             this.setState({
-                books: allStorage(),
+                books: getStoredBooks(),
             });
             this.catalogClose();
         }
@@ -415,6 +429,7 @@ class Main extends Component {
         }
     };
     handleFaultsIncrement = () => {
+        localStorage.setItem('STORED_FAULTS_KEY', this.state.pageFaults + 1);
         this.setState((prevState) => ({
             pageFaults: prevState.pageFaults + 1,
         }))
@@ -485,8 +500,10 @@ class Main extends Component {
                             {/* Reset Library */}
                             <Button type="primary" onClick={() => {
                                 localStorage.setItem("STORED_BOOK_KEY", "[]");
+                                localStorage.setItem("STORED_FAULTS_KEY", 0);
                                 this.setState({
                                     books: [],
+                                    pageFaults: 0,
                                 });
                                 // this.setState({catalogShow: true})
                                 this.props.handleRoleChange("Student");
