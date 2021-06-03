@@ -54,6 +54,41 @@ function getStoredSteps() {
     }
 }
 
+function getRandomIntInclusive(min, max) {
+    min = Math.ceil(min);
+    max = Math.floor(max);
+    return Math.floor(Math.random() * (max - min + 1) + min); //The maximum is inclusive and the minimum is inclusive
+}
+
+function storeBook(name, numOfBins) {
+    console.log('storing book', name);
+    const today = new Date();
+    const storedBooks = getStoredBooks();
+    const found = storedBooks.find(book => {
+        return book.name === name;
+    })
+    if (found) {
+        sessionStorage.setItem('STORED_BOOK_KEY', name);
+    } else {
+        // store the book
+        var uniqid = require('uniqid');
+        const bookObj = {
+            code: uniqid(),
+            name: name,
+            location: 0,
+            bin: getRandomIntInclusive(1, numOfBins),  // store to bin randomly
+            level: 0,
+            position: 0,
+            created_date: today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate() + ' ' + today.getHours() + ':' + today.getMinutes() + ':' + today.getSeconds(),
+            frequency: 0,
+            last_borrowed: 0,
+        };
+        storedBooks.push(bookObj);
+        const storedBooksJson = JSON.stringify(storedBooks);
+        localStorage.setItem('STORED_BOOK_KEY', storedBooksJson);
+    }
+}
+
 class Main extends Component {
 
     constructor(props) {
@@ -64,12 +99,13 @@ class Main extends Component {
         this.handleClickShowSteps = this.handleClickShowSteps.bind(this);
         this.handleSelectChange = this.handleSelectChange.bind(this);
         this.handleConfirm = this.handleConfirm.bind(this);
+        this.handleFaultsIncrement = this.handleFaultsIncrement.bind(this);
+        this.handleClickSearch = this.handleClickSearch.bind(this);
         this.state = {
             role: this.props.role,
             value: '',
             lib: [],
             catalogShow: false,
-            isEnter: false,
             numOfShelfLevels: 5,
             numOfBooksPerLevel: 3,
             numOfBins: 4,
@@ -135,7 +171,7 @@ class Main extends Component {
                 }
                 var storedBooksJson = JSON.stringify(storedBooks);
                 localStorage.setItem("STORED_BOOK_KEY", storedBooksJson);
-                this.setState({catalogShow: true})
+                this.setState({ catalogShow: true })
             }
             if (toLocation === 1) {
                 message.success(item.name + " is available on bookshelf now. Please double click to access.");
@@ -199,9 +235,28 @@ class Main extends Component {
             });
             this.catalogClose();
         }
-        
-        if (this.state.isEnter !== prevStates.isEnter) {
-            this.setState({isEnter: false})
+    }
+
+    handleClickSearch = () => {
+        if (!this.state.query) {
+            alert('Please input a name!');
+        } else {
+            storeBook(this.state.query, this.state.numOfBins);
+            this.setState({ catalogShow: true, value: this.state.query})
+            let books = getStoredBooks()
+            let targetBook = books.find(book => book.name === this.state.query)
+            if (targetBook) {
+                if (targetBook.location === 0) {
+                    message.info("The librarian is preparing the book.");
+                    message.info("Please move " + this.state.query + " from storage bin to bookshelf.");
+                    this.props.handleRoleChange("Librarian");
+                    this.handleFaultsIncrement();
+                }
+                if (targetBook.location === 1) {
+                    message.info("You can now retrieve the book on level " + targetBook.level + " and position " + targetBook.position);
+                    message.warn("Please double click on the book to retrieve");
+                }
+            }
         }
     }
 
@@ -350,20 +405,16 @@ class Main extends Component {
                                                 <div className="form-inline mt-4 mb-4" >
                                                     <input className="form-control-sm" type="text" placeholder="Find a Book" aria-label="Search"
                                                         value={this.state.query}
-                                                        // onSubmit={event => this.setState({ query: event.target.value })}
                                                         onClick={event => {
                                                             message.info("You can enter any book you want")
                                                         }}
                                                         onChange={event => this.setState({ query: event.target.value })}
                                                         onKeyPress={event => {
                                                             if (event.key === 'Enter') {
-                                                                if (!this.state.query) {
-                                                                    alert('Please input a name!');
-                                                                } else {
-                                                                    this.setState({ catalogShow: true, value: event.target.value, isEnter: true})
-                                                                }
+                                                                this.handleClickSearch()
                                                             }
                                                         }} />
+                                                    <Button type="primary" onClick={this.handleClickSearch}>Search</Button>
                                                 </div>
                                             </Row>
                                             <Row>
@@ -373,11 +424,9 @@ class Main extends Component {
                                                 <Catalog
                                                     query={this.state.value}
                                                     show={this.state.catalogShow}
-                                                    isEnter={this.state.isEnter}
                                                     onHide={this.catalogClose}
                                                     numOfBins={this.state.numOfBins}
                                                     handleRoleChange={this.props.handleRoleChange}
-                                                    handleFaultsIncrement={this.handleFaultsIncrement.bind(this)}
                                                 />
                                             </Row>
                                         </div>
