@@ -66,3 +66,7 @@
 .ant-input-number {
   width: 60px;
 }
+
+.form-control-sm {
+  width: 130px;
+}

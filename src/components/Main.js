@@ -10,7 +10,7 @@ import { Catalog } from './Catalog.js';
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import Storage from './Storage';
-import { message, Button, List, Tooltip, Select, Popconfirm, InputNumber, Statistic, Card} from 'antd';
+import { message, Button, List, Tooltip, Select, Popconfirm, InputNumber, Statistic, Card } from 'antd';
 import InfiniteScroll from 'react-infinite-scroller';
 
 function getStoredBooks() {
@@ -113,7 +113,7 @@ class Main extends Component {
             bookstandMarginTop: '30px',
             bookstandMarginLeft: '5px',
             numOfBins: 4,
-            books: allStorage(), // location: 0-storage; 1-bookshelf
+            books: getStoredBooks(), // location: 0-storage; 1-bookshelf
             query: '',
             error: 0,
             steps: getStoredSteps(),
@@ -246,7 +246,7 @@ class Main extends Component {
             alert('Please input a name!');
         } else {
             storeBook(this.state.query, this.state.numOfBins);
-            this.setState({ catalogShow: true, value: this.state.query})
+            this.setState({ catalogShow: true, value: this.state.query })
             let books = getStoredBooks()
             let targetBook = books.find(book => book.name === this.state.query)
             if (targetBook) {
@@ -428,6 +428,91 @@ class Main extends Component {
             <div className="main" >
                 <Container fluid="xxl">
                     <Row>
+                        <Col md={2}>
+                            <Card
+                                style={{ width: 110 }} >
+                                <Statistic
+                                    title="Page Faults"
+                                    value={this.state.pageFaults}
+                                    valueStyle={{ color: '#cf1322' }}
+
+                                />
+                            </Card>
+                        </Col>
+                    </Row>
+                    <Row>
+                        <Col>
+                            <Button type="primary"
+                                onClick={this.handleClickPrevious}
+                                disabled={this.state.pointer === 0 ? true : false}>
+                                Previous
+                            </Button>
+                            <Button type="primary"
+                                onClick={this.handleClickUpload}>
+                                Upload Json
+                            </Button>
+                            <input type="file"
+                                ref={this.hiddenFileInput}
+                                onChange={this.handleUpload}
+                                style={{ display: 'none' }}
+                            />
+                            <Button type="primary"
+                                onClick={this.handleClickNext}
+                                disabled={this.state.disableNext}>
+                                Next
+                            </Button>
+                        </Col>
+                        <Col>
+                            <Button
+                                type="primary"
+                                href={`data:text/json;charset=utf-8,${encodeURIComponent(
+                                    JSON.stringify(this.state.steps)
+                                    // JSON.stringify(JSON.parse(localStorage.getItem(`STORED_STEP_KEY`)))
+                                )}`}
+                                download="steps.json"
+                            >
+                                Download Json
+                            </Button>
+                            <Tooltip placement="bottom" title="Have any confusion? Check user manual from overview button.">
+                                <Button type="primary" onClick={this.handleClickRecord}>Record Step</Button>
+                            </Tooltip>
+                            <Button type="primary" onClick={() => {
+                                localStorage.setItem("STORED_STEP_KEY", "[]");
+                                this.setState({ steps: [] })
+                            }}>Clear all Steps</Button>
+                        </Col>
+                        <Col>
+                            {/* Reset Library */}
+                            <Button type="primary" onClick={() => {
+                                localStorage.setItem("STORED_BOOK_KEY", "[]");
+                                this.setState({
+                                    books: [],
+                                });
+                                // this.setState({catalogShow: true})
+                                this.props.handleRoleChange("Student");
+                            }}>Reset Library</Button>
+                            <Button type="primary" onClick={this.handleClickShowSteps}>
+                                {this.state.isToggleOn ? 'Hide Steps Info' : 'Show Steps Info'}
+                            </Button>
+                        </Col>
+                    </Row>
+                    <Row>
+                        <Col md={{ span: 6, offset: 3 }}>
+                            <Select placeholder="Select a step" style={{ width: 120 }} onChange={this.handleSelectChange}>
+                                {this.state.steps.map(step => (
+                                    <Option value={this.state.steps.indexOf(step) + 1}>{this.state.steps.indexOf(step) + 1}</Option>
+                                ))}
+                            </Select>
+                            <Popconfirm
+                                title={"Are you sure to undo step " + this.state.undoStep + " and all the following steps?"}
+                                onConfirm={this.handleConfirm}
+                                okText="Yes"
+                                cancelText="No">
+                                <Button>Undo</Button>
+                            </Popconfirm>
+                        </Col>
+                    </Row>
+                    <Row>
                         <Col>
                             <h5 className="computer-title"><strong>Catalog Computer</strong></h5>
                             <div className={(role === "Librarian") ? "wrapper" : ""}>
@@ -534,87 +619,6 @@ class Main extends Component {
                                 </InfiniteScroll>
                             </div>
                         </Col>
-                    </Row>
-                    <Row>
-                        <Col md={{ span: 6, offset: 3 }}>
-                            <Select placeholder="Select a step" style={{ width: 120 }} onChange={this.handleSelectChange}>
-                                {this.state.steps.map(step => (
-                                    <Option value={this.state.steps.indexOf(step) + 1}>{this.state.steps.indexOf(step) + 1}</Option>
-                                ))}
-                            </Select>
-                            <Popconfirm
-                                title={"Are you sure to undo step " + this.state.undoStep + " and all the following steps?"}
-                                onConfirm={this.handleConfirm}
-                                okText="Yes"
-                                cancelText="No">
-                                <Button>Undo</Button>
-                            </Popconfirm>
-                        </Col>
-                    </Row>
-                    <Row>
-                        <Col>
-                            <Button type="primary"
-                                onClick={this.handleClickPrevious}
-                                disabled={this.state.pointer === 0 ? true : false}>
-                                Previous
-                            </Button>
-                            <Button type="primary"
-                                onClick={this.handleClickUpload}>
-                                Upload Json
-                            </Button>
-                            <input type="file"
-                                ref={this.hiddenFileInput}
-                                onChange={this.handleUpload}
-                                style={{ display: 'none' }}
-                            />
-                            <Button type="primary"
-                                onClick={this.handleClickNext}
-                                disabled={this.state.disableNext}>
-                                Next
-                            </Button>
-                        </Col>
-                        <Col>
-                            <Button
-                                type="primary"
-                                href={`data:text/json;charset=utf-8,${encodeURIComponent(
-                                    JSON.stringify(this.state.steps)
-                                    // JSON.stringify(JSON.parse(localStorage.getItem(`STORED_STEP_KEY`)))
-                                )}`}
-                                download="steps.json"
-                            >
-                                Download Json
-                            </Button>
-                            <Tooltip placement="bottom" title="Have any confusion? Check user manual from overview button.">
-                                <Button type="primary" onClick={this.handleClickRecord}>Record Step</Button>
-                            </Tooltip>
-                            <Button type="primary" onClick={() => {
-                                localStorage.setItem("STORED_STEP_KEY", "[]");
-                                this.setState({ steps: [] })
-                            }}>Clear all Steps</Button>
-                        </Col>
-                        <Col>
-                            {/* Reset Library */}
-                            <Button type="primary" onClick={() => {
-                                localStorage.setItem("STORED_BOOK_KEY", "[]");
-                                this.setState({
-                                    books: [],
-                                });
-                                // this.setState({catalogShow: true})
-                                this.props.handleRoleChange("Student");
-                            }}>Reset Library</Button>
-                            <Button type="primary" onClick={this.handleClickShowSteps}>
-                                {this.state.isToggleOn ? 'Hide Steps Info' : 'Show Steps Info'}
-                            </Button>
-                        </Col>
-                    </Row>
-                    <Row>
-                        <Card>
-                            <Statistic
-                                title="Page Faults"
-                                value={this.state.pageFaults}
-                                valueStyle={{ color: '#3f8600' }}
-                            />
-                        </Card>
                     </Row>
                 </Container>
             </div >
