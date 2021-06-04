@@ -16,6 +16,10 @@ function BookStand(props) {
         })
     })
 
+    document.addEventListener("drop", function( event ) {
+        event.preventDefault();
+    })
+
     const books = props.books;
     if (Object.keys(books).length === 0 && books.constructor === Object) {
         return (
