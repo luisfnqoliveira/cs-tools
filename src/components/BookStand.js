@@ -3,7 +3,6 @@ import { Tooltip } from 'antd';
 import { useDrop } from 'react-dnd';
 import { ItemTypes } from '../utilities/items.js';
 import Book from './Book.js';
-import { event } from 'jquery';
 
 function BookStand(props) {
     const positionIntro = "Position " + props.position;
