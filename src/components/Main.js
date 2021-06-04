@@ -26,21 +26,6 @@ function getStoredBooks() {
     }
 }
 
-// function allStorage() {
-//     try {
-//         var archive = {};
-//         Object.entries(localStorage).map(([key, valueJSON]) => {
-//             const value = JSON.parse(valueJSON);
-//             archive = value;
-//         }
-//         )
-//         return (archive)
-//     }
-//     catch (err) {
-//         return [];
-//     }
-// }
-
 function getStoredSteps() {
     try {
         const retrievedStepsString = localStorage.getItem('STORED_STEP_KEY');
@@ -537,7 +522,7 @@ class Main extends Component {
                                     <div className="search-monitor">
                                         <div className="search-container">
                                             <Row>
-                                                Press Enter after Search
+                                                Please Search for any Book
                                             </Row>
                                             <Row>
                                                 <div className="form-inline mt-4 mb-4" >
@@ -621,13 +606,6 @@ class Main extends Component {
                                             <List.Item key={step.id}>
                                                 <h5>Step {this.state.steps.indexOf(step) + 1}: </h5>
                                                 {step.map(book => (
-                                                    // <Card type="inner"
-                                                    //     title={book.name}>
-                                                    //     {(book.location === 0 ? "storage: bin" + book.bin : "bookshelf: level" + book.level + "; position" + book.position)}
-                                                    // </Card>
-                                                    // <List.Item.Meta
-                                                    //     title={book.name}
-                                                    //     description={(book.location === 0 ? "storage: bin" + book.bin : "bookshelf: level" + book.level + "; position" + book.position)} />
                                                     <p><strong>{book.name}</strong> {(book.location === 0 ? "storage: bin" + book.bin : "bookshelf: level" + book.level + "; position" + book.position)}</p>
                                                 ))}
                                             </List.Item>

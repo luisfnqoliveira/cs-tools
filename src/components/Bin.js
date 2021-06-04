@@ -3,6 +3,7 @@ import { Popover, Tooltip } from 'antd';
 import Book from './Book';
 import { useDrop } from 'react-dnd';
 import { ItemTypes } from '../utilities/items.js';
+import { event } from 'jquery';
 
 function Bin(props) {
     const toStorage = 0;
