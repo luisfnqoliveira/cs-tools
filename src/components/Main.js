@@ -10,7 +10,7 @@ import { Catalog } from './Catalog.js';
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import Storage from './Storage';
-import { message, Button, List, Tooltip, Select, Popconfirm, InputNumber, Statistic, Card } from 'antd';
+import { message, Button, List, Tooltip, Select, Popconfirm, InputNumber, Statistic, Card, Popover } from 'antd';
 import InfiniteScroll from 'react-infinite-scroller';
 
 function getStoredBooks() {
@@ -123,7 +123,12 @@ class Main extends Component {
             loading: false,
             hasMore: true,
             undoStep: null,
-            pageFaults: getStoredFaults()
+            pageFaults: getStoredFaults(),
+            configVisible: false,
+            displayToLibrarianDialog: 'none',
+            displayMoveBookDialog: 'none',
+            displayNoticeDialog: 'none',
+            targetBookBinNumber: 0
         }
     }
 
@@ -177,7 +182,6 @@ class Main extends Component {
             }
             if (toLocation === 1) {
                 message.success(item.name + " is available on bookshelf now. Please double click to access.");
-                this.props.handleRoleChange("Student");
             }
         }
         else if (is_empty === 1) {
@@ -240,6 +244,35 @@ class Main extends Component {
         }
     }
 
+    showToLibrarianDialog = () => {
+        this.setState({
+            displayToLibrarianDialog: 'block'
+        })
+    }
+
+    handleToLibrarian = () => {
+        this.setState({
+            displayToLibrarianDialog: 'none',
+            displayMoveBookDialog: 'block'
+        })
+        this.props.handleRoleChange("Librarian");
+
+    }
+
+    handleToStudent = () => {
+        this.setState({
+            displayMoveBookDialog: 'none',
+            displayNoticeDialog: 'block'
+        })
+        this.props.handleRoleChange("Student");
+    }
+
+    handleFinishDialog = () => {
+        this.setState({
+            displayNoticeDialog: 'none'
+        })
+    }
+
     handleClickSearch = () => {
         if (!this.state.query) {
             alert('Please input a name!');
@@ -250,9 +283,10 @@ class Main extends Component {
             let targetBook = books.find(book => book.name === this.state.query)
             if (targetBook) {
                 if (targetBook.location === 0) {
-                    message.info("The librarian is preparing the book.");
-                    message.info("Please move " + this.state.query + " from storage bin to bookshelf.");
-                    this.props.handleRoleChange("Librarian");
+                    // message.info("The librarian is preparing the book.");
+                    this.showToLibrarianDialog();
+                    this.setState({ targetBookBinNumber: targetBook.bin });
+                    // message.info("Please move " + this.state.query + " from storage bin to bookshelf.");
                     this.handleFaultsIncrement();
                 }
                 if (targetBook.location === 1) {
@@ -418,7 +452,17 @@ class Main extends Component {
         this.setState((prevState) => ({
             pageFaults: prevState.pageFaults + 1,
         }))
-    }
+    };
+
+    hideConfig = () => {
+        this.setState({
+            configVisible: false,
+        });
+    };
+
+    handleConfigVisibleChange = configVisible => {
+        this.setState({ configVisible });
+    };
 
     render() {
         const role = this.props.role;
@@ -427,19 +471,6 @@ class Main extends Component {
         return (
             <div className="main" >
                 <Container fluid="xxl">
-                    <Row>
-                        <Col md={2}>
-                            <Card
-                                style={{ width: 110 }} >
-                                <Statistic
-                                    title="Page Faults"
-                                    value={this.state.pageFaults}
-                                    valueStyle={{ color: '#cf1322' }}
-
-                                />
-                            </Card>
-                        </Col>
-                    </Row>
                     <Row>
                         <Col>
                             <Button type="primary"
@@ -552,16 +583,52 @@ class Main extends Component {
                                                     handleRoleChange={this.props.handleRoleChange}
                                                 />
                                             </Row>
+                                            <Row>
+                                                <div className="bubble bubble-bottom-left" style={{ display: this.state.displayToLibrarianDialog }}>
+                                                    <p>Sorry, the book is not available now. You need to wait for librarian to retrieve the book from storage.</p>
+                                                    <Button onClick={this.handleToLibrarian}>Transfer role as Librarian</Button>
+                                                </div>
+                                                <div className="bubble bubble-bottom-left" style={{ display: this.state.displayNoticeDialog }}>
+                                                    <p>The book is available now! You can retrieve the book based on the catalog card.</p>
+                                                    <Button onClick={this.handleFinishDialog}>Got it!</Button>
+                                                </div>
+                                            </Row>
                                         </div>
                                     </div>
+                                </div>
+                                <div className="pageFaults">
+                                    <Card
+                                        style={{ width: 110 }} >
+                                        <Statistic
+                                            title="Page Faults"
+                                            value={this.state.pageFaults}
+                                            valueStyle={{ color: '#cf1322' }}
+                                        />
+                                    </Card>
                                 </div>
                             </div>
                         </Col>
                         <DndProvider backend={HTML5Backend}>
                             <Col className="bookshelf-view">
-                                <h5 className="computer-title"><strong>Bookshelf</strong></h5>
-                                <p><strong>Number of levels:</strong>  <InputNumber min={1} max={8} value={this.state.numOfShelfLevels} onChange={this.onChangeLevelInput} /> (Min: 1, Max: 8)</p>
-                                <p><strong>Number of positions per level:</strong> <InputNumber min={3} max={5} value={this.state.numOfBooksPerLevel} onChange={this.onChangePositionInput} /> (Min: 3, Max: 5)</p>
+                                <h5 className="computer-title">
+                                    <strong>Bookshelf</strong>
+                                    <Popover
+                                        content={
+                                            <div>
+                                                <p><strong>Number of levels:</strong>  <InputNumber min={1} max={8} value={this.state.numOfShelfLevels} onChange={this.onChangeLevelInput} /> (Range: 1~8)</p>
+                                                <p><strong>Number of positions per level:</strong> <InputNumber min={3} max={5} value={this.state.numOfBooksPerLevel} onChange={this.onChangePositionInput} /> (Range: 3~5)</p>
+                                                <a onClick={this.hideConfig} className="closeButton">Close</a>
+                                            </div>
+                                        }
+                                        placement="right"
+                                        title="Bookshelf Control Panel"
+                                        trigger="click"
+                                        visible={this.state.configVisible}
+                                        onVisibleChange={this.handleConfigVisibleChange}
+                                    >
+                                        <a className="configButton">Build Your Own</a>
+                                    </Popover>
+                                </h5>
                                 <div>
                                     <Bookshelf
                                         numOfLevels={this.state.numOfShelfLevels}
@@ -577,15 +644,30 @@ class Main extends Component {
                                 </div>
                             </Col>
                             <Col className="storage-view">
-                                <div className={(role === "Student") ? "wrapper" : ""}>
-                                    <div className={(role === "Student") ? "is-disabled" : ""}>
-                                        <Storage
-                                            books={this.state.books}
-                                            numOfBins={this.state.numOfBins}
-                                            dragHandler={this.dragHandler.bind(this)}
-                                        />
+                                <Row>
+                                    <div className="bubble bubble-bottom-left" style={{ display: this.state.displayMoveBookDialog }}>
+                                        <p>Your role is librarian now! Please move {this.state.query} from bin {this.state.targetBookBinNumber}  to bookshelf.</p>
+                                        <Popconfirm
+                                            title={"Have you moved this book from storage to bookshelf?"}
+                                            onConfirm={this.handleToStudent}
+                                            okText="Yes"
+                                            cancelText="No">
+                                            <Button>Notice Available</Button>
+                                        </Popconfirm>
+
                                     </div>
-                                </div>
+                                </Row>
+                                <Row>
+                                    <div className={(role === "Student") ? "wrapper" : ""}>
+                                        <div className={(role === "Student") ? "is-disabled" : ""}>
+                                            <Storage
+                                                books={this.state.books}
+                                                numOfBins={this.state.numOfBins}
+                                                dragHandler={this.dragHandler.bind(this)}
+                                            />
+                                        </div>
+                                    </div>
+                                </Row>
                             </Col>
                         </DndProvider>
                         <Col style={{ display: this.state.display }}>

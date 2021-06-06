@@ -8,21 +8,20 @@
 }
 
 .computer-title {
-  margin-top: 20px;
   text-align: center;
 }
 
 .search-monitor {
   background-image: url(../assets/images/monitor.png);
   padding-top: 20px;
-  background-size: contain;
-  height: 600px;
-  width: 300px;
+  background-size: cover;
+  height: 550px;
+  width: 280px;
 }
 
 .search-container {
-  padding-left: 58px;
-  padding-top: 40px;
+  margin-left: 50px;
+  margin-top: 40px;
 }
   
   .is-disabled {
@@ -39,8 +38,8 @@
   }
 
   .ant-btn-primary {
-    margin-left: 5px;
-    margin-right: 5px;
+    margin-left: 2.5px;
+    margin-right: 2.5px;
   }
 
   .demo-infinite-container {
@@ -57,6 +56,7 @@
 
 .row{
   margin-bottom: 5px;
+  margin-top: 7px;
 }
 
 .ant-select-selector {
@@ -69,4 +69,42 @@
 
 .form-control-sm {
   width: 130px;
+}
+
+.configButton {
+  color: #1890ff!important;
+  text-decoration: underline!important;
+  font-size: small;
+  margin-left: 10px;
+  font-weight: bold;
+}
+
+.closeButton {
+  color: #1890ff!important;
+  text-decoration: underline!important;
+}
+
+.bubble {
+  position: relative;
+  font-family: sans-serif;
+  font-size: 18px;
+  line-height: 24px;
+  width: 300px;
+  background: #f9bbb1;
+  border-radius: 40px;
+  padding: 24px;
+  text-align: center;
+  color: #000;
+}
+
+.bubble-bottom-left:before {
+  content: "";
+  width: 0px;
+  height: 0px;
+  position: absolute;
+  border-left: 20px solid #f9bbb1;
+  border-top: 12px solid #f9bbb1;
+  border-bottom: 25px solid transparent;
+  left: 0px;
+  top: 130px;
 }
