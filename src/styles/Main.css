@@ -15,8 +15,8 @@
   background-image: url(../assets/images/monitor.png);
   padding-top: 20px;
   background-size: cover;
-  height: 550px;
-  width: 280px;
+  height: 460px;
+  width: 320px;
 }
 
 .search-container {
@@ -107,4 +107,12 @@
   border-bottom: 25px solid transparent;
   left: 0px;
   top: 130px;
+}
+
+.ant-statistic-title {
+  font-size: 28px;
+}
+
+.ant-statistic-content {
+  font-size: 36px;
 }

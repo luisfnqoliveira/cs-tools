@@ -598,7 +598,12 @@ class Main extends Component {
                                 </div>
                                 <div className="pageFaults">
                                     <Card
-                                        style={{ width: 110 }} >
+                                        style={{
+                                            width: 320,
+                                            height: 115,
+                                            marginTop: 25,
+                                            textAlign: 'center'
+                                        }}>
                                         <Statistic
                                             title="Page Faults"
                                             value={this.state.pageFaults}
