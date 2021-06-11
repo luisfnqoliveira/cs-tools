@@ -1,31 +1,31 @@
 {
   "files": {
-    "main.css": "/cs-tools/static/css/main.ba3c07bf.chunk.css",
-    "main.js": "/cs-tools/static/js/main.9900079d.chunk.js",
-    "main.js.map": "/cs-tools/static/js/main.9900079d.chunk.js.map",
-    "runtime-main.js": "/cs-tools/static/js/runtime-main.4040f914.js",
-    "runtime-main.js.map": "/cs-tools/static/js/runtime-main.4040f914.js.map",
+    "main.css": "/cs-tools/static/css/main.01ca05af.chunk.css",
+    "main.js": "/cs-tools/static/js/main.8984e44b.chunk.js",
+    "main.js.map": "/cs-tools/static/js/main.8984e44b.chunk.js.map",
+    "runtime-main.js": "/cs-tools/static/js/runtime-main.c71f3ca7.js",
+    "runtime-main.js.map": "/cs-tools/static/js/runtime-main.c71f3ca7.js.map",
     "static/css/2.c52f0220.chunk.css": "/cs-tools/static/css/2.c52f0220.chunk.css",
-    "static/js/2.edfbf014.chunk.js": "/cs-tools/static/js/2.edfbf014.chunk.js",
-    "static/js/2.edfbf014.chunk.js.map": "/cs-tools/static/js/2.edfbf014.chunk.js.map",
-    "static/js/3.b56b11fc.chunk.js": "/cs-tools/static/js/3.b56b11fc.chunk.js",
-    "static/js/3.b56b11fc.chunk.js.map": "/cs-tools/static/js/3.b56b11fc.chunk.js.map",
+    "static/js/2.a2041483.chunk.js": "/cs-tools/static/js/2.a2041483.chunk.js",
+    "static/js/2.a2041483.chunk.js.map": "/cs-tools/static/js/2.a2041483.chunk.js.map",
+    "static/js/3.62d97a7b.chunk.js": "/cs-tools/static/js/3.62d97a7b.chunk.js",
+    "static/js/3.62d97a7b.chunk.js.map": "/cs-tools/static/js/3.62d97a7b.chunk.js.map",
     "index.html": "/cs-tools/index.html",
     "static/css/2.c52f0220.chunk.css.map": "/cs-tools/static/css/2.c52f0220.chunk.css.map",
-    "static/css/main.ba3c07bf.chunk.css.map": "/cs-tools/static/css/main.ba3c07bf.chunk.css.map",
-    "static/js/2.edfbf014.chunk.js.LICENSE.txt": "/cs-tools/static/js/2.edfbf014.chunk.js.LICENSE.txt",
+    "static/css/main.01ca05af.chunk.css.map": "/cs-tools/static/css/main.01ca05af.chunk.css.map",
+    "static/js/2.a2041483.chunk.js.LICENSE.txt": "/cs-tools/static/js/2.a2041483.chunk.js.LICENSE.txt",
     "static/media/Upitt_logo_400x400.8afe9141.jpg": "/cs-tools/static/media/Upitt_logo_400x400.8afe9141.jpg",
     "static/media/mdb.css": "/cs-tools/static/media/arrow_right.0897f985.svg",
     "static/media/index.css": "/cs-tools/static/media/singleLayerBookcase.6988cd96.jpg",
     "static/media/bookCover.6a39f467.jpg": "/cs-tools/static/media/bookCover.6a39f467.jpg",
     "static/media/all.min.css": "/cs-tools/static/media/fa-solid-900.efbd5d20.eot",
-    "static/media/Main.css": "/cs-tools/static/media/monitor.2e3f35ad.png"
+    "static/media/Main.css": "/cs-tools/static/media/monitor.cd388789.png"
   },
   "entrypoints": [
-    "static/js/runtime-main.4040f914.js",
+    "static/js/runtime-main.c71f3ca7.js",
     "static/css/2.c52f0220.chunk.css",
-    "static/js/2.edfbf014.chunk.js",
-    "static/css/main.ba3c07bf.chunk.css",
-    "static/js/main.9900079d.chunk.js"
+    "static/js/2.a2041483.chunk.js",
+    "static/css/main.01ca05af.chunk.css",
+    "static/js/main.8984e44b.chunk.js"
   ]
 }
