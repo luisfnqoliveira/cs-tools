@@ -75,7 +75,7 @@ class Storage extends Component {
                                             books={i.books}
                                             dragHandler={this.props.dragHandler}
                                             animationShow={this.props.animationShow}
-                                            bounceBook={this.props.bounceBook}
+                                            bouncingBooks={this.props.bouncingBooks}
                                             flyingBooks={this.props.flyingBooks}
                                             handleFromUpdate={this.props.handleFromUpdate}
                                             handleToUpdate={this.props.handleToUpdate}
@@ -91,7 +91,7 @@ class Storage extends Component {
                                         books={i.books}
                                         dragHandler={this.props.dragHandler}
                                         animationShow={this.props.animationShow}
-                                        bounceBook={this.props.bounceBook}
+                                        bouncingBooks={this.props.bouncingBooks}
                                         flyingBooks={this.props.flyingBooks}
                                         handleFromUpdate={this.props.handleFromUpdate}
                                         handleToUpdate={this.props.handleToUpdate}
@@ -116,7 +116,7 @@ class Storage extends Component {
                                     books={i.books}
                                     dragHandler={this.props.dragHandler}
                                     animationShow={this.props.animationShow}
-                                    bounceBook={this.props.bounceBook}
+                                    bouncingBooks={this.props.bouncingBooks}
                                     flyingBooks={this.props.flyingBooks}
                                     handleFromUpdate={this.props.handleFromUpdate}
                                     handleToUpdate={this.props.handleToUpdate}

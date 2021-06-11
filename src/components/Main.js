@@ -356,7 +356,8 @@ class Main extends Component {
             this.setState((prevState) => ({
                 pointer: prevState.pointer - 1,
                 disableNext: false,
-                animationShow: true
+                animationShow: false,
+                bouncingBooks: [],
             }), function () {
                 this.setState({ books: fileContent[this.state.pointer] })
                 localStorage.setItem('STORED_BOOK_KEY', JSON.stringify(fileContent[this.state.pointer]))
@@ -364,19 +365,14 @@ class Main extends Component {
             });
         }
     }
-    componentDidMount() {
-        this.handleFromUpdate();
-        this.handleToUpdate();
-    }
+    // componentDidMount(){
+    //     console.log("didMount")
+    // }
+    // componentWillMount() {
+    //     console.log("willMount")
+    // }
 
     handleFromUpdate(name, fromX, fromY) {
-        // this.setState({
-        //     flyingBooksPosition: {
-        //         'name': name,
-        //         'fromX': fromX,
-        //         'fromY': fromY
-        //     }
-        // })
         let flyingBooksCopy = this.state.flyingBooks
         flyingBooksCopy.map(book => {
             if (book.name === name) {
@@ -390,13 +386,6 @@ class Main extends Component {
     }
 
     handleToUpdate(name, toX, toY) {
-        // this.setState({
-        //     flyingBooksPosition: {
-        //         'name': name,
-        //         'ToX': toX,
-        //         'ToY': toY
-        //     }
-        // })
         let flyingBooksCopy = this.state.flyingBooks
         flyingBooksCopy.map(book => {
             if (book.name === name) {
@@ -415,6 +404,7 @@ class Main extends Component {
             let currStep = fileContent[this.state.pointer]
             let nextStep = fileContent[this.state.pointer + 1]
             let existingBook = []
+            let bouncingBooks = []
             for (let i = 0; i < currStep.length; i++) {
                 // compare existing book location
                 if (currStep[i].code === nextStep[i].code &&
@@ -436,26 +426,30 @@ class Main extends Component {
                         'toX': null,
                         'toY': null
                     })
-                    this.setState({ bouncingBooks: [] })
+                    // this.setState({ bouncingBooks: [] })
+                    bouncingBooks.push(currStep[i])
                 }
             }
-
-            this.setState({
-                flyingBooks: existingBook,
-                animationShow: true,
-            })
 
             if (nextStep.length > currStep.length) {
                 // handling new added book
                 let newBook = []
                 for (let j = currStep.length; j < nextStep.length; j++) {
-                    newBook.push(nextStep[j])
+                    // newBook.push(nextStep[j])
+                    bouncingBooks.push(nextStep[j])
                 }
-                this.setState({
-                    bouncingBooks: newBook,
-                    animationShow: true,
-                })
+                // this.setState({
+                //     bouncingBooks: newBook,
+                //     animationShow: true,
+                // })
             }
+
+
+            this.setState({
+                flyingBooks: existingBook,
+                bouncingBooks: bouncingBooks,
+                animationShow: true,
+            })
 
             this.setState((prevState) => ({
                 pointer: prevState.pointer + 1,
@@ -565,7 +559,6 @@ class Main extends Component {
     render() {
         const role = this.props.role;
         const { Option } = Select;
-        console.log(this.state.flyingBooks)
 
         return (
             <div className="main" >

@@ -3,10 +3,6 @@ import SingleBookCase from './SingleBookCase';
 
 class Bookshelf extends Component {
 
-    state = {
-
-    }
-
     render() {
         const { numOfLevels } = this.props;
         const { numOfBooksPerLevel } = this.props;

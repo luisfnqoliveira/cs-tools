@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import { Tooltip } from 'antd';
 import { useDrop } from 'react-dnd';
 import { ItemTypes } from '../utilities/items.js';
@@ -16,6 +16,32 @@ function BookStand(props) {
         })
     })
 
+    const inputRef = useRef();
+
+    const onWindowResize = _ => {
+        updateDimension();
+    };
+
+    const updateDimension = () => {
+        if (inputRef.current) {
+            console.log("reset bookstand")
+            let bookstand = {
+                level: props.level,
+                position: props.position,
+                x: inputRef.current.getBoundingClientRect().x,
+                y: inputRef.current.getBoundingClientRect().y
+            };
+            console.log("add bookstand", bookstand)
+        }
+    }
+    useEffect(() => {
+        // updateDimension();
+        // window.addEventListener("resize", onWindowResize, true);
+        // return () => {
+        //     window.removeEventListener("resize", onWindowResize, true);
+        // };
+    }, []);
+
     document.addEventListener("drop", function (event) {
         event.preventDefault();
     })
@@ -32,11 +58,12 @@ function BookStand(props) {
     else {
         const shelfBook = books.filter(book => book.location === 1);
         return (
-            <Tooltip placement="bottom" title={positionIntro}>
-                <div className="bookstand"
+            <div ref={inputRef}>
+                <Tooltip placement="bottom" title={positionIntro}>
+                    {/* <div
                     ref={el => {
                         if (!el) return;
-                        if (props.flyingBooks && props.animationShow) {
+                        if (props.flyingBooks.length > 0 && props.animationShow) {
                             console.log(props.flyingBooks)
                             props.flyingBooks.map(book => {
                                 if (book.fromLevel === props.level && book.fromPosition === props.position) {
@@ -51,8 +78,8 @@ function BookStand(props) {
                                 }
                             })
                         }
-                    }}>
-                    <div ref={drop}>
+                    }}> */}
+                    <div className="bookstand" ref={drop}>
                         {shelfBook.map(i => {
                             if (i.level === props.level && i.position === props.position) {
                                 return (
@@ -75,9 +102,9 @@ function BookStand(props) {
                             }
                         })}
                     </div>
-                </div>
-            </Tooltip>
-
+                    {/* </div> */}
+                </Tooltip>
+            </div >
         );
     }
 }

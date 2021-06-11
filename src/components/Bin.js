@@ -40,7 +40,7 @@ function Bin(props) {
                                     frequency={i.frequency}
                                     last_borrowed={i.last_borrowed}
                                     animationShow={props.animationShow}
-                                    bounceBook={props.bounceBook}
+                                    bouncingBooks={props.bouncingBooks}
                                 />
                             </div>
                         );
@@ -52,9 +52,9 @@ function Bin(props) {
     return (
         <Tooltip placement="top" title={binTitle}>
             <Popover content={content} placement="top" title={binTitle} trigger="click">
-                <div className="bin"
-                    ref={el => {
-                        if (!el) return;
+                {/* <div className="bin"> */}
+                     {/* ref={el => {
+                        if (zz!el) return;
                         if (props.flyingBooks) {
                             props.flyingBooks.map(book => {
                                 if (book.fromBin === props.binId) {
@@ -68,24 +68,9 @@ function Bin(props) {
                                     props.handleToUpdate(book.name, toX, toY)
                                 }
                             })
-                        }
-                        /* maintain position per book */
-                        // props.books.map(book => {
-                        //     if (book.bin === props.binId) {
-                        //         console.log("bin", props.binId, (el.getBoundingClientRect()));
-                        //     }
-                        // })
-                        /* maintain position per bin */
-                        // if (el) {
-                        //     let binPosition = {
-                        //         'bin': props.binId,
-                        //         'x': el.getBoundingClientRect().x,
-                        //         'y': el.getBoundingClientRect().y
-                        //     }
-                        // }
-                    }}>
-                    <div ref={drop}></div>
-                </div>
+                        } */}
+                    <div className="bin" ref={drop}></div>
+                {/* </div> */}
             </Popover>
         </Tooltip>
     );
