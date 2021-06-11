@@ -3,10 +3,6 @@ import SingleBookCase from './SingleBookCase';
 
 class Bookshelf extends Component {
 
-    state = {
-
-    }
-
     render() {
         const { numOfLevels } = this.props;
         const { numOfBooksPerLevel } = this.props;
@@ -37,7 +33,13 @@ class Bookshelf extends Component {
                                 bookstandMarginLeft={i.bookstandMarginLeft}
                                 books={i.books}
                                 dragHandler={this.props.dragHandler}
-                                dbclick={this.props.dbclick} />
+                                dbclick={this.props.dbclick}
+                                animationShow={this.props.animationShow}
+                                bouncingBooks={this.props.bouncingBooks}
+                                flyingBooks={this.props.flyingBooks}
+                                handleFromUpdate={this.props.handleFromUpdate}
+                                handleToUpdate={this.props.handleToUpdate}
+                            />
                         )
                     })
                 }
