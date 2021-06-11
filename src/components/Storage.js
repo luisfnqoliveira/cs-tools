@@ -66,6 +66,8 @@ class Storage extends Component {
                     <h5><strong>Book Storage</strong></h5>
                     {
                         bins.map(i => {
+                            // console.log(this.props.bouncingBooks)
+                            // console.log(this.props.bouncingBooks.some(book => book.bin === i.binId))
                             if (this.props.bouncingBooks.some(book => book.bin === i.binId)) {
                                 return (
                                     <TweenOne animation={animation}>

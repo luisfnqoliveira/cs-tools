@@ -41,10 +41,9 @@ export function Catalog(props) {
     <pre>
       <u>Book Name</u>: {props.query}{"\n"}
       <u>Location</u>: {location === 0 ? 'storage' : location === 1 ? 'bookshelf' : ''}{"\n"}
-      <u>Storage Bin</u>: {bin} {"\n"}
-      <u>Level</u>: {level} {"\n"}
-      <u>Position</u>: {position} {"\n"}
-      {"\n"}
+      <div style={{ display: location === 0 ? 'block' : 'none'}}><u>Storage Bin</u>: {bin} </div>
+      <div style={{ display: location === 1 ? 'block' : 'none'}}><u>Level</u>: {level} </div> 
+      <div style={{ display: location === 1 ? 'block' : 'none'}}><u>Position</u>: {position}</div>
     </pre>
   );
 }
