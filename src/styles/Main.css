@@ -15,13 +15,14 @@
   background-image: url(../assets/images/monitor.png);
   padding-top: 20px;
   background-size: cover;
-  height: 460px;
-  width: 320px;
+  height: 485px;
+  width: 355px;
 }
 
 .search-container {
   margin-left: 50px;
-  margin-top: 40px;
+  margin-top: 20px;
+  margin-right: 35px;
 }
   
   .is-disabled {
@@ -106,11 +107,12 @@
   border-top: 12px solid #f9bbb1;
   border-bottom: 25px solid transparent;
   left: 0px;
-  top: 130px;
+  top: 100px;
 }
 
 .ant-statistic-title {
   font-size: 28px;
+  color: black;
 }
 
 .ant-statistic-content {
