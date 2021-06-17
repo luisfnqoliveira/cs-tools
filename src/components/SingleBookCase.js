@@ -42,7 +42,13 @@ class SingleBookCase extends Component {
                                         bookcaseHeight={i.bookcaseHeight}
                                         bookcaseWidth={i.bookcaseWidth}
                                         bookstandMarginTop={i.bookstandMarginTop}
-                                        dragHandler={this.props.dragHandler} />
+                                        dragHandler={this.props.dragHandler}
+                                        animationShow={this.props.animationShow}
+                                        bouncingBooks={this.props.bouncingBooks}
+                                        flyingBooks={this.props.flyingBooks}
+                                        handleFromUpdate={this.props.handleFromUpdate}
+                                        handleToUpdate={this.props.handleToUpdate}
+                                    />
                                 </div>
                             )
                         })

@@ -13,6 +13,7 @@
     "jquery": "^3.6.0",
     "mdbreact": "^5.0.1",
     "popper.js": "^1.16.1",
+    "rc-tween-one": "^2.7.3",
     "react": "^17.0.2",
     "react-bootstrap": "^1.5.2",
     "react-dnd": "^14.0.2",

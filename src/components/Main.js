@@ -119,7 +119,7 @@ class Main extends Component {
             pointer: 0,
             isToggleOn: false,
             display: 'none',
-            disableNext: false,
+            disableNext: true,
             loading: false,
             hasMore: true,
             undoStep: null,
@@ -128,7 +128,11 @@ class Main extends Component {
             displayToLibrarianDialog: 'none',
             displayMoveBookDialog: 'none',
             displayNoticeDialog: 'none',
-            targetBookBinNumber: 0
+            targetBookBinNumber: 0,
+            animationShow: false,
+            bouncingBooks: [],
+            flyingBooks: [],
+            nextClicked: false
         }
     }
 
@@ -182,7 +186,7 @@ class Main extends Component {
             }
             if (toLocation === 1) {
                 // TODO: check dbclick to confirm if book is correct
-                
+
                 // if ()
                 this.handleToStudent();
                 // message.success(item.name + " is available on bookshelf now. Please double click to access.");
@@ -199,6 +203,8 @@ class Main extends Component {
             message.info("You can remove the book with least frequency.", 15);
             this.setState({ error: 1 });
         }
+
+        this.setState({ animationShow: false })
     }
 
     dbclick = () => {
@@ -268,7 +274,7 @@ class Main extends Component {
 
     handleToStudent = () => {
         // TODO: check if the dragged book is the book you search
-       
+
         this.setState({
             displayMoveBookDialog: 'none',
             displayNoticeDialog: 'block'
@@ -286,6 +292,26 @@ class Main extends Component {
         if (!this.state.query) {
             alert('Please input a name!');
         } else {
+            // let books = getStoredBooks();
+            // let targetBook = books.find(book => book.name === this.state.query)
+            // if (targetBook){
+            //     this.setState({ catalogShow: true, value: this.state.query })
+            //     if (targetBook.location === 0) {
+            //         message.info("The librarian is preparing the book.");
+            //         message.info("Please move " + this.state.query + " from storage bin to bookshelf.");
+            //         this.props.handleRoleChange("Librarian");
+            //         this.handleFaultsIncrement();
+            //     }
+            //     if (targetBook.location === 1) {
+            //         message.info("You can now retrieve the book on level " + targetBook.level + " and position " + targetBook.position);
+            //         message.warn("Please double click on the book to retrieve");
+            //     }
+            // }
+            // else {
+            //     storeBook(this.state.query, this.state.numOfBins);
+            //     this.setState({ catalogShow: true, value: this.state.query })
+            //     books = getStoredBooks()
+            // }
             storeBook(this.state.query, this.state.numOfBins);
             this.setState({ catalogShow: true, value: this.state.query })
             let books = getStoredBooks()
@@ -305,20 +331,45 @@ class Main extends Component {
                 }
             }
         }
+        this.setState({ animationShow: false })
     }
 
     handleUpload = e => {
+        /* To do: upload error handling */
         const fileReader = new FileReader();
         fileReader.readAsText(e.target.files[0], "UTF-8");
         fileReader.onload = e => {
-            this.setState({
-                files: JSON.parse(e.target.result),
-                books: JSON.parse(e.target.result)[0],
-                steps: JSON.parse(e.target.result)
-            });
-            localStorage.setItem('STORED_BOOK_KEY', JSON.stringify(JSON.parse(e.target.result)[0]))
-            localStorage.setItem('STORED_STEP_KEY', JSON.stringify(JSON.parse(e.target.result)))
-            message.success("The Json file has uploaded successfully!")
+            // check empty array; todo: check format
+            if ((JSON.parse(e.target.result).length > 0)) {
+                this.setState({
+                    files: JSON.parse(e.target.result),
+                    books: JSON.parse(e.target.result)[0],
+                    steps: JSON.parse(e.target.result),
+                    disableNext: false
+                });
+                localStorage.setItem('STORED_BOOK_KEY', JSON.stringify(JSON.parse(e.target.result)[0]))
+                localStorage.setItem('STORED_STEP_KEY', JSON.stringify(JSON.parse(e.target.result)))
+                message.success("The Json file has uploaded successfully!")
+
+                this.setState({
+                    animationShow: true,
+                    bouncingBooks: JSON.parse(e.target.result)[0]
+                })
+                // let firstStep = JSON.parse(e.target.result)[0]
+                // if (firstStep && firstStep.length !== 0) {
+                //     firstStep.map(book => {
+                //         if (book.location === 0) {
+                //             // storage
+                //         }
+                //         if (book.location === 1) {
+                //             // bookshelf
+                //         }
+                //     })
+                // }
+            }
+            else {
+                message.error("There is something wrong with your file. Please try again!")
+            }
         };
     };
 
@@ -348,7 +399,8 @@ class Main extends Component {
         if (fileContent && this.state.pointer > 0) {
             this.setState((prevState) => ({
                 pointer: prevState.pointer - 1,
-                disableNext: false
+                disableNext: false,
+                animationShow: true
             }), function () {
                 this.setState({ books: fileContent[this.state.pointer] })
                 localStorage.setItem('STORED_BOOK_KEY', JSON.stringify(fileContent[this.state.pointer]))
@@ -356,12 +408,102 @@ class Main extends Component {
             });
         }
     }
+    componentDidMount() {
+        this.handleFromUpdate();
+        this.handleToUpdate();
+    }
+
+    handleFromUpdate(name, fromX, fromY) {
+        // this.setState({
+        //     flyingBooksPosition: {
+        //         'name': name,
+        //         'fromX': fromX,
+        //         'fromY': fromY
+        //     }
+        // })
+        let flyingBooksCopy = this.state.flyingBooks
+        flyingBooksCopy.map(book => {
+            if (book.name === name) {
+                book.fromX = fromX
+                book.fromY = fromY
+            }
+        })
+        setTimeout(() => {
+            this.setState({ flyingBooks: flyingBooksCopy })
+        }, 1000)
+    }
+
+    handleToUpdate(name, toX, toY) {
+        // this.setState({
+        //     flyingBooksPosition: {
+        //         'name': name,
+        //         'ToX': toX,
+        //         'ToY': toY
+        //     }
+        // })
+        let flyingBooksCopy = this.state.flyingBooks
+        flyingBooksCopy.map(book => {
+            if (book.name === name) {
+                book.toX = toX
+                book.toY = toY
+            }
+        })
+        setTimeout(() => {
+            this.setState({ flyingBooks: flyingBooksCopy })
+        }, 1000)
+    }
 
     handleClickNext() {
         const fileContent = this.state.files;
         if (fileContent && this.state.pointer < fileContent.length - 1) {
+            let currStep = fileContent[this.state.pointer]
+            let nextStep = fileContent[this.state.pointer + 1]
+            let existingBook = []
+            for (let i = 0; i < currStep.length; i++) {
+                // compare existing book location
+                if (currStep[i].code === nextStep[i].code &&
+                    (currStep[i].level !== nextStep[i].level ||
+                        currStep[i].position !== nextStep[i].position ||
+                        currStep[i].bin !== nextStep[i].bin)) {
+                    // get fromX fromY, toX toY
+                    existingBook.push({
+                        'code': currStep[i].code,
+                        'name': currStep[i].name,
+                        'fromLevel': currStep[i].level,
+                        'fromPosition': currStep[i].position,
+                        'fromBin': currStep[i].bin,
+                        'toLevel': nextStep[i].level,
+                        'toPosition': nextStep[i].position,
+                        'toBin': nextStep[i].bin,
+                        'fromX': null,
+                        'fromY': null,
+                        'toX': null,
+                        'toY': null
+                    })
+                    this.setState({ bouncingBooks: [] })
+                }
+            }
+
+            this.setState({
+                flyingBooks: existingBook,
+                animationShow: true,
+            })
+
+            if (nextStep.length > currStep.length) {
+                // handling new added book
+                let newBook = []
+                for (let j = currStep.length; j < nextStep.length; j++) {
+                    newBook.push(nextStep[j])
+                }
+                this.setState({
+                    bouncingBooks: newBook,
+                    animationShow: true,
+                })
+            }
+
             this.setState((prevState) => ({
                 pointer: prevState.pointer + 1,
+                animationShow: true
             }), function () {
                 this.setState({ books: fileContent[this.state.pointer] })
                 localStorage.setItem('STORED_BOOK_KEY', JSON.stringify(fileContent[this.state.pointer]))
@@ -483,6 +625,7 @@ class Main extends Component {
     render() {
         const role = this.props.role;
         const { Option } = Select;
+        console.log(this.state.flyingBooks)
 
         return (
             <div className="main" >
@@ -662,6 +805,11 @@ class Main extends Component {
                                         books={this.state.books}
                                         dragHandler={this.dragHandler.bind(this)}
                                         dbclick={this.dbclick()}
+                                        animationShow={this.state.animationShow}
+                                        bouncingBooks={this.state.bouncingBooks}
+                                        flyingBooks={this.state.flyingBooks}
+                                        handleFromUpdate={this.handleFromUpdate.bind(this)}
+                                        handleToUpdate={this.handleToUpdate.bind(this)}
                                     />
                                 </div>
                             </Col>
@@ -676,7 +824,6 @@ class Main extends Component {
                                             cancelText="No">
                                             <Button>Notice Available</Button>
                                         </Popconfirm> */}
-
                                     </div>
                                 </Row>
                                 <Row>
@@ -686,6 +833,11 @@ class Main extends Component {
                                                 books={this.state.books}
                                                 numOfBins={this.state.numOfBins}
                                                 dragHandler={this.dragHandler.bind(this)}
+                                                animationShow={this.state.animationShow}
+                                                bouncingBooks={this.state.bouncingBooks}
+                                                flyingBooks={this.state.flyingBooks}
+                                                handleFromUpdate={this.handleFromUpdate.bind(this)}
+                                                handleToUpdate={this.handleToUpdate.bind(this)}
                                             />
                                         </div>
                                     </div>

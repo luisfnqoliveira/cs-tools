@@ -22,7 +22,6 @@ function Bin(props) {
     } else {
         // TODO: not only for location == 0, also need to seperate them by different bins
         let storageBook = props.books.filter(book => book.location === 0);
-        // console.log(storageBook)
         content = (
             <div className="book-container">
                 {
@@ -33,13 +32,15 @@ function Bin(props) {
                                     key={i.code}
                                     code={i.code}
                                     name={i.name}
-                                    author={i.author}
+                                    // author={i.author}
                                     location={i.location}
                                     level={i.level}
                                     position={i.position}
                                     created_date={i.created_date}
                                     frequency={i.frequency}
                                     last_borrowed={i.last_borrowed}
+                                    animationShow={props.animationShow}
+                                    bounceBook={props.bounceBook}
                                 />
                             </div>
                         );
@@ -51,10 +52,42 @@ function Bin(props) {
     return (
         <Tooltip placement="top" title={binTitle}>
             <Popover content={content} placement="top" title={binTitle} trigger="click">
-                <div className="bin" ref={drop}></div>
+                <div className="bin"
+                    ref={el => {
+                        if (!el) return;
+                        if (props.flyingBooks) {
+                            props.flyingBooks.map(book => {
+                                if (book.fromBin === props.binId) {
+                                    let fromX = el.getBoundingClientRect().x
+                                    let fromY = el.getBoundingClientRect().y
+                                    props.handleFromUpdate(book.name, fromX, fromY)
+                                }
+                                if (book.toBin === props.binId) {
+                                    let toX = el.getBoundingClientRect().x
+                                    let toY = el.getBoundingClientRect().y
+                                    props.handleToUpdate(book.name, toX, toY)
+                                }
+                            })
+                        }
+                        /* maintain position per book */
+                        // props.books.map(book => {
+                        //     if (book.bin === props.binId) {
+                        //         console.log("bin", props.binId, (el.getBoundingClientRect()));
+                        //     }
+                        // })
+                        /* maintain position per bin */
+                        // if (el) {
+                        //     let binPosition = {
+                        //         'bin': props.binId,
+                        //         'x': el.getBoundingClientRect().x,
+                        //         'y': el.getBoundingClientRect().y
+                        //     }
+                        // }
+                    }}>
+                    <div ref={drop}></div>
+                </div>
             </Popover>
         </Tooltip>
-
     );
 }
 
