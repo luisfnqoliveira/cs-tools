@@ -193,6 +193,11 @@ class Main extends Component {
                         // var today = new Date();
                         // storedBooks[i].created_date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
                         sessionStorage.setItem("STORED_BOOK_KEY", item.name);
+                        if (item.name === this.state.value) {
+                            this.handleToStudent();
+                        } else {
+                            message.error("Moved a wrong book! Please move "+ this.state.value + " again!");
+                        }
                     }
                     storedBooks[i].name = item.name;
                     storedBooks[i].location = toLocation;
@@ -203,13 +208,6 @@ class Main extends Component {
                 var storedBooksJson = JSON.stringify(storedBooks);
                 localStorage.setItem("STORED_BOOK_KEY", storedBooksJson);
                 this.setState({ catalogShow: true })
-            }
-            if (toLocation === 1) {
-                if (item.name === this.state.value) {
-                    this.handleToStudent();
-                } else {
-                    message.error("Moved a wrong book! Please move "+ this.state.value + " again!");
-                }
             }
         }
         else if (is_empty === 1) {
