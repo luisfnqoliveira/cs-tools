@@ -346,44 +346,46 @@ class Main extends Component {
 
     handleUpload = e => {
         /* To do: upload error handling */
-        const fileReader = new FileReader();
-        fileReader.readAsText(e.target.files[0], "UTF-8");
-        fileReader.onload = e => {
-            // check empty array; todo: check format
-            if ((JSON.parse(e.target.result).length > 0)) {
-                this.setState({
-                    files: JSON.parse(e.target.result),
-                    books: JSON.parse(e.target.result)[0],
-                    steps: JSON.parse(e.target.result),
-                    disableNext: false,
-                    pointer: 0,
-                    flyingBooks: [],
-                    bouncingBooks: []
-                });
-                localStorage.setItem('STORED_BOOK_KEY', JSON.stringify(JSON.parse(e.target.result)[0]))
-                localStorage.setItem('STORED_STEP_KEY', JSON.stringify(JSON.parse(e.target.result)))
-                message.success("The Json file has uploaded successfully!")
+        if (e.target.files[0]) {
+            const fileReader = new FileReader();
+            fileReader.readAsText(e.target.files[0], "UTF-8");
+            fileReader.onload = e => {
+                // check empty array; todo: check format
+                if ((JSON.parse(e.target.result).length > 0)) {
+                    this.setState({
+                        files: JSON.parse(e.target.result),
+                        books: JSON.parse(e.target.result)[0],
+                        steps: JSON.parse(e.target.result),
+                        disableNext: false,
+                        pointer: 0,
+                        flyingBooks: [],
+                        bouncingBooks: []
+                    });
+                    localStorage.setItem('STORED_BOOK_KEY', JSON.stringify(JSON.parse(e.target.result)[0]))
+                    localStorage.setItem('STORED_STEP_KEY', JSON.stringify(JSON.parse(e.target.result)))
+                    message.success("The Json file has uploaded successfully!")
 
-                this.setState({
-                    animationShow: true,
-                    bouncingBooks: JSON.parse(e.target.result)[0]
-                })
-                // let firstStep = JSON.parse(e.target.result)[0]
-                // if (firstStep && firstStep.length !== 0) {
-                //     firstStep.map(book => {
-                //         if (book.location === 0) {
-                //             // storage
-                //         }
-                //         if (book.location === 1) {
-                //             // bookshelf
-                //         }
-                //     })
-                // }
-            }
-            else {
-                message.error("There is something wrong with your file. Please try again!")
-            }
-        };
+                    this.setState({
+                        animationShow: true,
+                        bouncingBooks: JSON.parse(e.target.result)[0]
+                    })
+                    // let firstStep = JSON.parse(e.target.result)[0]
+                    // if (firstStep && firstStep.length !== 0) {
+                    //     firstStep.map(book => {
+                    //         if (book.location === 0) {
+                    //             // storage
+                    //         }
+                    //         if (book.location === 1) {
+                    //             // bookshelf
+                    //         }
+                    //     })
+                    // }
+                }
+                else {
+                    message.error("There is something wrong with your file. Please try again!")
+                }
+            };
+        }
     };
 
     handleClickUpload = e => {
@@ -701,7 +703,7 @@ class Main extends Component {
                             </Tooltip>
                             <Button type="primary" onClick={() => {
                                 localStorage.setItem("STORED_STEP_KEY", "[]");
-                                this.setState({ steps: [] })
+                                this.setState({ steps: [], files: "", pointer: 0 })
                             }}>Clear all Steps</Button>
                         </Col>
                         <Col>
