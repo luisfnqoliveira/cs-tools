@@ -5,7 +5,7 @@ import { ItemTypes } from '../utilities/items.js';
 import Book from './Book.js';
 
 function BookStand(props) {
-    console.log("render bookstand")
+    // console.log("render bookstand")
     const positionIntro = "Position " + props.position;
     const toShelf = 1;
     const toBin = 0;

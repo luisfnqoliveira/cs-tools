@@ -5,7 +5,7 @@ import { useDrop } from 'react-dnd';
 import { ItemTypes } from '../utilities/items.js';
 
 function Bin(props) {
-    console.log("render bin")
+    // console.log("render bin")
     const toStorage = 0;
     const toBin = props.binId;
     const [{ isOver }, drop] = useDrop({

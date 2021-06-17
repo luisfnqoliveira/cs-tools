@@ -12,7 +12,6 @@ import { HTML5Backend } from "react-dnd-html5-backend";
 import Storage from './Storage';
 import { message, Button, List, Tooltip, Select, Popconfirm, InputNumber, Statistic, Card, Popover } from 'antd';
 import InfiniteScroll from 'react-infinite-scroller';
-import x from 'uniqid';
 
 function getStoredBooks() {
     try {

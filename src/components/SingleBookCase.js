@@ -5,7 +5,7 @@ import BookStand from './BookStand';
 class SingleBookCase extends Component {
 
     render() {
-        console.log("render bookcase")
+        // console.log("render bookcase")
         const levelIntro = "Level " + this.props.level;
         const { numOfBooksPerLevel } = this.props;
         let bookstands = [];
