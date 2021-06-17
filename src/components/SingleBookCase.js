@@ -5,6 +5,7 @@ import BookStand from './BookStand';
 class SingleBookCase extends Component {
 
     render() {
+        console.log("render bookcase")
         const levelIntro = "Level " + this.props.level;
         const { numOfBooksPerLevel } = this.props;
         let bookstands = [];
@@ -39,6 +40,8 @@ class SingleBookCase extends Component {
                                         key={i.position}
                                         level={i.level}
                                         books={i.books}
+                                        numOfLevels={this.props.numOfLevels}
+                                        numOfBooksPerLevel={this.props.numOfBooksPerLevel}
                                         bookcaseHeight={i.bookcaseHeight}
                                         bookcaseWidth={i.bookcaseWidth}
                                         bookstandMarginTop={i.bookstandMarginTop}
@@ -46,8 +49,9 @@ class SingleBookCase extends Component {
                                         animationShow={this.props.animationShow}
                                         bouncingBooks={this.props.bouncingBooks}
                                         flyingBooks={this.props.flyingBooks}
-                                        handleFromUpdate={this.props.handleFromUpdate}
-                                        handleToUpdate={this.props.handleToUpdate}
+                                        bookshelfDim={this.props.bookshelfDim}
+                                        updateBookshelfDim={this.props.updateBookshelfDim}
+                                        showStepsInfo={this.props.showStepsInfo}
                                     />
                                 </div>
                             )

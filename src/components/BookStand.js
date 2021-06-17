@@ -1,10 +1,11 @@
-import React, { useRef, useEffect, useState } from 'react';
+import React, { useRef, useEffect } from 'react';
 import { Tooltip } from 'antd';
 import { useDrop } from 'react-dnd';
 import { ItemTypes } from '../utilities/items.js';
 import Book from './Book.js';
 
 function BookStand(props) {
+    console.log("render bookstand")
     const positionIntro = "Position " + props.position;
     const toShelf = 1;
     const toBin = 0;
@@ -16,31 +17,45 @@ function BookStand(props) {
         })
     })
 
-    const inputRef = useRef();
+    const bookstandRef = useRef();
+    var bookshelfDim = props.bookshelfDim;
 
     const onWindowResize = _ => {
         updateDimension();
     };
 
     const updateDimension = () => {
-        if (inputRef.current) {
-            console.log("reset bookstand")
-            let bookstand = {
+        if (bookstandRef.current) {
+            let Newbookstand = {
                 level: props.level,
                 position: props.position,
-                x: inputRef.current.getBoundingClientRect().x,
-                y: inputRef.current.getBoundingClientRect().y
+                x: bookstandRef.current.getBoundingClientRect().x,
+                y: bookstandRef.current.getBoundingClientRect().y
             };
-            console.log("add bookstand", bookstand)
+            let index = bookshelfDim.findIndex(stand => stand.level === props.level && stand.position === props.position)
+            if (index === -1) {
+                bookshelfDim.push(Newbookstand)
+            }
+            else {
+                bookshelfDim[index] = Newbookstand
+            }
+            return bookshelfDim;
         }
     }
+
+    // React.useLayoutEffect(() => {
+    //     setTimeout(() => console.log(inputRef.current.getBoundingClientRect()),
+    //         100
+    //     );
+    // });
     useEffect(() => {
-        // updateDimension();
-        // window.addEventListener("resize", onWindowResize, true);
-        // return () => {
-        //     window.removeEventListener("resize", onWindowResize, true);
-        // };
-    }, []);
+        console.log("bookstand use effect")
+        props.updateBookshelfDim(updateDimension())
+        window.addEventListener("resize", onWindowResize, true);
+        return () => {
+            window.removeEventListener("resize", onWindowResize, true);
+        };
+    }, [props.numOfLevels, props.numOfBooksPerLevel, props.showStepsInfo]);
 
     document.addEventListener("drop", function (event) {
         event.preventDefault();
@@ -56,29 +71,10 @@ function BookStand(props) {
         );
     }
     else {
-        const shelfBook = books.filter(book => book.location === 1);
+        let shelfBook = books.filter(book => book.location === 1);
         return (
-            <div ref={inputRef}>
+            <div ref={bookstandRef}>
                 <Tooltip placement="bottom" title={positionIntro}>
-                    {/* <div
-                    ref={el => {
-                        if (!el) return;
-                        if (props.flyingBooks.length > 0 && props.animationShow) {
-                            console.log(props.flyingBooks)
-                            props.flyingBooks.map(book => {
-                                if (book.fromLevel === props.level && book.fromPosition === props.position) {
-                                    let fromX = el.getBoundingClientRect().x
-                                    let fromY = el.getBoundingClientRect().y
-                                    props.handleFromUpdate(book.name, fromX, fromY)
-                                }
-                                if (book.toLevel === props.level && book.toPosition === props.position) {
-                                    let toX = el.getBoundingClientRect().x
-                                    let toY = el.getBoundingClientRect().y
-                                    props.handleToUpdate(book.name, toX, toY)
-                                }
-                            })
-                        }
-                    }}> */}
                     <div className="bookstand" ref={drop}>
                         {shelfBook.map(i => {
                             if (i.level === props.level && i.position === props.position) {
@@ -87,22 +83,36 @@ function BookStand(props) {
                                         key={i.code}
                                         code={i.code}
                                         name={i.name}
-                                        // author={i.author}
-                                        location={i.location}
-                                        level={i.level}
-                                        position={i.position}
                                         created_date={i.created_date}
                                         frequency={i.frequency}
                                         last_borrowed={i.last_borrowed}
                                         animationShow={props.animationShow}
                                         bouncingBooks={props.bouncingBooks}
+                                        flyingBooks={props.flyingBooks}
                                     />
-
                                 )
                             }
                         })}
+                        {props.animationShow &&
+                            props.bouncingBooks.map(book => {
+                                let alreadyOnShelf = shelfBook.some(i => i.code === book.code)
+                                if (alreadyOnShelf === false && book.level === props.level && book.position === props.position) {
+                                    return (
+                                        <Book
+                                            key={book.code}
+                                            code={book.code}
+                                            name={book.name}
+                                            created_date={book.created_date}
+                                            frequency={book.frequency}
+                                            last_borrowed={book.last_borrowed}
+                                            animationShow={props.animationShow}
+                                            bouncingBooks={props.bouncingBooks}
+                                            flyingBooks={props.flyingBooks}
+                                        />
+                                    );
+                                }
+                            })}
                     </div>
-                    {/* </div> */}
                 </Tooltip>
             </div >
         );

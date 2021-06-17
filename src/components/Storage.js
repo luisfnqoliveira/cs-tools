@@ -1,6 +1,10 @@
 import React, { Component } from 'react';
 import Bin from './Bin';
 import TweenOne from 'rc-tween-one';
+import { Card, Popover, Badge, message } from 'antd';
+import bookcover from '../assets/images/bookCover.jpg';
+import BezierPlugin from 'rc-tween-one/lib/plugin/BezierPlugin';
+TweenOne.plugins.push(BezierPlugin);
 
 class Storage extends Component {
     state = {
@@ -8,12 +12,14 @@ class Storage extends Component {
     }
 
     render() {
+        console.log("render storage")
+        const { Meta } = Card;
         const p0 = 'M0,100 L25,100 C34,20 40,0 100,0';
         const p1 = 'M0,100 C5,120 25,130 25,100 C30,60 40,75 58,90 C69,98.5 83,99.5 100,100';
         const ease0 = TweenOne.easing.path(p0);
         const ease1 = TweenOne.easing.path(p1);
 
-        const animation = [
+        const bounce = [
             {
                 // repeatDelay: 300,
                 y: -70,
@@ -60,52 +66,7 @@ class Storage extends Component {
             }
         }
 
-        if (this.props.animationShow) {
-            return (
-                <div className="storage">
-                    <h5><strong>Book Storage</strong></h5>
-                    {
-                        bins.map(i => {
-                            // console.log(this.props.bouncingBooks)
-                            // console.log(this.props.bouncingBooks.some(book => book.bin === i.binId))
-                            if (this.props.bouncingBooks.some(book => book.bin === i.binId)) {
-                                return (
-                                    <TweenOne animation={animation}>
-                                        <Bin
-                                            binId={i.binId}
-                                            key={i.binId}
-                                            books={i.books}
-                                            dragHandler={this.props.dragHandler}
-                                            animationShow={this.props.animationShow}
-                                            bouncingBooks={this.props.bouncingBooks}
-                                            flyingBooks={this.props.flyingBooks}
-                                            handleFromUpdate={this.props.handleFromUpdate}
-                                            handleToUpdate={this.props.handleToUpdate}
-                                        />
-                                    </TweenOne>
-                                )
-                            }
-                            else {
-                                return (
-                                    <Bin
-                                        binId={i.binId}
-                                        key={i.binId}
-                                        books={i.books}
-                                        dragHandler={this.props.dragHandler}
-                                        animationShow={this.props.animationShow}
-                                        bouncingBooks={this.props.bouncingBooks}
-                                        flyingBooks={this.props.flyingBooks}
-                                        handleFromUpdate={this.props.handleFromUpdate}
-                                        handleToUpdate={this.props.handleToUpdate}
-                                    />
-                                )
-                            }
-                        })
-                    }
-                </div>
-            );
-        }
-        else {
+        if (!this.props.animationShow) {
             return (
                 <div className="storage">
                     <h5><strong>Book Storage</strong></h5>
@@ -120,10 +81,62 @@ class Storage extends Component {
                                     animationShow={this.props.animationShow}
                                     bouncingBooks={this.props.bouncingBooks}
                                     flyingBooks={this.props.flyingBooks}
-                                    handleFromUpdate={this.props.handleFromUpdate}
-                                    handleToUpdate={this.props.handleToUpdate}
+                                    storageDim={this.props.storageDim}
+                                    updateStorageDim={this.props.updateStorageDim}
+                                    showStepsInfo={this.props.showStepsInfo}
+                                    numOfLevels={this.props.numOfLevels}
+                                    numOfBooksPerLevel={this.props.numOfBooksPerLevel}
                                 />
                             )
+                        })
+                    }
+                </div>
+            );
+        }
+        else {
+            return (
+                <div className="storage">
+                    <h5><strong>Book Storage</strong></h5>
+                    {
+                        bins.map(i => {
+                            if (this.props.bouncingBooks.some(book => book.bin === i.binId)) {
+                                return (
+                                    <TweenOne animation={bounce}>
+                                        <Bin
+                                            binId={i.binId}
+                                            key={i.binId}
+                                            books={i.books}
+                                            dragHandler={this.props.dragHandler}
+                                            animationShow={this.props.animationShow}
+                                            bouncingBooks={this.props.bouncingBooks}
+                                            flyingBooks={this.props.flyingBooks}
+                                            storageDim={this.props.storageDim}
+                                            updateStorageDim={this.props.updateStorageDim}
+                                            showStepsInfo={this.props.showStepsInfo}
+                                            numOfLevels={this.props.numOfLevels}
+                                            numOfBooksPerLevel={this.props.numOfBooksPerLevel}
+                                        />
+                                    </TweenOne>
+                                );
+                            }
+                            else {
+                                return (
+                                    <Bin
+                                        binId={i.binId}
+                                        key={i.binId}
+                                        books={i.books}
+                                        dragHandler={this.props.dragHandler}
+                                        animationShow={this.props.animationShow}
+                                        bouncingBooks={this.props.bouncingBooks}
+                                        flyingBooks={this.props.flyingBooks}
+                                        storageDim={this.props.storageDim}
+                                        updateStorageDim={this.props.updateStorageDim}
+                                        showStepsInfo={this.props.showStepsInfo}
+                                        numOfLevels={this.props.numOfLevels}
+                                        numOfBooksPerLevel={this.props.numOfBooksPerLevel}
+                                    />
+                                )
+                            }
                         })
                     }
                 </div>

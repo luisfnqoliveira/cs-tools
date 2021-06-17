@@ -1,24 +1,21 @@
 import React from 'react';
-import { Card, Popover, Badge } from 'antd';
+import { Card, Popover, Badge, message } from 'antd';
 import bookcover from '../assets/images/bookCover.jpg';
 import { ItemTypes } from '../utilities/items.js';
 import { useDrag } from 'react-dnd';
-import { message } from 'antd';
 // import PropTypes from 'prop-types';
 import TweenOne from 'rc-tween-one';
+import BezierPlugin from 'rc-tween-one/lib/plugin/BezierPlugin';
+TweenOne.plugins.push(BezierPlugin);
 
 function Book(props) {
+    // console.log("render book")
     const { Meta } = Card;
     const [{ isDragging }, drag] = useDrag(() => ({
         type: ItemTypes.BOOK,
         item: {
             code: props.code,
             name: props.name,
-            level: props.level,
-            position: props.position,
-            created_date: props.created_date,
-            frequency: props.frequency,
-            last_borrowed: props.last_borrowed,
         },
         collect: monitor => ({
             isDragging: !!monitor.isDragging(),
@@ -38,9 +35,8 @@ function Book(props) {
     const ease0 = TweenOne.easing.path(p0);
     const ease1 = TweenOne.easing.path(p1);
 
-    const animation = [
+    const bounce = [
         {
-            // repeatDelay: 300,
             y: -70,
             repeat: 1,
             yoyo: true,
@@ -48,7 +44,6 @@ function Book(props) {
             duration: 500
         },
         {
-            // repeatDelay: 300,
             appearTo: 0,
             scaleX: 0,
             scaleY: 2,
@@ -66,7 +61,7 @@ function Book(props) {
                     <Popover content={content} title={props.name} mouseEnterDelay={2}>
                         <Card
                             hoverable
-                            style={{ left: 14, width: 70, height: 80 }}
+                            style={{ left: 14, width: 70, height: 80, pointerEvents: 'auto' }}
                             cover={<img alt="bookcover" src={bookcover} />}
                         >
                             <Meta title={props.name}
@@ -84,37 +79,70 @@ function Book(props) {
     }
     else {
         return (
-            <div ref={drag}>
-                {props.bouncingBooks.some(book => book.code === props.code) === false &&
-                    <Badge count={props.frequency}>
-                        <Popover content={content} title={props.name} mouseEnterDelay={2}>
-                            <Card
-                                hoverable
-                                style={{ left: 14, width: 70, height: 80 }}
-                                cover={<img alt="bookcover" src={bookcover} />}
-                            >
-                                <Meta title={props.name}
-                                    description={props.author}
-                                    onClick={() => {
-                                        if (props.name === props.query)
-                                            message.success("You have successfully retrieved " + props.name);
-                                    }}
-                                />
-                            </Card>
-                        </Popover>
-                    </Badge>}
+            <div>
+                {(props.bouncingBooks.some(book => book.code === props.code) === false) &&
+                    (props.flyingBooks.some(book => book.code === props.code) === false) &&
+                    <div ref={drag}>
+                        <Badge count={props.frequency}>
+                            <Popover content={content} title={props.name} mouseEnterDelay={2}>
+                                <Card
+                                    hoverable
+                                    style={{ left: 14, width: 70, height: 80 }}
+                                    cover={<img alt="bookcover" src={bookcover} />}
+                                >
+                                    <Meta title={props.name}
+                                        description={props.author}
+                                        onClick={() => {
+                                            if (props.name === props.query)
+                                                message.success("You have successfully retrieved " + props.name);
+                                        }}
+                                    />
+                                </Card>
+                            </Popover>
+                        </Badge>
+                    </div>
+                }
                 {props.bouncingBooks.map(book => {
                     if (book.code === props.code) {
                         return (
                             <div ref={drag}>
                                 <TweenOne
-                                    animation={animation}
-                                //   paused={true}
-                                //   className="code-box-shape"
-                                //   style={{
-                                //     position: 'absolute',
-                                //     transformOrigin: 'center bottom',
-                                //   }}
+                                    animation={bounce}
+                                >
+                                    <Badge count={props.frequency}>
+                                        <Popover content={content} title={props.name} mouseEnterDelay={2}>
+                                            <Card
+                                                hoverable
+                                                style={{ left: 14, width: 70, height: 80 }}
+                                                cover={<img alt="bookcover" src={bookcover} />}
+                                            >
+                                                <Meta title={props.name}
+                                                    description={props.author}
+                                                    onClick={() => {
+                                                        if (props.name === props.query)
+                                                            message.success("You have successfully retrieved " + props.name);
+                                                    }}
+                                                />
+                                            </Card>
+                                        </Popover>
+                                    </Badge>
+                                </TweenOne>
+                            </div>
+                        );
+                    }
+                })}
+                {props.flyingBooks.map(book => {
+                    if (book.code === props.code) {
+                        return (
+                            <div ref={drag}>
+                                <TweenOne
+                                    animation={{
+                                        bezier: {
+                                            type: 'thru',
+                                            vars: [book.bezier],
+                                        },
+                                        duration: 1500,
+                                    }}
                                 >
                                     <Badge count={props.frequency}>
                                         <Popover content={content} title={props.name} mouseEnterDelay={2}>

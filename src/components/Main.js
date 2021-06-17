@@ -12,6 +12,7 @@ import { HTML5Backend } from "react-dnd-html5-backend";
 import Storage from './Storage';
 import { message, Button, List, Tooltip, Select, Popconfirm, InputNumber, Statistic, Card, Popover } from 'antd';
 import InfiniteScroll from 'react-infinite-scroller';
+import x from 'uniqid';
 
 function getStoredBooks() {
     try {
@@ -132,20 +133,40 @@ class Main extends Component {
             displayToLibrarianDialog: 'none',
             displayMoveBookDialog: 'none',
             displayNoticeDialog: 'none',
-            targetBookBinNumber: 0
+            targetBookBinNumber: 0,
+            bookshelfDim: [],
+            storageDim: [],
         }
     }
 
+    updateBookshelfDim = (newDim) => {
+        this.setState(() => ({
+            bookshelfDim: newDim
+        }), function () {
+        })
+    }
+
+    updateStorageDim = (newDim) => {
+        this.setState(() => ({
+            storageDim: newDim
+        }), function () {
+        })
+    }
+
     dragHandler = (item, toLocation, toBin, toLevel, toPosition) => {
-        let booksCopy = [...this.state.books];
-        let bookDragged = booksCopy.filter(book => book.code === item.code);
-        let index = booksCopy.indexOf(bookDragged[0]);
-        bookDragged[0].location = toLocation;
-        bookDragged[0].bin = toBin;
-        bookDragged[0].level = toLevel;
-        bookDragged[0].position = toPosition;
-        booksCopy[index] = bookDragged[0];
-        this.setState({ books: booksCopy });
+        // let booksCopy = [...this.state.books];
+        // console.log(this.state.books)
+        // let bookDragged = booksCopy.filter(book => book.code === item.code);
+        // if (bookDragged.length > 0){
+        //     console.log(bookDragged)
+        //     let index = booksCopy.indexOf(bookDragged[0]);
+        //     bookDragged[0].location = toLocation;
+        //     bookDragged[0].bin = toBin;
+        //     bookDragged[0].level = toLevel;
+        //     bookDragged[0].position = toPosition;
+        //     booksCopy[index] = bookDragged[0];
+        //     this.setState({ books: booksCopy });
+        // }
 
         var is_empty = 0;
         var shelf_book = 1;
@@ -335,7 +356,10 @@ class Main extends Component {
                     files: JSON.parse(e.target.result),
                     books: JSON.parse(e.target.result)[0],
                     steps: JSON.parse(e.target.result),
-                    disableNext: false
+                    disableNext: false,
+                    pointer: 0,
+                    flyingBooks: [],
+                    bouncingBooks: []
                 });
                 localStorage.setItem('STORED_BOOK_KEY', JSON.stringify(JSON.parse(e.target.result)[0]))
                 localStorage.setItem('STORED_STEP_KEY', JSON.stringify(JSON.parse(e.target.result)))
@@ -399,37 +423,23 @@ class Main extends Component {
             });
         }
     }
-    // componentDidMount(){
-    //     console.log("didMount")
-    // }
-    // componentWillMount() {
-    //     console.log("willMount")
-    // }
 
-    handleFromUpdate(name, fromX, fromY) {
-        let flyingBooksCopy = this.state.flyingBooks
-        flyingBooksCopy.map(book => {
-            if (book.name === name) {
-                book.fromX = fromX
-                book.fromY = fromY
+    getDimension(level, position, binId) {
+        const bookshelfDim = this.state.bookshelfDim;
+        const storageDim = this.state.storageDim;
+        let dim = [];
+        if (level !== 0 && position !== 0) {
+            dim = bookshelfDim.find(bookstand => bookstand.level === level && bookstand.position === position)
+            if (dim) {
+                return ({ x: dim.x, y: dim.y })
             }
-        })
-        setTimeout(() => {
-            this.setState({ flyingBooks: flyingBooksCopy })
-        }, 1000)
-    }
-
-    handleToUpdate(name, toX, toY) {
-        let flyingBooksCopy = this.state.flyingBooks
-        flyingBooksCopy.map(book => {
-            if (book.name === name) {
-                book.toX = toX
-                book.toY = toY
+        }
+        if (binId !== 0) {
+            dim = storageDim.find(bin => bin.binId === binId)
+            if (dim) {
+                return ({ x: dim.x, y: dim.y })
             }
-        })
-        setTimeout(() => {
-            this.setState({ flyingBooks: flyingBooksCopy })
-        }, 1000)
+        }
     }
 
     handleClickNext() {
@@ -438,59 +448,108 @@ class Main extends Component {
             let currStep = fileContent[this.state.pointer]
             let nextStep = fileContent[this.state.pointer + 1]
             let existingBook = []
-            // let bouncingBooks = []
+            let newBook = []
             for (let i = 0; i < currStep.length; i++) {
                 // compare existing book location
                 if (currStep[i].code === nextStep[i].code &&
                     (currStep[i].level !== nextStep[i].level ||
                         currStep[i].position !== nextStep[i].position ||
                         currStep[i].bin !== nextStep[i].bin)) {
-                    // get fromX fromY, toX toY
-                    existingBook.push({
-                        'code': currStep[i].code,
-                        'name': currStep[i].name,
-                        'fromLevel': currStep[i].level,
-                        'fromPosition': currStep[i].position,
-                        'fromBin': currStep[i].bin,
-                        'toLevel': nextStep[i].level,
-                        'toPosition': nextStep[i].position,
-                        'toBin': nextStep[i].bin,
-                        'fromX': null,
-                        'fromY': null,
-                        'toX': null,
-                        'toY': null
-                    })
-                    this.setState({ bouncingBooks: [] })
-                    // bouncingBooks.push(currStep[i])
+                    if (currStep[i].location === 1 &&
+                        nextStep[i].location === 0) {
+                        let from = this.getDimension(currStep[i].level, currStep[i].position, 0)
+                        let to = this.getDimension(0, 0, nextStep[i].bin)
+                        existingBook.push({
+                            code: currStep[i].code,
+                            name: currStep[i].name,
+                            created_date: nextStep[i].created_date,
+                            frequency: nextStep[i].frequency,
+                            last_borrowed: nextStep[i].last_borrowed,
+                            from: { level: currStep[i].level, position: currStep[i].position, bin: currStep[i].bin },
+                            to: { level: nextStep[i].level, position: nextStep[i].position, bin: nextStep[i].bin },
+                            bezier: { x: to.x - from.x, y: to.y - from.y }
+                        })
+                    }
+                    if (currStep[i].location === 0 &&
+                        nextStep[i].location === 1) {
+                        let from = this.getDimension(0, 0, currStep[i].bin)
+                        let to = this.getDimension(nextStep[i].level, nextStep[i].position, 0)
+                        existingBook.push({
+                            code: currStep[i].code,
+                            name: currStep[i].name,
+                            created_date: nextStep[i].created_date,
+                            frequency: nextStep[i].frequency,
+                            last_borrowed: nextStep[i].last_borrowed,
+                            from: { level: currStep[i].level, position: currStep[i].position, bin: currStep[i].bin },
+                            to: { level: nextStep[i].level, position: nextStep[i].position, bin: nextStep[i].bin },
+                            bezier: { x: to.x - from.x, y: to.y - from.y }
+                        })
+                    }
+                    if (currStep[i].location === 1 &&
+                        nextStep[i].location === 1) {
+                        let from = this.getDimension(currStep[i].level, currStep[i].position, 0)
+                        let to = this.getDimension(nextStep[i].level, nextStep[i].position, 0)
+                        existingBook.push({
+                            code: currStep[i].code,
+                            name: currStep[i].name,
+                            created_date: nextStep[i].created_date,
+                            frequency: nextStep[i].frequency,
+                            last_borrowed: nextStep[i].last_borrowed,
+                            from: { level: currStep[i].level, position: currStep[i].position, bin: currStep[i].bin },
+                            to: { level: nextStep[i].level, position: nextStep[i].position, bin: nextStep[i].bin },
+                            bezier: { x: to.x - from.x, y: to.y - from.y }
+                        })
+                    }
+                    if (currStep[i].location === 0 &&
+                        nextStep[i].location === 0) {
+                        let from = this.getDimension(0, 0, currStep[i].bin)
+                        let to = this.getDimension(0, 0, nextStep[i].bin)
+                        existingBook.push({
+                            code: currStep[i].code,
+                            name: currStep[i].name,
+                            created_date: nextStep[i].created_date,
+                            frequency: nextStep[i].frequency,
+                            last_borrowed: nextStep[i].last_borrowed,
+                            from: { level: currStep[i].level, position: currStep[i].position, bin: currStep[i].bin },
+                            to: { level: nextStep[i].level, position: nextStep[i].position, bin: nextStep[i].bin },
+                            bezier: { x: to.x - from.x, y: to.y - from.y }
+                        })
+                    }
                 }
+                // this.setState({ bouncingBooks: [] })
             }
 
             if (nextStep.length > currStep.length) {
                 // handling new added book
-                let newBook = []
                 for (let j = currStep.length; j < nextStep.length; j++) {
                     newBook.push(nextStep[j])
-                    // bouncingBooks.push(nextStep[j])
                 }
-                this.setState({
-                    bouncingBooks: newBook,
-                    animationShow: true,
-                })
+                // this.setState({
+                //     bouncingBooks: newBook,
+                //     animationShow: true,
+                // })
             }
-
 
             this.setState({
                 flyingBooks: existingBook,
-                animationShow: true
+                bouncingBooks: newBook,
+                animationShow: true,
+                pointer: this.state.pointer + 1,
+                books: fileContent[this.state.pointer]
             })
+            localStorage.setItem('STORED_BOOK_KEY', JSON.stringify(fileContent[this.state.pointer + 1]))
+            message.success("Next clicked! You are at step " + (this.state.pointer + 2))
 
-            this.setState((prevState) => ({
-                pointer: prevState.pointer + 1,
-            }), function () {
-                this.setState({ books: fileContent[this.state.pointer]})
-                localStorage.setItem('STORED_BOOK_KEY', JSON.stringify(fileContent[this.state.pointer]))
-                message.success("Next clicked! You are at step " + (this.state.pointer + 1))
-            });
+            // this.setState((prevState) => ({
+            //     pointer: prevState.pointer + 1,
+            //     // flyingBooks: existingBook,
+            //     // bouncingBooks: newBook,
+            //     // animationShow: true,
+            // }), function () {
+            //     this.setState({ books: fileContent[this.state.pointer] })
+            //     localStorage.setItem('STORED_BOOK_KEY', JSON.stringify(fileContent[this.state.pointer]))
+            //     message.success("Next clicked! You are at step " + (this.state.pointer + 1))
+            // });
         }
         if (this.state.pointer >= fileContent.length - 2) {
             this.setState((prevState) => ({
@@ -782,8 +841,9 @@ class Main extends Component {
                                         animationShow={this.state.animationShow}
                                         bouncingBooks={this.state.bouncingBooks}
                                         flyingBooks={this.state.flyingBooks}
-                                        handleFromUpdate={this.handleFromUpdate.bind(this)}
-                                        handleToUpdate={this.handleToUpdate.bind(this)}
+                                        bookshelfDim={this.state.bookshelfDim}
+                                        updateBookshelfDim={this.updateBookshelfDim}
+                                        showStepsInfo={this.state.isToggleOn}
                                     />
                                 </div>
                             </Col>
@@ -811,8 +871,11 @@ class Main extends Component {
                                                 animationShow={this.state.animationShow}
                                                 bouncingBooks={this.state.bouncingBooks}
                                                 flyingBooks={this.state.flyingBooks}
-                                                handleFromUpdate={this.handleFromUpdate.bind(this)}
-                                                handleToUpdate={this.handleToUpdate.bind(this)}
+                                                storageDim={this.state.storageDim}
+                                                updateStorageDim={this.updateStorageDim}
+                                                showStepsInfo={this.state.isToggleOn}
+                                                numOfLevels={this.state.numOfShelfLevels}
+                                                numOfBooksPerLevel={this.state.numOfBooksPerLevel}
                                             />
                                         </div>
                                     </div>
