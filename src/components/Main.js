@@ -205,7 +205,11 @@ class Main extends Component {
                 this.setState({ catalogShow: true })
             }
             if (toLocation === 1) {
-                message.success(item.name + " is available on bookshelf now. Please double click to access.");
+                if (item.name === this.state.value) {
+                    this.handleToStudent();
+                } else {
+                    message.error("Moved a wrong book! Please move "+ this.state.value + " again!");
+                }
             }
         }
         else if (is_empty === 1) {
@@ -272,7 +276,8 @@ class Main extends Component {
 
     showToLibrarianDialog = () => {
         this.setState({
-            displayToLibrarianDialog: 'block'
+            displayToLibrarianDialog: 'block',
+            displayNoticeDialog: 'none'
         })
     }
 
@@ -286,6 +291,8 @@ class Main extends Component {
     }
 
     handleToStudent = () => {
+        // TODO: check if the dragged book is the book you search
+
         this.setState({
             displayMoveBookDialog: 'none',
             displayNoticeDialog: 'block'
@@ -336,7 +343,8 @@ class Main extends Component {
                     this.handleFaultsIncrement();
                 }
                 if (targetBook.location === 1) {
-                    message.info("You can now retrieve the book on level " + targetBook.level + " and position " + targetBook.position);
+                    this.setState({ displayNoticeDialog: 'block' });
+                    // message.info("You can now retrieve the book on level " + targetBook.level + " and position " + targetBook.position);
                     message.warn("Please double click on the book to retrieve");
                 }
             }
@@ -658,6 +666,12 @@ class Main extends Component {
         this.setState({ configVisible });
     };
 
+    handleCancel() {
+        this.setState({
+            displayToLibrarianDialog: 'none'
+        })
+    }
+
     render() {
         const role = this.props.role;
         const { Option } = Select;
@@ -778,13 +792,14 @@ class Main extends Component {
                                                 />
                                             </Row>
                                             <Row>
-                                                <div className="bubble bubble-bottom-left" style={{ display: this.state.displayToLibrarianDialog }}>
+                                                <div style={{ display: this.state.displayToLibrarianDialog }}>
                                                     <p>Sorry, the book is not available now. You need to wait for librarian to retrieve the book from storage.</p>
-                                                    <Button onClick={this.handleToLibrarian}>Transfer role as Librarian</Button>
+                                                    <Button type="primary" onClick={this.handelCancel}>Cancel</Button>
+                                                    <Button type="primary" onClick={this.handleToLibrarian}>Accept</Button>
                                                 </div>
-                                                <div className="bubble bubble-bottom-left" style={{ display: this.state.displayNoticeDialog }}>
-                                                    <p>The book is available now! You can retrieve the book based on the catalog card.</p>
-                                                    <Button onClick={this.handleFinishDialog}>Got it!</Button>
+                                                <div style={{ display: this.state.displayNoticeDialog }}>
+                                                    <p>The book is available! You can retrieve the book based on the catalog card.</p>
+                                                    <Button type="primary" onClick={this.handleFinishDialog}>Got it!</Button>
                                                 </div>
                                             </Row>
                                         </div>
@@ -849,17 +864,16 @@ class Main extends Component {
                                 </div>
                             </Col>
                             <Col className="storage-view">
-
                                 <Row>
                                     <div className="bubble bubble-bottom-left" style={{ display: this.state.displayMoveBookDialog }}>
-                                        <p>Your role is librarian now! Please move {this.state.query} from bin {this.state.targetBookBinNumber}  to bookshelf.</p>
-                                        <Popconfirm
+                                        <p>Your role is librarian now! Please move {this.state.value} from bin {this.state.targetBookBinNumber}  to bookshelf.</p>
+                                        {/* <Popconfirm
                                             title={"Have you moved this book from storage to bookshelf?"}
                                             onConfirm={this.handleToStudent}
                                             okText="Yes"
                                             cancelText="No">
                                             <Button>Notice Available</Button>
-                                        </Popconfirm>
+                                        </Popconfirm> */}
                                     </div>
                                 </Row>
                                 <Row>
