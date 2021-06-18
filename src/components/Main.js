@@ -677,7 +677,7 @@ class Main extends Component {
 
         return (
             <div className="main" >
-                <Container fluid="xxl" style={{width: "70%"}}>
+                <Container fluid="xxl">
                     <Row>
                         <Col style={{flexGrow: 1.2, marginLeft: 25}}>
                             <Button type="primary"
