@@ -122,7 +122,7 @@ function Bin(props) {
     return (
         <Tooltip placement="top" title={binTitle}>
             <Popover content={content} placement="top" title={binTitle} trigger="click">
-                <div className="bin" ref={binRef}>
+                <div  ref={binRef}>
                     <div className="bin" ref={drop}>
                         {props.animationShow &&
                             props.flyingBooks.map(i => {

@@ -677,9 +677,9 @@ class Main extends Component {
 
         return (
             <div className="main" >
-                <Container fluid="xxl">
+                <Container fluid="xxl" style={{width: "70%"}}>
                     <Row>
-                        <Col>
+                        <Col style={{flexGrow: 1.2, marginLeft: 25}}>
                             <Button type="primary"
                                 onClick={this.handleClickPrevious}
                                 disabled={this.state.pointer === 0 ? true : false}>
@@ -700,7 +700,7 @@ class Main extends Component {
                                 Next
                             </Button>
                         </Col>
-                        <Col>
+                        <Col style={{flexGrow: 1.5}}>
                             <Button
                                 type="primary"
                                 href={`data:text/json;charset=utf-8,${encodeURIComponent(
@@ -810,7 +810,8 @@ class Main extends Component {
                                             width: 320,
                                             height: 115,
                                             marginTop: 25,
-                                            textAlign: 'center'
+                                            textAlign: 'center',
+                                            marginLeft: 20
                                         }}>
                                         <Statistic
                                             title="Page Faults"
@@ -822,7 +823,7 @@ class Main extends Component {
                             </div>
                         </Col>
                         <DndProvider backend={HTML5Backend}>
-                            <Col className="bookshelf-view">
+                            <Col className="bookshelf-view" style={{marginLeft: 40}}>
                                 <h5 className="computer-title">
                                     <strong>Bookshelf</strong>
                                     <Popover
@@ -875,7 +876,7 @@ class Main extends Component {
                                         </Popconfirm> */}
                                     </div>
                                 </Row>
-                                <Row>
+                                <Row style={{justifyContent:"center"}}>
                                     <div className={(role === "Student") ? "wrapper" : ""}>
                                         <div className={(role === "Student") ? "is-disabled" : ""}>
                                             <Storage
