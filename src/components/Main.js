@@ -370,7 +370,8 @@ class Main extends Component {
                     localStorage.setItem('STORED_BOOK_KEY', JSON.stringify(JSON.parse(e.target.result)[0]))
                     localStorage.setItem('STORED_STEP_KEY', JSON.stringify(JSON.parse(e.target.result)))
                     message.success("The Json file has uploaded successfully!")
-
+                    // set to libarian mode automatically with both bookshelf and storage
+                    this.props.handleRoleChange("Librarian");
                     this.setState({
                         animationShow: true,
                         bouncingBooks: JSON.parse(e.target.result)[0]
