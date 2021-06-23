@@ -37,7 +37,8 @@ class Storage extends Component {
                 yoyo: true,
                 ease: ease1,
                 duration: 500,
-            }
+                onComplete: this.props.onAnimComplete()
+            },
         ];
         const { numOfBins } = this.props;
         const { books } = this.props;
@@ -86,6 +87,7 @@ class Storage extends Component {
                                     showStepsInfo={this.props.showStepsInfo}
                                     numOfLevels={this.props.numOfLevels}
                                     numOfBooksPerLevel={this.props.numOfBooksPerLevel}
+                                    onAnimComplete={this.props.onAnimComplete}
                                 />
                             )
                         })
@@ -115,6 +117,7 @@ class Storage extends Component {
                                             showStepsInfo={this.props.showStepsInfo}
                                             numOfLevels={this.props.numOfLevels}
                                             numOfBooksPerLevel={this.props.numOfBooksPerLevel}
+                                            onAnimComplete={this.props.onAnimComplete}
                                         />
                                     </TweenOne>
                                 );
@@ -134,6 +137,7 @@ class Storage extends Component {
                                         showStepsInfo={this.props.showStepsInfo}
                                         numOfLevels={this.props.numOfLevels}
                                         numOfBooksPerLevel={this.props.numOfBooksPerLevel}
+                                        onAnimComplete={this.props.onAnimComplete}
                                     />
                                 )
                             }

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Card, Popover, Badge, message } from 'antd';
 import bookcover from '../assets/images/bookCover.jpg';
 import { ItemTypes } from '../utilities/items.js';
@@ -53,6 +53,21 @@ function Book(props) {
             duration: 500,
         }
     ];
+
+    useEffect(() => {
+        // console.log("book use effect")
+        // console.log(props.animationShow)
+        // if (props.animationShow) {
+        //     setTimeout(() => {
+        //         props.onFlyingComplete()
+        //     }, 1600)
+        // }
+    }, []);
+
+    // const onFlyingComplete = () => {
+    //     console.log("flying completed")
+    // }
+
 
     if (!props.animationShow) {
         return (
@@ -142,6 +157,7 @@ function Book(props) {
                                             vars: [book.bezier],
                                         },
                                         duration: 1500,
+                                        onComplete: props.onAnimComplete()
                                     }}
                                 >
                                     <Badge count={props.frequency}>

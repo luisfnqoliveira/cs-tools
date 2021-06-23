@@ -152,6 +152,18 @@ class Main extends Component {
         })
     }
 
+    onAnimComplete = () => {
+        if (this.state.animationShow) {
+            setTimeout(() => {
+                let steps = this.state.steps;
+                this.setState({
+                    books: steps[this.state.pointer],
+                    animationShow: false,
+                })
+            }, 1700)
+        }
+    }
+
     dragHandler = (item, toLocation, toBin, toLevel, toPosition) => {
         // let booksCopy = [...this.state.books];
         // console.log(this.state.books)
@@ -196,7 +208,7 @@ class Main extends Component {
                         if (item.name === this.state.value) {
                             this.handleToStudent();
                         } else {
-                            message.error("Moved a wrong book! Please move "+ this.state.value + " again!");
+                            message.error("Moved a wrong book! Please move " + this.state.value + " again!");
                         }
                     }
                     storedBooks[i].name = item.name;
@@ -518,8 +530,8 @@ class Main extends Component {
                             created_date: nextStep[i].created_date,
                             frequency: nextStep[i].frequency,
                             last_borrowed: nextStep[i].last_borrowed,
-                            from: { level: currStep[i].level, position: currStep[i].position, bin: currStep[i].bin },
-                            to: { level: nextStep[i].level, position: nextStep[i].position, bin: nextStep[i].bin },
+                            from: { location: currStep[i].location, level: currStep[i].level, position: currStep[i].position, bin: currStep[i].bin },
+                            to: { location: currStep[i].location, level: nextStep[i].level, position: nextStep[i].position, bin: nextStep[i].bin },
                             bezier: { x: to.x - from.x, y: to.y - from.y }
                         })
                     }
@@ -677,9 +689,9 @@ class Main extends Component {
 
         return (
             <div className="main" >
-                <Container fluid="xxl" style={{width: "70%"}}>
+                <Container fluid="xxl" style={{ width: "70%" }}>
                     <Row>
-                        <Col style={{flexGrow: 1.2, marginLeft: 25}}>
+                        <Col style={{ flexGrow: 1.2, marginLeft: 25 }}>
                             <Button type="primary"
                                 onClick={this.handleClickPrevious}
                                 disabled={this.state.pointer === 0 ? true : false}>
@@ -700,7 +712,7 @@ class Main extends Component {
                                 Next
                             </Button>
                         </Col>
-                        <Col style={{flexGrow: 1.5}}>
+                        <Col style={{ flexGrow: 1.5 }}>
                             <Button
                                 type="primary"
                                 href={`data:text/json;charset=utf-8,${encodeURIComponent(
@@ -726,10 +738,12 @@ class Main extends Component {
                                 localStorage.setItem("STORED_FAULTS_KEY", 0);
                                 this.setState({
                                     books: [],
+                                    bouncingBooks: [],
+                                    flyingBooks: [],
                                     pageFaults: 0,
                                 });
                                 // this.setState({catalogShow: true})
-                                this.props.handleRoleChange("Student");
+                                // this.props.handleRoleChange("Student");
                             }}>Reset Library</Button>
                             <Button type="primary" onClick={this.handleClickShowSteps}>
                                 {this.state.isToggleOn ? 'Hide Steps Info' : 'Show Steps Info'}
@@ -823,7 +837,7 @@ class Main extends Component {
                             </div>
                         </Col>
                         <DndProvider backend={HTML5Backend}>
-                            <Col className="bookshelf-view" style={{marginLeft: 40}}>
+                            <Col className="bookshelf-view" style={{ marginLeft: 40 }}>
                                 <h5 className="computer-title">
                                     <strong>Bookshelf</strong>
                                     <Popover
@@ -860,6 +874,7 @@ class Main extends Component {
                                         bookshelfDim={this.state.bookshelfDim}
                                         updateBookshelfDim={this.updateBookshelfDim}
                                         showStepsInfo={this.state.isToggleOn}
+                                        onAnimComplete={this.onAnimComplete.bind(this)}
                                     />
                                 </div>
                             </Col>
@@ -876,7 +891,7 @@ class Main extends Component {
                                         </Popconfirm> */}
                                     </div>
                                 </Row>
-                                <Row style={{justifyContent:"center"}}>
+                                <Row style={{ justifyContent: "center" }}>
                                     <div className={(role === "Student") ? "wrapper" : ""}>
                                         <div className={(role === "Student") ? "is-disabled" : ""}>
                                             <Storage
@@ -891,6 +906,7 @@ class Main extends Component {
                                                 showStepsInfo={this.state.isToggleOn}
                                                 numOfLevels={this.state.numOfShelfLevels}
                                                 numOfBooksPerLevel={this.state.numOfBooksPerLevel}
+                                                onAnimComplete={this.onAnimComplete.bind(this)}
                                             />
                                         </div>
                                     </div>

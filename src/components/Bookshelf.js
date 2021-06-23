@@ -42,6 +42,7 @@ class Bookshelf extends Component {
                                 bookshelfDim={this.props.bookshelfDim}
                                 updateBookshelfDim={this.props.updateBookshelfDim}
                                 showStepsInfo={this.props.showStepsInfo}
+                                onAnimComplete={this.props.onAnimComplete}
                             />
                         )
                     })
