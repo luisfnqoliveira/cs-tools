@@ -1,10 +1,8 @@
 .main {
-    width: 100%;
-    flex: 1 0 auto;
-    display: flex;
-    padding-left: 5%;
-    padding-right: 5%;
-    justify-content: space-evenly;
+  width: 100%;
+  display: block;
+  padding-left: 5%;
+  padding-right: 5%;
 }
 
 .computer-title {

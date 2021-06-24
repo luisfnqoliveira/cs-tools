@@ -100,6 +100,7 @@ class Main extends Component {
         this.handleConfirm = this.handleConfirm.bind(this);
         this.handleFaultsIncrement = this.handleFaultsIncrement.bind(this);
         this.handleClickSearch = this.handleClickSearch.bind(this);
+        // this.dbclick = this.dbclick.bind(this);
         this.state = {
             role: this.props.role,
             value: '',
@@ -130,9 +131,11 @@ class Main extends Component {
             flyingBooks: [],
             nextClicked: false,
             configVisible: false,
+            isSuccess: false,
             displayToLibrarianDialog: 'none',
             displayMoveBookDialog: 'none',
             displayNoticeDialog: 'none',
+            displayRetriveSuccessDialog: 'none',
             targetBookBinNumber: 0,
             bookshelfDim: [],
             storageDim: [],
@@ -236,16 +239,28 @@ class Main extends Component {
         }
     }
 
+    showRetriveSuccess() {
+        if (this.state.isSuccess === true) {
+            this.setState({
+                displayRetriveSuccessDialog: 'block',
+                displayNoticeDialog: 'none'
+            })
+        }
+    }
+
     dbclick = () => {
-        document.ondblclick = DoubleClick;
+        document.ondblclick = DoubleClick.bind(this);
         function DoubleClick(e) {
             if (e.target.draggable === true) {
                 let book_name = e.target.offsetParent.innerText;
                 let data = sessionStorage.getItem('STORED_BOOK_KEY');
-
+                let retrieveSuccess = false;
                 if (data === book_name) {
-                    alert("You have successfully retrieved " + data);
-
+                    retrieveSuccess = true;
+                    this.setState({
+                        isSuccess: retrieveSuccess,
+                    });
+                    this.showRetriveSuccess();
                     var storedBooks = getStoredBooks();
                     var today = new Date();
                     for (var i = 0; i < storedBooks.length; i++) {
@@ -258,7 +273,10 @@ class Main extends Component {
                         localStorage.setItem("STORED_BOOK_KEY", storedBooksJson);
                     }
                     sessionStorage.setItem('STORED_BOOK_KEY', '');
-                    window.location.reload();
+                    //window.location.reload();
+                    this.setState({
+                        books: getStoredBooks()
+                    });
                 }
                 else {
                     message.warning("Please choose again");
@@ -288,25 +306,26 @@ class Main extends Component {
     showToLibrarianDialog = () => {
         this.setState({
             displayToLibrarianDialog: 'block',
-            displayNoticeDialog: 'none'
+            displayNoticeDialog: 'none',
+            displayRetriveSuccessDialog:'none'
         })
     }
 
     handleToLibrarian = () => {
         this.setState({
             displayToLibrarianDialog: 'none',
-            displayMoveBookDialog: 'block'
+            displayMoveBookDialog: 'block',
+            displayRetriveSuccessDialog:'none'
         })
         this.props.handleRoleChange("Librarian");
 
     }
 
     handleToStudent = () => {
-        // TODO: check if the dragged book is the book you search
-
         this.setState({
             displayMoveBookDialog: 'none',
-            displayNoticeDialog: 'block'
+            displayNoticeDialog: 'block',
+            displayRetriveSuccessDialog:'none'
         })
         this.props.handleRoleChange("Student");
     }
@@ -678,12 +697,6 @@ class Main extends Component {
         this.setState({ configVisible });
     };
 
-    handleCancel() {
-        this.setState({
-            displayToLibrarianDialog: 'none'
-        })
-    }
-
     render() {
         console.log("render main!!!!")
         const role = this.props.role;
@@ -691,7 +704,7 @@ class Main extends Component {
 
         return (
             <div className="main" >
-                <Container fluid="xxl" style={{ width: "70%" }}>
+                <Container fluid="xxl">
                     <Row>
                         <Col style={{ flexGrow: 1.2, marginLeft: 25 }}>
                             <Button type="primary"
@@ -810,13 +823,15 @@ class Main extends Component {
                                             </Row>
                                             <Row>
                                                 <div style={{ display: this.state.displayToLibrarianDialog }}>
-                                                    <p>Sorry, the book is not available now. You need to wait for librarian to retrieve the book from storage.</p>
-                                                    <Button type="primary" onClick={this.handelCancel}>Cancel</Button>
+                                                    <strong style={{ display: this.state.displayToLibrarianDialog }}>Sorry, the book is not available now. You need to wait for librarian to retrieve the book from storage.</strong>
                                                     <Button type="primary" onClick={this.handleToLibrarian}>Accept</Button>
                                                 </div>
                                                 <div style={{ display: this.state.displayNoticeDialog }}>
-                                                    <p>The book is available! You can retrieve the book based on the catalog card.</p>
-                                                    <Button type="primary" onClick={this.handleFinishDialog}>Got it!</Button>
+                                                    <strong style={{ display: this.state.displayNoticeDialog }}>The book is available! You can retrieve the book based on the catalog card by double clicking.</strong>
+                                                    {/* <Button type="primary" onClick={this.handleFinishDialog}>Got it!</Button> */}
+                                                </div>
+                                                <div style={{ display: this.state.displayRetriveSuccessDialog }}>
+                                                    <strong style={{ display: this.state.displayRetriveSuccessDialog }}>You have retrieved {this.state.value} successfully! Thank you so much!</strong>
                                                 </div>
                                             </Row>
                                         </div>
