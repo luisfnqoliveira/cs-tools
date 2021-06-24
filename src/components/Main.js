@@ -378,7 +378,7 @@ class Main extends PureComponent {
                     this.handleFaultsIncrement();
                 }
                 if (targetBook.location === 1) {
-                    this.setState({ displayNoticeDialog: 'block', animationShow: false });
+                    this.setState({ displayNoticeDialog: 'block', displayRetriveSuccessDialog: 'none', animationShow: false });
                     // message.info("You can now retrieve the book on level " + targetBook.level + " and position " + targetBook.position);
                     message.warn("Please double click on the book to retrieve");
                 }
@@ -758,8 +758,8 @@ class Main extends PureComponent {
                     <Row>
                         <Col md={{ span: 6, offset: 3 }}>
                             <Select placeholder="Select a step" style={{ width: 120 }} onChange={this.handleSelectChange}>
-                                {this.state.steps.map(step => (
-                                    <Option value={this.state.steps.indexOf(step) + 1}>{this.state.steps.indexOf(step) + 1}</Option>
+                                {this.state.steps.map((step) => (
+                                    <Option key={this.state.steps.indexOf(step)} value={this.state.steps.indexOf(step) + 1}>{this.state.steps.indexOf(step) + 1}</Option>
                                 ))}
                             </Select>
                             <Popconfirm
@@ -934,11 +934,10 @@ class Main extends PureComponent {
                                         dataSource={this.state.steps}
                                         bordered
                                         renderItem={step => (
-                                            // <Card title={step.id}>
-                                            <List.Item key={step.id}>
+                                            <List.Item>
                                                 <h5>Step {this.state.steps.indexOf(step) + 1}: </h5>
                                                 {step.map(book => (
-                                                    <p><strong>{book.name}</strong> {(book.location === 0 ? "storage: bin" + book.bin : "bookshelf: level" + book.level + "; position" + book.position)}</p>
+                                                    <p key={step.indexOf(book)}><strong>{book.name}</strong> {(book.location === 0 ? "storage: bin" + book.bin : "bookshelf: level" + book.level + "; position" + book.position)}</p>
                                                 ))}
                                             </List.Item>
                                             // </Card>

@@ -62,9 +62,8 @@ function Bin(props) {
                     {
                         storageBook.map(i => {
                             return (
-                                <div className='book-align-block'>
+                                <div key={i.code} className='book-align-block'>
                                     <Book
-                                        key={i.code}
                                         code={i.code}
                                         name={i.name}
                                         created_date={i.created_date}
@@ -105,7 +104,7 @@ function Bin(props) {
                                         />
                                     </div>
                                 );
-                            }
+                            } 
                         })
                     }
                 </div>
@@ -139,6 +138,10 @@ function Bin(props) {
                                             />
                                         </div>
                                     );
+                                } else {
+                                    return (
+                                        <div></div>
+                                    )
                                 }
 
                             })}

@@ -34,10 +34,9 @@ class SingleBookCase extends Component {
                                 marginLeft: i.bookstandMarginLeft
                             }
                             return (
-                                <div className="single" style={bookstandMargin}>
+                                <div key={i.position} className="single" style={bookstandMargin}>
                                     <BookStand
                                         position={i.position}
-                                        key={i.position}
                                         level={i.level}
                                         books={i.books}
                                         numOfLevels={this.props.numOfLevels}
