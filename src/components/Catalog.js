@@ -25,6 +25,7 @@ export function Catalog(props) {
 
   // when modal open
   React.useEffect(() => {
+    // console.log("catalog use effect")
     if (props.show) {
       const books = getStoredBooks();
       const found = books.find(book => book.name === props.query);
@@ -35,6 +36,7 @@ export function Catalog(props) {
         setBin(found.bin);
       }
     }
+    props.onHide();
   }, [props.show, props.query, props.numOfBins]);
 
   return (

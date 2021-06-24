@@ -92,6 +92,7 @@ class Main extends Component {
     constructor(props) {
         super(props);
         this.hiddenFileInput = React.createRef();
+        this.updateInput = this.updateInput.bind(this);
         this.handleClickNext = this.handleClickNext.bind(this);
         this.handleClickPrevious = this.handleClickPrevious.bind(this);
         this.handleClickShowSteps = this.handleClickShowSteps.bind(this);
@@ -138,6 +139,10 @@ class Main extends Component {
         }
     }
 
+    updateInput(event) {
+        this.setState({ query: event.target.value })
+    }
+
     updateBookshelfDim = (newDim) => {
         this.setState(() => ({
             bookshelfDim: newDim
@@ -166,10 +171,8 @@ class Main extends Component {
 
     dragHandler = (item, toLocation, toBin, toLevel, toPosition) => {
         // let booksCopy = [...this.state.books];
-        // console.log(this.state.books)
         // let bookDragged = booksCopy.filter(book => book.code === item.code);
         // if (bookDragged.length > 0){
-        //     console.log(bookDragged)
         //     let index = booksCopy.indexOf(bookDragged[0]);
         //     bookDragged[0].location = toLocation;
         //     bookDragged[0].bin = toBin;
@@ -219,7 +222,7 @@ class Main extends Component {
                 }
                 var storedBooksJson = JSON.stringify(storedBooks);
                 localStorage.setItem("STORED_BOOK_KEY", storedBooksJson);
-                this.setState({ catalogShow: true })
+                this.setState({ catalogShow: true, animationShow: false, books: getStoredBooks()})
             }
         }
         else if (is_empty === 1) {
@@ -231,8 +234,6 @@ class Main extends Component {
             message.info("You can remove the book with least frequency.", 15);
             this.setState({ error: 1 });
         }
-
-        this.setState({ animationShow: false })
     }
 
     dbclick = () => {
@@ -276,12 +277,12 @@ class Main extends Component {
             this.setState({ error: 0 });
         }
 
-        if (this.state.catalogShow !== prevStates.catalogShow) {
-            this.setState({
-                books: getStoredBooks(),
-            });
-            this.catalogClose();
-        }
+        // if (this.state.catalogShow !== prevStates.catalogShow) {
+        //     this.setState({
+        //         books: getStoredBooks(),
+        //         catalogShow: false,
+        //     });
+        // }
     }
 
     showToLibrarianDialog = () => {
@@ -348,18 +349,18 @@ class Main extends Component {
                 if (targetBook.location === 0) {
                     // message.info("The librarian is preparing the book.");
                     this.showToLibrarianDialog();
-                    this.setState({ targetBookBinNumber: targetBook.bin });
+                    this.setState({ targetBookBinNumber: targetBook.bin, animationShow: false });
                     // message.info("Please move " + this.state.query + " from storage bin to bookshelf.");
                     this.handleFaultsIncrement();
                 }
                 if (targetBook.location === 1) {
-                    this.setState({ displayNoticeDialog: 'block' });
+                    this.setState({ displayNoticeDialog: 'block', animationShow: false });
                     // message.info("You can now retrieve the book on level " + targetBook.level + " and position " + targetBook.position);
                     message.warn("Please double click on the book to retrieve");
                 }
             }
         }
-        this.setState({ animationShow: false })
+        // this.setState({ animationShow: false })
     }
 
     handleUpload = e => {
@@ -684,6 +685,7 @@ class Main extends Component {
     }
 
     render() {
+        console.log("render main!!!!")
         const role = this.props.role;
         const { Option } = Select;
 
@@ -741,6 +743,8 @@ class Main extends Component {
                                     bouncingBooks: [],
                                     flyingBooks: [],
                                     pageFaults: 0,
+                                    displayMoveBookDialog: 'none',
+                                    displayToLibrarianDialog: 'none',
                                 });
                                 // this.setState({catalogShow: true})
                                 // this.props.handleRoleChange("Student");
@@ -779,11 +783,11 @@ class Main extends Component {
                                             <Row>
                                                 <div className="form-inline mt-4 mb-4" >
                                                     <input className="form-control-sm" type="text" placeholder="Find a Book" aria-label="Search"
-                                                        value={this.state.query}
+                                                        // value={this.state.query}
                                                         onClick={event => {
                                                             message.info("You can enter any book you want")
                                                         }}
-                                                        onChange={event => this.setState({ query: event.target.value })}
+                                                        onChange={this.updateInput}
                                                         onKeyPress={event => {
                                                             if (event.key === 'Enter') {
                                                                 this.handleClickSearch()
@@ -798,8 +802,8 @@ class Main extends Component {
                                             <Row>
                                                 <Catalog
                                                     query={this.state.value}
-                                                    show={this.state.catalogShow}
                                                     onHide={this.catalogClose}
+                                                    show={this.state.catalogShow}
                                                     numOfBins={this.state.numOfBins}
                                                     handleRoleChange={this.props.handleRoleChange}
                                                 />
@@ -866,7 +870,7 @@ class Main extends Component {
                                         bookstandMarginTop={this.state.bookstandMarginTop}
                                         bookstandMarginLeft={this.state.bookstandMarginLeft}
                                         books={this.state.books}
-                                        dragHandler={this.dragHandler.bind(this)}
+                                        dragHandler={this.dragHandler}
                                         dbclick={this.dbclick()}
                                         animationShow={this.state.animationShow}
                                         bouncingBooks={this.state.bouncingBooks}
