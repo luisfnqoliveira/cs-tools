@@ -295,12 +295,12 @@ class Main extends Component {
             this.setState({ error: 0 });
         }
 
-        // if (this.state.catalogShow !== prevStates.catalogShow) {
-        //     this.setState({
-        //         books: getStoredBooks(),
-        //         catalogShow: false,
-        //     });
-        // }
+        if (this.state.catalogShow !== prevStates.catalogShow) {
+            this.setState({
+                books: getStoredBooks(),
+                catalogShow: false,
+            });
+        }
     }
 
     showToLibrarianDialog = () => {

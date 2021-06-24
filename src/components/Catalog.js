@@ -36,7 +36,7 @@ export function Catalog(props) {
         setBin(found.bin);
       }
     }
-    props.onHide();
+    // props.onHide();
   }, [props.show, props.query, props.numOfBins]);
 
   return (
