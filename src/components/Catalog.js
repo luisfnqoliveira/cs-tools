@@ -25,7 +25,6 @@ export function Catalog(props) {
 
   // when modal open
   React.useEffect(() => {
-    // console.log("catalog use effect")
     if (props.show) {
       const books = getStoredBooks();
       const found = books.find(book => book.name === props.query);
@@ -36,16 +35,16 @@ export function Catalog(props) {
         setBin(found.bin);
       }
     }
-    // props.onHide();
-  }, [props.show, props.query, props.numOfBins]);
+    props.onHide();
+  }, [props.show, props.query]);
 
   return (
     <pre>
       <u>Book Name</u>: {props.query}{"\n"}
       <u>Location</u>: {location === 0 ? 'storage' : location === 1 ? 'bookshelf' : ''}{"\n"}
-      <div style={{ display: location === 0 ? 'block' : 'none'}}><u>Storage Bin</u>: {bin} </div>
-      <div style={{ display: location === 1 ? 'block' : 'none'}}><u>Level</u>: {level} </div> 
-      <div style={{ display: location === 1 ? 'block' : 'none'}}><u>Position</u>: {position}</div>
+      <div style={{ display: location === 0 ? 'block' : 'none' }}><u>Storage Bin</u>: {bin} </div>
+      <div style={{ display: location === 1 ? 'block' : 'none' }}><u>Level</u>: {level} </div>
+      <div style={{ display: location === 1 ? 'block' : 'none' }}><u>Position</u>: {position}</div>
     </pre>
   );
 }

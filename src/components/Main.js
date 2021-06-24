@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import Bookshelf from './Bookshelf';
 import "../styles/Main.css";
 import "antd/dist/antd.css";
@@ -87,7 +87,7 @@ function storeBook(name, numOfBins) {
     }
 }
 
-class Main extends Component {
+class Main extends PureComponent {
 
     constructor(props) {
         super(props);
@@ -175,14 +175,13 @@ class Main extends Component {
     dragHandler = (item, toLocation, toBin, toLevel, toPosition) => {
         // let booksCopy = [...this.state.books];
         // let bookDragged = booksCopy.filter(book => book.code === item.code);
-        // if (bookDragged.length > 0){
+        // if (bookDragged.length > 0) {
         //     let index = booksCopy.indexOf(bookDragged[0]);
         //     bookDragged[0].location = toLocation;
         //     bookDragged[0].bin = toBin;
         //     bookDragged[0].level = toLevel;
         //     bookDragged[0].position = toPosition;
         //     booksCopy[index] = bookDragged[0];
-        //     this.setState({ books: booksCopy });
         // }
 
         var is_empty = 0;
@@ -222,10 +221,15 @@ class Main extends Component {
                     storedBooks[i].bin = toBin;
                     storedBooks[i].level = toLevel;
                     storedBooks[i].position = toPosition
+
+                    var storedBooksJson = JSON.stringify(storedBooks);
+                    localStorage.setItem("STORED_BOOK_KEY", storedBooksJson);
+                    if (item.name === this.state.value) {
+                        // update catalog
+                        this.setState({catalogShow: true})
+                    }
+                    this.setState({ animationShow: false, books: getStoredBooks() })
                 }
-                var storedBooksJson = JSON.stringify(storedBooks);
-                localStorage.setItem("STORED_BOOK_KEY", storedBooksJson);
-                this.setState({ catalogShow: true, animationShow: false, books: getStoredBooks()})
             }
         }
         else if (is_empty === 1) {
@@ -273,7 +277,6 @@ class Main extends Component {
                         localStorage.setItem("STORED_BOOK_KEY", storedBooksJson);
                     }
                     sessionStorage.setItem('STORED_BOOK_KEY', '');
-                    //window.location.reload();
                     this.setState({
                         books: getStoredBooks()
                     });
@@ -289,25 +292,26 @@ class Main extends Component {
 
     componentDidUpdate(prevProps, prevStates) {
         if (this.state.error !== prevStates.error) {
+            console.log("set books state")
             this.setState({
                 books: getStoredBooks(),
             });
             this.setState({ error: 0 });
         }
 
-        if (this.state.catalogShow !== prevStates.catalogShow) {
-            this.setState({
-                books: getStoredBooks(),
-                catalogShow: false,
-            });
-        }
+        // if (this.state.catalogShow !== prevStates.catalogShow) {
+        //     this.setState({
+        //         // books: getStoredBooks(),
+        //         catalogShow: false,
+        //     });
+        // }
     }
 
     showToLibrarianDialog = () => {
         this.setState({
             displayToLibrarianDialog: 'block',
             displayNoticeDialog: 'none',
-            displayRetriveSuccessDialog:'none'
+            displayRetriveSuccessDialog: 'none'
         })
     }
 
@@ -315,7 +319,7 @@ class Main extends Component {
         this.setState({
             displayToLibrarianDialog: 'none',
             displayMoveBookDialog: 'block',
-            displayRetriveSuccessDialog:'none'
+            displayRetriveSuccessDialog: 'none'
         })
         this.props.handleRoleChange("Librarian");
 
@@ -325,7 +329,7 @@ class Main extends Component {
         this.setState({
             displayMoveBookDialog: 'none',
             displayNoticeDialog: 'block',
-            displayRetriveSuccessDialog:'none'
+            displayRetriveSuccessDialog: 'none'
         })
         this.props.handleRoleChange("Student");
     }
@@ -361,7 +365,8 @@ class Main extends Component {
             //     books = getStoredBooks()
             // }
             storeBook(this.state.query, this.state.numOfBins);
-            this.setState({ catalogShow: true, value: this.state.query })
+            this.setState({ catalogShow: true, value: this.state.query, books: getStoredBooks()})
+            // this.setState({ value: this.state.query, books: getStoredBooks() })
             let books = getStoredBooks()
             let targetBook = books.find(book => book.name === this.state.query)
             if (targetBook) {
@@ -556,7 +561,6 @@ class Main extends Component {
                         })
                     }
                 }
-                // this.setState({ bouncingBooks: [] })
             }
 
             if (nextStep.length > currStep.length) {
@@ -564,10 +568,6 @@ class Main extends Component {
                 for (let j = currStep.length; j < nextStep.length; j++) {
                     newBook.push(nextStep[j])
                 }
-                // this.setState({
-                //     bouncingBooks: newBook,
-                //     animationShow: true,
-                // })
             }
 
             this.setState({
@@ -579,17 +579,6 @@ class Main extends Component {
             })
             localStorage.setItem('STORED_BOOK_KEY', JSON.stringify(fileContent[this.state.pointer + 1]))
             message.success("Next clicked! You are at step " + (this.state.pointer + 2))
-
-            // this.setState((prevState) => ({
-            //     pointer: prevState.pointer + 1,
-            //     // flyingBooks: existingBook,
-            //     // bouncingBooks: newBook,
-            //     // animationShow: true,
-            // }), function () {
-            //     this.setState({ books: fileContent[this.state.pointer] })
-            //     localStorage.setItem('STORED_BOOK_KEY', JSON.stringify(fileContent[this.state.pointer]))
-            //     message.success("Next clicked! You are at step " + (this.state.pointer + 1))
-            // });
         }
         if (this.state.pointer >= fileContent.length - 2) {
             this.setState((prevState) => ({
@@ -698,7 +687,6 @@ class Main extends Component {
     };
 
     render() {
-        console.log("render main!!!!")
         const role = this.props.role;
         const { Option } = Select;
 
