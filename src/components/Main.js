@@ -99,6 +99,7 @@ class Main extends Component {
         this.handleConfirm = this.handleConfirm.bind(this);
         this.handleFaultsIncrement = this.handleFaultsIncrement.bind(this);
         this.handleClickSearch = this.handleClickSearch.bind(this);
+        // this.dbclick = this.dbclick.bind(this);
         this.state = {
             role: this.props.role,
             value: '',
@@ -129,9 +130,11 @@ class Main extends Component {
             flyingBooks: [],
             nextClicked: false,
             configVisible: false,
+            isSuccess: false,
             displayToLibrarianDialog: 'none',
             displayMoveBookDialog: 'none',
             displayNoticeDialog: 'none',
+            displayRetriveSuccessDialog: 'none',
             targetBookBinNumber: 0,
             bookshelfDim: [],
             storageDim: [],
@@ -196,7 +199,7 @@ class Main extends Component {
                         if (item.name === this.state.value) {
                             this.handleToStudent();
                         } else {
-                            message.error("Moved a wrong book! Please move "+ this.state.value + " again!");
+                            message.error("Moved a wrong book! Please move " + this.state.value + " again!");
                         }
                     }
                     storedBooks[i].name = item.name;
@@ -223,16 +226,28 @@ class Main extends Component {
         this.setState({ animationShow: false })
     }
 
+    showRetriveSuccess() {
+        if (this.state.isSuccess === true) {
+            this.setState({
+                displayRetriveSuccessDialog: 'block',
+                displayNoticeDialog: 'none'
+            })
+        }
+    }
+
     dbclick = () => {
-        document.ondblclick = DoubleClick;
+        document.ondblclick = DoubleClick.bind(this);
         function DoubleClick(e) {
             if (e.target.draggable === true) {
                 let book_name = e.target.offsetParent.innerText;
                 let data = sessionStorage.getItem('STORED_BOOK_KEY');
-
+                let retrieveSuccess = false;
                 if (data === book_name) {
-                    alert("You have successfully retrieved " + data);
-
+                    retrieveSuccess = true;
+                    this.setState({
+                        isSuccess: retrieveSuccess,
+                    });
+                    this.showRetriveSuccess();
                     var storedBooks = getStoredBooks();
                     var today = new Date();
                     for (var i = 0; i < storedBooks.length; i++) {
@@ -245,7 +260,10 @@ class Main extends Component {
                         localStorage.setItem("STORED_BOOK_KEY", storedBooksJson);
                     }
                     sessionStorage.setItem('STORED_BOOK_KEY', '');
-                    window.location.reload();
+                    //window.location.reload();
+                    this.setState({
+                        books: getStoredBooks()
+                    });
                 }
                 else {
                     message.warning("Please choose again");
@@ -275,25 +293,26 @@ class Main extends Component {
     showToLibrarianDialog = () => {
         this.setState({
             displayToLibrarianDialog: 'block',
-            displayNoticeDialog: 'none'
+            displayNoticeDialog: 'none',
+            displayRetriveSuccessDialog:'none'
         })
     }
 
     handleToLibrarian = () => {
         this.setState({
             displayToLibrarianDialog: 'none',
-            displayMoveBookDialog: 'block'
+            displayMoveBookDialog: 'block',
+            displayRetriveSuccessDialog:'none'
         })
         this.props.handleRoleChange("Librarian");
 
     }
 
     handleToStudent = () => {
-        // TODO: check if the dragged book is the book you search
-
         this.setState({
             displayMoveBookDialog: 'none',
-            displayNoticeDialog: 'block'
+            displayNoticeDialog: 'block',
+            displayRetriveSuccessDialog:'none'
         })
         this.props.handleRoleChange("Student");
     }
@@ -665,12 +684,6 @@ class Main extends Component {
         this.setState({ configVisible });
     };
 
-    handleCancel() {
-        this.setState({
-            displayToLibrarianDialog: 'none'
-        })
-    }
-
     render() {
         const role = this.props.role;
         const { Option } = Select;
@@ -679,7 +692,7 @@ class Main extends Component {
             <div className="main" >
                 <Container fluid="xxl">
                     <Row>
-                        <Col style={{flexGrow: 1.2, marginLeft: 25}}>
+                        <Col style={{ flexGrow: 1.2, marginLeft: 25 }}>
                             <Button type="primary"
                                 onClick={this.handleClickPrevious}
                                 disabled={this.state.pointer === 0 ? true : false}>
@@ -700,7 +713,7 @@ class Main extends Component {
                                 Next
                             </Button>
                         </Col>
-                        <Col style={{flexGrow: 1.5}}>
+                        <Col style={{ flexGrow: 1.5 }}>
                             <Button
                                 type="primary"
                                 href={`data:text/json;charset=utf-8,${encodeURIComponent(
@@ -792,13 +805,15 @@ class Main extends Component {
                                             </Row>
                                             <Row>
                                                 <div style={{ display: this.state.displayToLibrarianDialog }}>
-                                                    <p>Sorry, the book is not available now. You need to wait for librarian to retrieve the book from storage.</p>
-                                                    <Button type="primary" onClick={this.handelCancel}>Cancel</Button>
+                                                    <strong style={{ display: this.state.displayToLibrarianDialog }}>Sorry, the book is not available now. You need to wait for librarian to retrieve the book from storage.</strong>
                                                     <Button type="primary" onClick={this.handleToLibrarian}>Accept</Button>
                                                 </div>
                                                 <div style={{ display: this.state.displayNoticeDialog }}>
-                                                    <p>The book is available! You can retrieve the book based on the catalog card.</p>
-                                                    <Button type="primary" onClick={this.handleFinishDialog}>Got it!</Button>
+                                                    <strong style={{ display: this.state.displayNoticeDialog }}>The book is available! You can retrieve the book based on the catalog card by double clicking.</strong>
+                                                    {/* <Button type="primary" onClick={this.handleFinishDialog}>Got it!</Button> */}
+                                                </div>
+                                                <div style={{ display: this.state.displayRetriveSuccessDialog }}>
+                                                    <strong style={{ display: this.state.displayRetriveSuccessDialog }}>You have retrieved {this.state.value} successfully! Thank you so much!</strong>
                                                 </div>
                                             </Row>
                                         </div>
@@ -823,7 +838,7 @@ class Main extends Component {
                             </div>
                         </Col>
                         <DndProvider backend={HTML5Backend}>
-                            <Col className="bookshelf-view" style={{marginLeft: 40}}>
+                            <Col className="bookshelf-view" style={{ marginLeft: 40 }}>
                                 <h5 className="computer-title">
                                     <strong>Bookshelf</strong>
                                     <Popover
@@ -876,7 +891,7 @@ class Main extends Component {
                                         </Popconfirm> */}
                                     </div>
                                 </Row>
-                                <Row style={{justifyContent:"center"}}>
+                                <Row style={{ justifyContent: "center" }}>
                                     <div className={(role === "Student") ? "wrapper" : ""}>
                                         <div className={(role === "Student") ? "is-disabled" : ""}>
                                             <Storage
