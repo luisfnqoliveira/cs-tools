@@ -42,7 +42,6 @@ function Bin(props) {
     }
 
     useEffect(() => {
-        console.log("bin use effect")
         props.updateStorageDim(updateDimension())
         window.addEventListener("resize", onWindowResize, true);
         return () => {
@@ -68,16 +67,13 @@ function Bin(props) {
                                         key={i.code}
                                         code={i.code}
                                         name={i.name}
-                                        // author={i.author}
-                                        location={i.location}
-                                        level={i.level}
-                                        position={i.position}
                                         created_date={i.created_date}
                                         frequency={i.frequency}
                                         last_borrowed={i.last_borrowed}
                                         animationShow={props.animationShow}
                                         bouncingBooks={props.bouncingBooks}
                                         flyingBooks={props.flyingBooks}
+                                        onAnimComplete={props.onAnimComplete}
                                     />
                                 </div>
                             );
@@ -99,16 +95,13 @@ function Bin(props) {
                                             key={i.code}
                                             code={i.code}
                                             name={i.name}
-                                            // author={i.author}
-                                            location={i.location}
-                                            level={i.level}
-                                            position={i.position}
                                             created_date={i.created_date}
                                             frequency={i.frequency}
                                             last_borrowed={i.last_borrowed}
                                             animationShow={props.animationShow}
                                             bouncingBooks={props.bouncingBooks}
                                             flyingBooks={props.flyingBooks}
+                                            onAnimComplete={props.onAnimComplete}
                                         />
                                     </div>
                                 );
@@ -136,16 +129,13 @@ function Bin(props) {
                                                 key={i.code}
                                                 code={i.code}
                                                 name={i.name}
-                                                // author={i.author}
-                                                location={i.location}
-                                                level={i.level}
-                                                position={i.position}
                                                 created_date={i.created_date}
                                                 frequency={i.frequency}
                                                 last_borrowed={i.last_borrowed}
                                                 animationShow={props.animationShow}
                                                 bouncingBooks={props.bouncingBooks}
                                                 flyingBooks={props.flyingBooks}
+                                                onAnimComplete={props.onAnimComplete}
                                             />
                                         </div>
                                     );

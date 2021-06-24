@@ -1,10 +1,13 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import SingleBookCase from './SingleBookCase';
 
-class Bookshelf extends Component {
+class Bookshelf extends PureComponent {
+    // shouldComponentUpdate(nextProps, nextState) {
+    //     return nextProps !== this.props
+    // }
 
     render() {
-        console.log("render bookshelf")
+        // console.log("render bookshelf")
         const { numOfLevels } = this.props;
         const { numOfBooksPerLevel } = this.props;
         let bookcases = [];
@@ -42,6 +45,7 @@ class Bookshelf extends Component {
                                 bookshelfDim={this.props.bookshelfDim}
                                 updateBookshelfDim={this.props.updateBookshelfDim}
                                 showStepsInfo={this.props.showStepsInfo}
+                                onAnimComplete={this.props.onAnimComplete}
                             />
                         )
                     })

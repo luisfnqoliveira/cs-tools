@@ -49,7 +49,6 @@ function BookStand(props) {
     //     );
     // });
     useEffect(() => {
-        console.log("bookstand use effect")
         props.updateBookshelfDim(updateDimension())
         window.addEventListener("resize", onWindowResize, true);
         return () => {
@@ -89,6 +88,7 @@ function BookStand(props) {
                                         animationShow={props.animationShow}
                                         bouncingBooks={props.bouncingBooks}
                                         flyingBooks={props.flyingBooks}
+                                        onAnimComplete={props.onAnimComplete}
                                     />
                                 )
                             }
@@ -108,6 +108,7 @@ function BookStand(props) {
                                             animationShow={props.animationShow}
                                             bouncingBooks={props.bouncingBooks}
                                             flyingBooks={props.flyingBooks}
+                                            onAnimComplete={props.onAnimComplete}
                                         />
                                     );
                                 }
