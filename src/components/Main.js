@@ -66,7 +66,7 @@ function storeBook(name, numOfBins) {
         return book.name === name;
     })
     if (found) {
-        sessionStorage.setItem('STORED_BOOK_KEY', name);
+        // sessionStorage.setItem('STORED_BOOK_KEY', name);
     } else {
         // store the book
         var uniqid = require('uniqid');
@@ -100,7 +100,6 @@ class Main extends PureComponent {
         this.handleConfirm = this.handleConfirm.bind(this);
         this.handleFaultsIncrement = this.handleFaultsIncrement.bind(this);
         this.handleClickSearch = this.handleClickSearch.bind(this);
-        // this.dbclick = this.dbclick.bind(this);
         this.state = {
             role: this.props.role,
             value: '',
@@ -172,17 +171,6 @@ class Main extends PureComponent {
     }
 
     dragHandler = (item, toLocation, toBin, toLevel, toPosition) => {
-        // let booksCopy = [...this.state.books];
-        // let bookDragged = booksCopy.filter(book => book.code === item.code);
-        // if (bookDragged.length > 0) {
-        //     let index = booksCopy.indexOf(bookDragged[0]);
-        //     bookDragged[0].location = toLocation;
-        //     bookDragged[0].bin = toBin;
-        //     bookDragged[0].level = toLevel;
-        //     bookDragged[0].position = toPosition;
-        //     booksCopy[index] = bookDragged[0];
-        // }
-
         var is_empty = 0;
         var shelf_book = 1;
         var storedBooks = getStoredBooks();
@@ -208,10 +196,10 @@ class Main extends PureComponent {
                     if (storedBooks[i].location === 0 && toLocation === 1) {
                         // var today = new Date();
                         // storedBooks[i].created_date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
-                        sessionStorage.setItem("STORED_BOOK_KEY", item.name);
+                        // sessionStorage.setItem("STORED_BOOK_KEY", item.name);
                         if (item.name === this.state.value) {
                             this.handleToStudent();
-                        } else if (this.state.value){
+                        } else if (this.state.value) {
                             message.error("Moved a wrong book! Please move " + this.state.value + " again!");
                         }
                     }
@@ -258,31 +246,75 @@ class Main extends PureComponent {
                 let book_name = e.target.offsetParent.innerText;
                 let data = sessionStorage.getItem('STORED_BOOK_KEY');
                 let retrieveSuccess = false;
-                if (data === book_name) {
-                    retrieveSuccess = true;
-                    this.setState({
-                        isSuccess: retrieveSuccess,
-                    });
-                    this.showRetriveSuccess();
-                    var storedBooks = getStoredBooks();
-                    var today = new Date();
-                    for (var i = 0; i < storedBooks.length; i++) {
-                        if (storedBooks[i].name === data) {
-                            storedBooks[i].frequency += 1;
-                            // this.updateFrequency(storedBooks[i].frequency);
-                            storedBooks[i].last_borrowed = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate() + ' ' + today.getHours() + ':' + today.getMinutes() + ':' + today.getSeconds();
+                let storedBooks = getStoredBooks();
+                let found = storedBooks.find(book => book.name === book_name)
+                if (found) {
+                    if (found.location === 1) {
+                        if (data === book_name) {
+                            retrieveSuccess = true;
+                            this.setState({
+                                isSuccess: retrieveSuccess,
+                            });
+                            this.showRetriveSuccess();
+                            let today = new Date();
+                            let index = storedBooks.indexOf(found)
+                            found.frequency += 1;
+                            found.last_borrowed = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate() + ' ' + today.getHours() + ':' + today.getMinutes() + ':' + today.getSeconds();
+                            storedBooks[index] = found
+                            let storedBooksJson = JSON.stringify(storedBooks);
+                            localStorage.setItem("STORED_BOOK_KEY", storedBooksJson);
+                            sessionStorage.setItem('STORED_BOOK_KEY', '');
+                            this.setState({
+                                books: getStoredBooks()
+                            });
                         }
-                        var storedBooksJson = JSON.stringify(storedBooks);
-                        localStorage.setItem("STORED_BOOK_KEY", storedBooksJson);
+                        else if (data) {
+                            message.warning("Please choose again!")
+                        }
                     }
-                    sessionStorage.setItem('STORED_BOOK_KEY', '');
-                    this.setState({
-                        books: getStoredBooks()
-                    });
+                    if (found.location === 0) {
+                        message.warning("Cannot retrieve book in storage! Please drag the book to bookshelf.")
+                    }
                 }
-                else {
-                    message.warning("Please choose again");
-                }
+                // if (data === book_name) {
+                //     if (found && found.location === 1) {
+                //         retrieveSuccess = true;
+                //         this.setState({
+                //             isSuccess: retrieveSuccess,
+                //         });
+                //         this.showRetriveSuccess();
+                //         let today = new Date();
+                //         let index = storedBooks.indexOf(found)
+                //         found.frequency += 1;
+                //         found.last_borrowed = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate() + ' ' + today.getHours() + ':' + today.getMinutes() + ':' + today.getSeconds();
+                //         storedBooks[index] = found
+                //         let storedBooksJson = JSON.stringify(storedBooks);
+                //         localStorage.setItem("STORED_BOOK_KEY", storedBooksJson);
+                // sessionStorage.setItem('STORED_BOOK_KEY', '');
+                // this.setState({
+                //     books: getStoredBooks()
+                // });
+                //     }
+                //     else if (found.location === 0) {
+                //         message.warning("Cannot retrieve book in storage! Please drag the book to bookshelf.")
+                //     }
+                //     // for (var i = 0; i < storedBooks.length; i++) {
+                //     //     if (storedBooks[i].name === data) {
+                //     //         storedBooks[i].frequency += 1;
+                //     //         // this.updateFrequency(storedBooks[i].frequency);
+                //     //         storedBooks[i].last_borrowed = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate() + ' ' + today.getHours() + ':' + today.getMinutes() + ':' + today.getSeconds();
+                //     //     }
+                //     //     var storedBooksJson = JSON.stringify(storedBooks);
+                //     //     localStorage.setItem("STORED_BOOK_KEY", storedBooksJson);
+                //     // }
+                //     sessionStorage.setItem('STORED_BOOK_KEY', '');
+                //     this.setState({
+                //         books: getStoredBooks()
+                //     });
+                // }
+                // else {
+                //     message.warning("Please choose again");
+                // }
             }
         }
     }
@@ -326,9 +358,10 @@ class Main extends PureComponent {
 
     handleToStudent = () => {
         this.setState({
+            displayToLibrarianDialog: 'none',
             displayMoveBookDialog: 'none',
             displayNoticeDialog: 'block',
-            displayRetriveSuccessDialog: 'none'
+            displayRetriveSuccessDialog: 'none',
         })
         this.props.handleRoleChange("Student");
     }
@@ -343,47 +376,23 @@ class Main extends PureComponent {
         if (!this.state.query) {
             alert('Please input a name!');
         } else {
-            // let books = getStoredBooks();
-            // let targetBook = books.find(book => book.name === this.state.query)
-            // if (targetBook){
-            //     this.setState({ catalogShow: true, value: this.state.query })
-            //     if (targetBook.location === 0) {
-            //         message.info("The librarian is preparing the book.");
-            //         message.info("Please move " + this.state.query + " from storage bin to bookshelf.");
-            //         this.props.handleRoleChange("Librarian");
-            //         this.handleFaultsIncrement();
-            //     }
-            //     if (targetBook.location === 1) {
-            //         message.info("You can now retrieve the book on level " + targetBook.level + " and position " + targetBook.position);
-            //         message.warn("Please double click on the book to retrieve");
-            //     }
-            // }
-            // else {
-            //     storeBook(this.state.query, this.state.numOfBins);
-            //     this.setState({ catalogShow: true, value: this.state.query })
-            //     books = getStoredBooks()
-            // }
             storeBook(this.state.query, this.state.numOfBins);
             this.setState({ catalogShow: true, value: this.state.query, books: getStoredBooks() })
-            // this.setState({ value: this.state.query, books: getStoredBooks() })
+            sessionStorage.setItem('STORED_BOOK_KEY', this.state.query)
             let books = getStoredBooks()
             let targetBook = books.find(book => book.name === this.state.query)
             if (targetBook) {
                 if (targetBook.location === 0) {
-                    // message.info("The librarian is preparing the book.");
                     this.showToLibrarianDialog();
                     this.setState({ targetBookBinNumber: targetBook.bin, animationShow: false });
-                    // message.info("Please move " + this.state.query + " from storage bin to bookshelf.");
                     this.handleFaultsIncrement();
                 }
                 if (targetBook.location === 1) {
                     this.setState({ displayNoticeDialog: 'block', displayRetriveSuccessDialog: 'none', animationShow: false });
-                    // message.info("You can now retrieve the book on level " + targetBook.level + " and position " + targetBook.position);
                     message.warn("Please double click on the book to retrieve");
                 }
             }
         }
-        // this.setState({ animationShow: false })
     }
 
     handleUpload = e => {
@@ -395,43 +404,30 @@ class Main extends PureComponent {
                 // check empty array; todo: check format
                 if ((JSON.parse(e.target.result).length > 0)) {
                     this.setState({
-                        // files: JSON.parse(e.target.result),
                         books: JSON.parse(e.target.result)[0],
                         steps: JSON.parse(e.target.result),
                         pointer: 0,
                         disableNext: false,
                         flyingBooks: [],
-                        // bouncingBooks: []
                         animationShow: true,
                         bouncingBooks: JSON.parse(e.target.result)[0]
                     });
                     if (JSON.parse(e.target.result)[0].length > 0) {
-                        if ('faults' in JSON.parse(e.target.result)[0][0]){
-                            this.setState({pageFaults: JSON.parse(e.target.result)[0][0].faults})
+                        if ('faults' in JSON.parse(e.target.result)[0][0]) {
+                            this.setState({ pageFaults: JSON.parse(e.target.result)[0][0].faults })
                         }
                         else {
-                            this.setState({pageFaults: 0})
+                            this.setState({ pageFaults: 0 })
                         }
                     }
                     else {
-                        this.setState({pageFaults: 0})
+                        this.setState({ pageFaults: 0 })
                     }
                     localStorage.setItem('STORED_BOOK_KEY', JSON.stringify(JSON.parse(e.target.result)[0]))
                     localStorage.setItem('STORED_STEP_KEY', JSON.stringify(JSON.parse(e.target.result)))
                     message.success("The Json file has uploaded successfully!")
                     // set to libarian mode automatically with both bookshelf and storage
                     this.props.handleRoleChange("Librarian");
-                    // let firstStep = JSON.parse(e.target.result)[0]
-                    // if (firstStep && firstStep.length !== 0) {
-                    //     firstStep.map(book => {
-                    //         if (book.location === 0) {
-                    //             // storage
-                    //         }
-                    //         if (book.location === 1) {
-                    //             // bookshelf
-                    //         }
-                    //     })
-                    // }
                 }
                 else {
                     message.error("There is something wrong with your file. Please try again!")
@@ -472,14 +468,14 @@ class Main extends PureComponent {
                 animationShow: false,
                 bouncingBooks: [],
             }), function () {
-                this.setState({ books: fileContent[this.state.pointer]})
+                this.setState({ books: fileContent[this.state.pointer] })
                 if (fileContent[this.state.pointer].length > 0) {
-                    if ('faults' in fileContent[this.state.pointer][0]){
-                        this.setState({pageFaults: fileContent[this.state.pointer][0].faults})
+                    if ('faults' in fileContent[this.state.pointer][0]) {
+                        this.setState({ pageFaults: fileContent[this.state.pointer][0].faults })
                     }
                 }
                 else {
-                    this.setState({pageFaults: 0})
+                    this.setState({ pageFaults: 0 })
                 }
                 localStorage.setItem('STORED_BOOK_KEY', JSON.stringify(fileContent[this.state.pointer]))
                 message.success("Previous clicked! You are at step " + (this.state.pointer + 1))
@@ -596,12 +592,12 @@ class Main extends PureComponent {
                 books: fileContent[this.state.pointer],
             })
             if (fileContent[this.state.pointer + 1].length > 0) {
-                if ('faults' in fileContent[this.state.pointer + 1][0]){
-                    this.setState({pageFaults: fileContent[this.state.pointer + 1][0].faults})
+                if ('faults' in fileContent[this.state.pointer + 1][0]) {
+                    this.setState({ pageFaults: fileContent[this.state.pointer + 1][0].faults })
                 }
             }
             else {
-                this.setState({pageFaults: 0})
+                this.setState({ pageFaults: 0 })
             }
             localStorage.setItem('STORED_BOOK_KEY', JSON.stringify(fileContent[this.state.pointer + 1]))
             message.success("Next clicked! You are at step " + (this.state.pointer + 2))
@@ -776,8 +772,6 @@ class Main extends PureComponent {
                                     displayNoticeDialog: 'none',
                                     displayRetriveSuccessDialog: 'none',
                                 });
-                                // this.setState({catalogShow: true})
-                                // this.props.handleRoleChange("Student");
                             }}>Reset Library</Button>
                             <Button type="primary" onClick={this.handleClickShowSteps}>
                                 {this.state.isToggleOn ? 'Hide Steps Info' : 'Show Steps Info'}
@@ -845,7 +839,6 @@ class Main extends PureComponent {
                                                 </div>
                                                 <div style={{ display: this.state.displayNoticeDialog }}>
                                                     <strong style={{ display: this.state.displayNoticeDialog }}>The book is available! Please refer to the information on the catalog card, and retrieve the book by double clicking.</strong>
-                                                    {/* <Button type="primary" onClick={this.handleFinishDialog}>Got it!</Button> */}
                                                 </div>
                                                 <div style={{ display: this.state.displayRetriveSuccessDialog }}>
                                                     <strong style={{ display: this.state.displayRetriveSuccessDialog }}>You have retrieved {this.state.value} successfully! Thank you so much!</strong>
@@ -916,15 +909,8 @@ class Main extends PureComponent {
                             </Col>
                             <Col className="storage-view">
                                 <Row>
-                                    <div className="bubble bubble-bottom-left" style={{ display: this.state.displayMoveBookDialog }}>
+                                    <div className="bubble bubble-bottom-left" style={{ display: (role === "Student" ? 'none' : this.state.displayMoveBookDialog) }}>
                                         <p>Your role is librarian now! Please move {this.state.value} from bin {this.state.targetBookBinNumber}  to bookshelf.</p>
-                                        {/* <Popconfirm
-                                            title={"Have you moved this book from storage to bookshelf?"}
-                                            onConfirm={this.handleToStudent}
-                                            okText="Yes"
-                                            cancelText="No">
-                                            <Button>Notice Available</Button>
-                                        </Popconfirm> */}
                                     </div>
                                 </Row>
                                 <Row style={{ justifyContent: "center" }}>
@@ -969,7 +955,6 @@ class Main extends PureComponent {
                                                     <p key={step.indexOf(book)}><strong>{book.name}</strong> {(book.location === 0 ? "storage: bin" + book.bin : "bookshelf: level" + book.level + "; position" + book.position)}</p>
                                                 ))}
                                             </List.Item>
-                                            // </Card>
                                         )} />
                                 </InfiniteScroll>
                             </div>
