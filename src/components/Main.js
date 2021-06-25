@@ -250,7 +250,7 @@ class Main extends PureComponent {
                 let found = storedBooks.find(book => book.name === book_name)
                 if (found) {
                     if (found.location === 1) {
-                        if (data === book_name) {
+                        if (data === book_name && book_name === this.state.value) {
                             retrieveSuccess = true;
                             this.setState({
                                 isSuccess: retrieveSuccess,
@@ -268,11 +268,11 @@ class Main extends PureComponent {
                                 books: getStoredBooks()
                             });
                         }
-                        else if (data) {
-                            message.warning("Please choose again!")
+                        else if (this.state.value && data) {
+                            message.warning("Chose a wrong book. Please try again!")
                         }
                     }
-                    if (found.location === 0) {
+                    if (found.location === 0 && this.state.value && data) {
                         message.warning("Cannot retrieve book in storage! Please drag the book to bookshelf.")
                     }
                 }
@@ -323,7 +323,6 @@ class Main extends PureComponent {
 
     componentDidUpdate(prevProps, prevStates) {
         if (this.state.error !== prevStates.error) {
-            console.log("set books state")
             this.setState({
                 books: getStoredBooks(),
             });
