@@ -117,7 +117,6 @@ class Main extends PureComponent {
             query: '',
             error: 0,
             steps: getStoredSteps(),
-            // files: "",
             pointer: 0,
             isToggleOn: false,
             display: 'none',
@@ -390,7 +389,7 @@ class Main extends PureComponent {
     handleUpload = e => {
         /* To do: upload error handling */
         if (e.target.files[0]) {
-            const fileReader = new FileReader();
+            let fileReader = new FileReader();
             fileReader.readAsText(e.target.files[0], "UTF-8");
             fileReader.onload = e => {
                 // check empty array; todo: check format
@@ -437,6 +436,7 @@ class Main extends PureComponent {
                 else {
                     message.error("There is something wrong with your file. Please try again!")
                 }
+                this.hiddenFileInput.current.value = "";
             };
         }
     };
@@ -465,7 +465,6 @@ class Main extends PureComponent {
 
     handleClickPrevious() {
         const fileContent = this.state.steps;
-        // const fileContent = this.state.files;
         if (fileContent && this.state.pointer > 0) {
             this.setState((prevState) => ({
                 pointer: prevState.pointer - 1,
@@ -508,7 +507,6 @@ class Main extends PureComponent {
 
     handleClickNext() {
         const fileContent = this.state.steps;
-        // const fileContent = this.state.files;
         if (fileContent && this.state.pointer < fileContent.length - 1) {
             let currStep = fileContent[this.state.pointer]
             let nextStep = fileContent[this.state.pointer + 1]
@@ -516,7 +514,7 @@ class Main extends PureComponent {
             let newBook = []
             for (let i = 0; i < currStep.length; i++) {
                 // compare existing book location
-                if (nextStep.length> 0 && currStep[i].code === nextStep[i].code &&
+                if (nextStep.length > 0 && currStep[i].code === nextStep[i].code &&
                     (currStep[i].level !== nextStep[i].level ||
                         currStep[i].position !== nextStep[i].position ||
                         currStep[i].bin !== nextStep[i].bin)) {
@@ -761,7 +759,6 @@ class Main extends PureComponent {
                             </Tooltip>
                             <Button type="primary" onClick={() => {
                                 localStorage.setItem("STORED_STEP_KEY", "[]");
-                                // this.setState({ steps: [], files: "", pointer: 0 })
                                 this.setState({ steps: [], pointer: 0 })
                             }}>Clear all Steps</Button>
                         </Col>

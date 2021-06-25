@@ -103,10 +103,9 @@ class Storage extends Component {
                         bins.map(i => {
                             if (this.props.bouncingBooks.some(book => book.bin === i.binId)) {
                                 return (
-                                    <TweenOne animation={bounce}>
+                                    <TweenOne key={i.binId} animation={bounce}>
                                         <Bin
                                             binId={i.binId}
-                                            key={i.binId}
                                             books={i.books}
                                             dragHandler={this.props.dragHandler}
                                             animationShow={this.props.animationShow}
