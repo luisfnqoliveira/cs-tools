@@ -89,9 +89,8 @@ function Bin(props) {
                             let alreadyOnBin = props.flyingBooks.some(book => book.code === i.code)
                             if (alreadyOnBin === false) {
                                 return (
-                                    <div className='book-align-block'>
+                                    <div key={i.code} className='book-align-block'>
                                         <Book
-                                            key={i.code}
                                             code={i.code}
                                             name={i.name}
                                             created_date={i.created_date}
@@ -104,7 +103,7 @@ function Bin(props) {
                                         />
                                     </div>
                                 );
-                            } 
+                            }
                         })
                     }
                 </div>
@@ -114,18 +113,17 @@ function Bin(props) {
     return (
         <Tooltip placement="top" title={binTitle}>
             <Popover content={content} placement="top" title={binTitle} trigger="click">
-                <div  ref={binRef}>
+                <div ref={binRef}>
                     <div className="bin" ref={drop}>
                         {props.animationShow &&
                             props.flyingBooks.map(i => {
                                 if (i.from.bin === props.binId) {
                                     return (
-                                        <div style={{
+                                        <div key={i.code} style={{
                                             justifySelf: 'left',
                                             // pointerEvents: 'auto',
                                         }}>
                                             <Book
-                                                key={i.code}
                                                 code={i.code}
                                                 name={i.name}
                                                 created_date={i.created_date}

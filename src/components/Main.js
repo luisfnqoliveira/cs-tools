@@ -117,7 +117,7 @@ class Main extends PureComponent {
             query: '',
             error: 0,
             steps: getStoredSteps(),
-            files: "",
+            // files: "",
             pointer: 0,
             isToggleOn: false,
             display: 'none',
@@ -390,13 +390,13 @@ class Main extends PureComponent {
     handleUpload = e => {
         /* To do: upload error handling */
         if (e.target.files[0]) {
-            const fileReader = new FileReader();
+            let fileReader = new FileReader();
             fileReader.readAsText(e.target.files[0], "UTF-8");
             fileReader.onload = e => {
                 // check empty array; todo: check format
                 if ((JSON.parse(e.target.result).length > 0)) {
                     this.setState({
-                        files: JSON.parse(e.target.result),
+                        // files: JSON.parse(e.target.result),
                         books: JSON.parse(e.target.result)[0],
                         steps: JSON.parse(e.target.result),
                         disableNext: false,
@@ -428,6 +428,7 @@ class Main extends PureComponent {
                 else {
                     message.error("There is something wrong with your file. Please try again!")
                 }
+                this.hiddenFileInput.current.value = "";
             };
         }
     };
@@ -454,7 +455,7 @@ class Main extends PureComponent {
     }
 
     handleClickPrevious() {
-        const fileContent = this.state.files;
+        const fileContent = this.state.steps;
         if (fileContent && this.state.pointer > 0) {
             this.setState((prevState) => ({
                 pointer: prevState.pointer - 1,
@@ -488,7 +489,7 @@ class Main extends PureComponent {
     }
 
     handleClickNext() {
-        const fileContent = this.state.files;
+        const fileContent = this.state.steps;
         if (fileContent && this.state.pointer < fileContent.length - 1) {
             let currStep = fileContent[this.state.pointer]
             let nextStep = fileContent[this.state.pointer + 1]
@@ -496,7 +497,7 @@ class Main extends PureComponent {
             let newBook = []
             for (let i = 0; i < currStep.length; i++) {
                 // compare existing book location
-                if (currStep[i].code === nextStep[i].code &&
+                if (nextStep.length > 0 && currStep[i].code === nextStep[i].code &&
                     (currStep[i].level !== nextStep[i].level ||
                         currStep[i].position !== nextStep[i].position ||
                         currStep[i].bin !== nextStep[i].bin)) {
@@ -617,7 +618,9 @@ class Main extends PureComponent {
         if (this.state.undoStep !== null && this.state.undoStep > 1) {
             this.setState({
                 steps: this.state.steps.slice(0, this.state.undoStep - 1),
-                books: this.state.steps[this.state.undoStep - 2]
+                books: this.state.steps[this.state.undoStep - 2],
+                pointer: this.state.undoStep - 2,
+                // files: this.state.steps.slice(0, this.state.undoStep - 1)
             })
             localStorage.setItem('STORED_STEP_KEY', JSON.stringify(this.state.steps.slice(0, this.state.undoStep - 1)))
             localStorage.setItem('STORED_BOOK_KEY', JSON.stringify(this.state.steps[this.state.undoStep - 2]))
@@ -626,7 +629,9 @@ class Main extends PureComponent {
         else if (this.state.undoStep === 1) {
             this.setState({
                 steps: [],
-                books: []
+                books: [],
+                pointer: 0,
+                // files: []
             })
             localStorage.setItem('STORED_STEP_KEY', '[]')
             localStorage.setItem('STORED_BOOK_KEY', '[]')
@@ -731,7 +736,7 @@ class Main extends PureComponent {
                             </Tooltip>
                             <Button type="primary" onClick={() => {
                                 localStorage.setItem("STORED_STEP_KEY", "[]");
-                                this.setState({ steps: [], files: "", pointer: 0 })
+                                this.setState({ steps: [], pointer: 0 })
                             }}>Clear all Steps</Button>
                         </Col>
                         <Col>
