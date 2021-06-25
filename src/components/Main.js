@@ -117,7 +117,6 @@ class Main extends PureComponent {
             query: '',
             error: 0,
             steps: getStoredSteps(),
-            // files: "",
             pointer: 0,
             isToggleOn: false,
             display: 'none',
@@ -212,7 +211,7 @@ class Main extends PureComponent {
                         sessionStorage.setItem("STORED_BOOK_KEY", item.name);
                         if (item.name === this.state.value) {
                             this.handleToStudent();
-                        } else {
+                        } else if (this.state.value){
                             message.error("Moved a wrong book! Please move " + this.state.value + " again!");
                         }
                     }
@@ -226,7 +225,7 @@ class Main extends PureComponent {
                     localStorage.setItem("STORED_BOOK_KEY", storedBooksJson);
                     if (item.name === this.state.value) {
                         // update catalog
-                        this.setState({catalogShow: true})
+                        this.setState({ catalogShow: true })
                     }
                     this.setState({ animationShow: false, books: getStoredBooks() })
                 }
@@ -365,7 +364,7 @@ class Main extends PureComponent {
             //     books = getStoredBooks()
             // }
             storeBook(this.state.query, this.state.numOfBins);
-            this.setState({ catalogShow: true, value: this.state.query, books: getStoredBooks()})
+            this.setState({ catalogShow: true, value: this.state.query, books: getStoredBooks() })
             // this.setState({ value: this.state.query, books: getStoredBooks() })
             let books = getStoredBooks()
             let targetBook = books.find(book => book.name === this.state.query)
@@ -399,20 +398,29 @@ class Main extends PureComponent {
                         // files: JSON.parse(e.target.result),
                         books: JSON.parse(e.target.result)[0],
                         steps: JSON.parse(e.target.result),
-                        disableNext: false,
                         pointer: 0,
+                        disableNext: false,
                         flyingBooks: [],
-                        bouncingBooks: []
+                        // bouncingBooks: []
+                        animationShow: true,
+                        bouncingBooks: JSON.parse(e.target.result)[0]
                     });
+                    if (JSON.parse(e.target.result)[0].length > 0) {
+                        if ('faults' in JSON.parse(e.target.result)[0][0]){
+                            this.setState({pageFaults: JSON.parse(e.target.result)[0][0].faults})
+                        }
+                        else {
+                            this.setState({pageFaults: 0})
+                        }
+                    }
+                    else {
+                        this.setState({pageFaults: 0})
+                    }
                     localStorage.setItem('STORED_BOOK_KEY', JSON.stringify(JSON.parse(e.target.result)[0]))
                     localStorage.setItem('STORED_STEP_KEY', JSON.stringify(JSON.parse(e.target.result)))
                     message.success("The Json file has uploaded successfully!")
                     // set to libarian mode automatically with both bookshelf and storage
                     this.props.handleRoleChange("Librarian");
-                    this.setState({
-                        animationShow: true,
-                        bouncingBooks: JSON.parse(e.target.result)[0]
-                    })
                     // let firstStep = JSON.parse(e.target.result)[0]
                     // if (firstStep && firstStep.length !== 0) {
                     //     firstStep.map(book => {
@@ -440,6 +448,7 @@ class Main extends PureComponent {
     handleClickRecord = () => {
         const storedSteps = getStoredSteps();
         var currentStep = this.state.books;
+        currentStep.map(book => book.faults = this.state.pageFaults)
         if (JSON.stringify(storedSteps[storedSteps.length - 1]) === JSON.stringify(currentStep)) {
             console.log("Duplicate step")
             message.error("Duplicate step")
@@ -463,7 +472,15 @@ class Main extends PureComponent {
                 animationShow: false,
                 bouncingBooks: [],
             }), function () {
-                this.setState({ books: fileContent[this.state.pointer] })
+                this.setState({ books: fileContent[this.state.pointer]})
+                if (fileContent[this.state.pointer].length > 0) {
+                    if ('faults' in fileContent[this.state.pointer][0]){
+                        this.setState({pageFaults: fileContent[this.state.pointer][0].faults})
+                    }
+                }
+                else {
+                    this.setState({pageFaults: 0})
+                }
                 localStorage.setItem('STORED_BOOK_KEY', JSON.stringify(fileContent[this.state.pointer]))
                 message.success("Previous clicked! You are at step " + (this.state.pointer + 1))
             });
@@ -576,8 +593,16 @@ class Main extends PureComponent {
                 bouncingBooks: newBook,
                 animationShow: true,
                 pointer: this.state.pointer + 1,
-                books: fileContent[this.state.pointer]
+                books: fileContent[this.state.pointer],
             })
+            if (fileContent[this.state.pointer + 1].length > 0) {
+                if ('faults' in fileContent[this.state.pointer + 1][0]){
+                    this.setState({pageFaults: fileContent[this.state.pointer + 1][0].faults})
+                }
+            }
+            else {
+                this.setState({pageFaults: 0})
+            }
             localStorage.setItem('STORED_BOOK_KEY', JSON.stringify(fileContent[this.state.pointer + 1]))
             message.success("Next clicked! You are at step " + (this.state.pointer + 2))
         }
@@ -620,7 +645,6 @@ class Main extends PureComponent {
                 steps: this.state.steps.slice(0, this.state.undoStep - 1),
                 books: this.state.steps[this.state.undoStep - 2],
                 pointer: this.state.undoStep - 2,
-                // files: this.state.steps.slice(0, this.state.undoStep - 1)
             })
             localStorage.setItem('STORED_STEP_KEY', JSON.stringify(this.state.steps.slice(0, this.state.undoStep - 1)))
             localStorage.setItem('STORED_BOOK_KEY', JSON.stringify(this.state.steps[this.state.undoStep - 2]))
@@ -631,7 +655,6 @@ class Main extends PureComponent {
                 steps: [],
                 books: [],
                 pointer: 0,
-                // files: []
             })
             localStorage.setItem('STORED_STEP_KEY', '[]')
             localStorage.setItem('STORED_BOOK_KEY', '[]')
@@ -740,7 +763,6 @@ class Main extends PureComponent {
                             }}>Clear all Steps</Button>
                         </Col>
                         <Col>
-                            {/* Reset Library */}
                             <Button type="primary" onClick={() => {
                                 localStorage.setItem("STORED_BOOK_KEY", "[]");
                                 localStorage.setItem("STORED_FAULTS_KEY", 0);
@@ -751,6 +773,8 @@ class Main extends PureComponent {
                                     pageFaults: 0,
                                     displayMoveBookDialog: 'none',
                                     displayToLibrarianDialog: 'none',
+                                    displayNoticeDialog: 'none',
+                                    displayRetriveSuccessDialog: 'none',
                                 });
                                 // this.setState({catalogShow: true})
                                 // this.props.handleRoleChange("Student");
@@ -820,7 +844,7 @@ class Main extends PureComponent {
                                                     <Button type="primary" onClick={this.handleToLibrarian}>Accept</Button>
                                                 </div>
                                                 <div style={{ display: this.state.displayNoticeDialog }}>
-                                                    <strong style={{ display: this.state.displayNoticeDialog }}>The book is available! You can retrieve the book based on the catalog card by double clicking.</strong>
+                                                    <strong style={{ display: this.state.displayNoticeDialog }}>The book is available! Please refer to the information on the catalog card, and retrieve the book by double clicking.</strong>
                                                     {/* <Button type="primary" onClick={this.handleFinishDialog}>Got it!</Button> */}
                                                 </div>
                                                 <div style={{ display: this.state.displayRetriveSuccessDialog }}>
