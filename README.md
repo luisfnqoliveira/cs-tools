@@ -8,12 +8,12 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 ## lib installed for team use
 1. Ant Design <br />
 $ npm install antd <br /> 
-$ yarn add antd
+$ yarn add antd <br />
 Check the link if you have any questions: https://ant.design/docs/react/introduce
 
 2. React-Bootstrap <br />
 $ npm install react-bootstrap <br />
-$ yarn add react-bootstrap
+$ yarn add react-bootstrap <br />
 In this project, use this package for layout design. Check this link for details: https://react-bootstrap.github.io/layout/grid/ 
 
 3. uniqid <br />
