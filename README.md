@@ -43,7 +43,7 @@ Possible solution: save steps in session storage instead of local storage.
 
 4. Retrieving books only works when clicking on the book image.
 
-5. Json file format check and error handling.
+5. Json file format check and upload error handling.
 
 6. Responsive design.
 

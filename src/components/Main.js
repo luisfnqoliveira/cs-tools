@@ -582,6 +582,13 @@ class Main extends PureComponent {
                 books: this.state.steps[this.state.undoStep - 2],
                 pointer: this.state.undoStep - 2,
             })
+            if (this.state.steps[this.state.undoStep - 2].length > 0){
+                this.setState({pageFaults: this.state.steps[this.state.undoStep - 2][0].faults})
+            }
+            else {
+                this.setState({pageFaults: 0})
+            }
+            this.handleToStudent();
             localStorage.setItem('STORED_STEP_KEY', JSON.stringify(this.state.steps.slice(0, this.state.undoStep - 1)))
             localStorage.setItem('STORED_BOOK_KEY', JSON.stringify(this.state.steps[this.state.undoStep - 2]))
             message.success('Step ' + this.state.undoStep + ' and all the following steps have been removed. Now you can redo the recording from there.');
@@ -591,9 +598,11 @@ class Main extends PureComponent {
                 steps: [],
                 books: [],
                 pointer: 0,
+                pageFaults: 0,
             })
             localStorage.setItem('STORED_STEP_KEY', '[]')
             localStorage.setItem('STORED_BOOK_KEY', '[]')
+            this.handleToStudent();
         }
         else {
             message.error('Step value cannot be empty! Please try again to select a step.');
