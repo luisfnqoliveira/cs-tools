@@ -34,7 +34,7 @@ $ npm install --save react-infinite-scroll-component <br />
 $ yarn add react-infinite-scroll-component 
 
 ## Remaining Issues
-1. Previous steps remaining on page after refresh.\
+1. Previous steps remaining in "Steps Info" after the refresh, unless the user press "Reset Library" or "Clear all Steps".\
 Possible solution: save steps in session storage instead of local storage.
 
 2. Frequency increment delay during replay.
