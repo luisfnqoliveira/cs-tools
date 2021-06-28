@@ -43,11 +43,6 @@ function BookStand(props) {
         }
     }
 
-    // React.useLayoutEffect(() => {
-    //     setTimeout(() => console.log(inputRef.current.getBoundingClientRect()),
-    //         100
-    //     );
-    // });
     useEffect(() => {
         props.updateBookshelfDim(updateDimension())
         window.addEventListener("resize", onWindowResize, true);

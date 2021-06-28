@@ -2,12 +2,7 @@ import React, { PureComponent } from 'react';
 import SingleBookCase from './SingleBookCase';
 
 class Bookshelf extends PureComponent {
-    // shouldComponentUpdate(nextProps, nextState) {
-    //     return nextProps !== this.props
-    // }
-
     render() {
-        // console.log("render bookshelf")
         const { numOfLevels } = this.props;
         const { numOfBooksPerLevel } = this.props;
         let bookcases = [];
@@ -24,7 +19,6 @@ class Bookshelf extends PureComponent {
         }
         return (
             <div className="bookshelf">
-                {/* <h5 class="text-center"><strong>Bookshelf</strong></h5> */}
                 {
                     bookcases.map(i => {
                         return (

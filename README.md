@@ -1,6 +1,37 @@
-# Getting Started with Create React App
+# Memory Paging Interactive Practice System
+This project aims to provide an web-based interactive system for instructors and students in Computer Science department, which uses to help students learning about Memory Segmentation and Paging concepts.   
+
+This project is written in React.
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+
+## lib installed for team use
+1. Ant Design <br />
+$ npm install antd <br /> 
+$ yarn add antd
+Check the link if you have any questions: https://ant.design/docs/react/introduce
+
+2. React-Bootstrap <br />
+$ npm install react-bootstrap <br />
+$ yarn add react-bootstrap
+In this project, use this package for layout design. Check this link for details: https://react-bootstrap.github.io/layout/grid/ 
+
+3. uniqid <br />
+$ npm install uniqid <br />
+$ yarn add uniqid
+
+4. React DnD <br />
+$ npm install react-dnd react-dnd-html5-backend <br />
+Check the link if you have any questions: https://react-dnd.github.io/react-dnd/about
+
+5. rc-tween-one <br />
+$ npm install rc-tween-one <br />
+$ yarn add rc-tween-one <br />
+Check the link if you have any questions: https://motion.ant.design/components/tween-one
+
+6. react-infinite-scroll-component <br />
+$ npm install --save react-infinite-scroll-component <br />
+$ yarn add react-infinite-scroll-component 
 
 ## Available Scripts
 

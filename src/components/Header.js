@@ -34,7 +34,7 @@ class Header extends Component {
 					Memory Paging Practice System
                 </p>
 				<div className="overview-button">
-					<a style={{color: "white"}} onClick={this.props.clickOverview}>Overview</a>
+					<a style={{ color: "white" }} onClick={this.props.clickOverview}>Overview</a>
 				</div>
 				<div className="role-button">
 					<Role role={this.props.role} onChange={this.props.onChange} />

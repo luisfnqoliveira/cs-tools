@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import Bin from './Bin';
 import TweenOne from 'rc-tween-one';
 import { Card, Popover, Badge, message } from 'antd';
-import bookcover from '../assets/images/bookCover.jpg';
 import BezierPlugin from 'rc-tween-one/lib/plugin/BezierPlugin';
 TweenOne.plugins.push(BezierPlugin);
 
@@ -48,9 +47,6 @@ class Storage extends Component {
             for (let i = 0; i < numOfBins; i++) {
                 bins = [...bins, {
                     binId: i + 1,
-                    // do we need to limit number of books in each bin? 
-
-                    // filter books in different bins, still need to check
                     books: [],
                 }];
             }
@@ -59,9 +55,6 @@ class Storage extends Component {
                 const binBooks = books.filter(book => book.bin === i + 1);
                 bins = [...bins, {
                     binId: i + 1,
-                    // do we need to limit number of books in each bin? 
-
-                    // filter books in different bins, still need to check
                     books: binBooks,
                 }];
             }
