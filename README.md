@@ -33,6 +33,18 @@ Check the link if you have any questions: https://motion.ant.design/components/t
 $ npm install --save react-infinite-scroll-component <br />
 $ yarn add react-infinite-scroll-component 
 
+## Remaining Issues
+1. Previous steps remaining on page after refresh.\
+Possible solution: save steps in session storage instead of local storage.
+
+2. Frequency increment delay during replay.
+
+3. Book style issue. The book turns transparent if it flew out from a transparent storage bin.
+
+4. Json file format check and error handling.
+
+5. Responsive design.
+
 ## Available Scripts
 
 In the project directory, you can run:

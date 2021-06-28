@@ -317,7 +317,7 @@ class Main extends PureComponent {
     }
 
     onSearch = (value) => {
-        if (value == "") {
+        if (value === "") {
             alert('Please input a name!');
         } else {
             storeBook(value, this.state.numOfBins);
@@ -361,12 +361,7 @@ class Main extends PureComponent {
                         bouncingBooks: JSON.parse(e.target.result)[0]
                     });
                     if (JSON.parse(e.target.result)[0].length > 0) {
-                        if ('faults' in JSON.parse(e.target.result)[0][0]) {
-                            this.setState({ pageFaults: JSON.parse(e.target.result)[0][0].faults })
-                        }
-                        else {
-                            this.setState({ pageFaults: 0 })
-                        }
+                        this.setState({ pageFaults: JSON.parse(e.target.result)[0][0].faults })
                     }
                     else {
                         this.setState({ pageFaults: 0 })
@@ -418,9 +413,7 @@ class Main extends PureComponent {
             }), function () {
                 this.setState({ books: fileContent[this.state.pointer] })
                 if (fileContent[this.state.pointer].length > 0) {
-                    if ('faults' in fileContent[this.state.pointer][0]) {
-                        this.setState({ pageFaults: fileContent[this.state.pointer][0].faults })
-                    }
+                    this.setState({ pageFaults: fileContent[this.state.pointer][0].faults })
                 }
                 else {
                     this.setState({ pageFaults: 0 })
@@ -540,9 +533,7 @@ class Main extends PureComponent {
                 books: fileContent[this.state.pointer],
             })
             if (fileContent[this.state.pointer + 1].length > 0) {
-                if ('faults' in fileContent[this.state.pointer + 1][0]) {
-                    this.setState({ pageFaults: fileContent[this.state.pointer + 1][0].faults })
-                }
+                this.setState({ pageFaults: fileContent[this.state.pointer + 1][0].faults })
             }
             else {
                 this.setState({ pageFaults: 0 })

@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import Bin from './Bin';
 import TweenOne from 'rc-tween-one';
-import { Card, Popover, Badge, message } from 'antd';
 import BezierPlugin from 'rc-tween-one/lib/plugin/BezierPlugin';
 TweenOne.plugins.push(BezierPlugin);
 
@@ -12,7 +11,6 @@ class Storage extends Component {
 
     render() {
         // console.log("render storage")
-        const { Meta } = Card;
         const p0 = 'M0,100 L25,100 C34,20 40,0 100,0';
         const p1 = 'M0,100 C5,120 25,130 25,100 C30,60 40,75 58,90 C69,98.5 83,99.5 100,100';
         const ease0 = TweenOne.easing.path(p0);
