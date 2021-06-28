@@ -710,10 +710,12 @@ class Main extends PureComponent {
                         <Col>
                             <Button type="primary" onClick={() => {
                                 localStorage.setItem("STORED_BOOK_KEY", "[]");
+                                localStorage.setItem("STORED_STEP_KEY", "[]");
                                 localStorage.setItem("STORED_FAULTS_KEY", 0);
                                 this.queryRef.current.state.value = "";
                                 this.setState({
                                     books: [],
+                                    steps: [],
                                     bouncingBooks: [],
                                     flyingBooks: [],
                                     pageFaults: 0,
