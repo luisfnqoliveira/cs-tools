@@ -8,7 +8,7 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 ## lib installed for team use
 1. Ant Design <br />
 $ npm install antd <br /> 
-$ yarn add antd
+$ yarn add antd <br />
 Check the link if you have any questions: https://ant.design/docs/react/introduce
 
 2. React-Bootstrap <br />
