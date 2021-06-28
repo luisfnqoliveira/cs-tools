@@ -824,7 +824,7 @@ class Main extends PureComponent {
                                         content={
                                             <div>
                                                 <p><strong>Number of levels:</strong>  <InputNumber min={1} max={8} value={this.state.numOfShelfLevels} onChange={this.onChangeLevelInput} /> (Range: 1~8)</p>
-                                                <p><strong>Number of positions per level:</strong> <InputNumber min={3} max={5} value={this.state.numOfBooksPerLevel} onChange={this.onChangePositionInput} /> (Range: 3~5)</p>
+                                                <p><strong>Number of positions per level:</strong> <InputNumber min={1} max={5} value={this.state.numOfBooksPerLevel} onChange={this.onChangePositionInput} /> (Range: 1~5)</p>
                                                 <a onClick={this.hideConfig} className="closeButton">Close</a>
                                             </div>
                                         }
