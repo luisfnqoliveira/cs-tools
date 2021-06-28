@@ -582,11 +582,11 @@ class Main extends PureComponent {
                 books: this.state.steps[this.state.undoStep - 2],
                 pointer: this.state.undoStep - 2,
             })
-            if (this.state.steps[this.state.undoStep - 2].length > 0){
-                this.setState({pageFaults: this.state.steps[this.state.undoStep - 2][0].faults})
+            if (this.state.steps[this.state.undoStep - 2].length > 0) {
+                this.setState({ pageFaults: this.state.steps[this.state.undoStep - 2][0].faults })
             }
             else {
-                this.setState({pageFaults: 0})
+                this.setState({ pageFaults: 0 })
             }
             this.handleToStudent();
             localStorage.setItem('STORED_STEP_KEY', JSON.stringify(this.state.steps.slice(0, this.state.undoStep - 1)))

@@ -47,6 +47,8 @@ Possible solution: save steps in session storage instead of local storage.
 
 6. Responsive design.
 
+7. Print out the uploaded file name.
+
 ## Available Scripts
 
 In the project directory, you can run:
