@@ -23,7 +23,6 @@ export function Catalog(props) {
   const [position, setPosition] = React.useState();
   const [bin, setBin] = React.useState();
 
-  // when modal open
   React.useEffect(() => {
     if (props.show) {
       const books = getStoredBooks();
@@ -34,6 +33,9 @@ export function Catalog(props) {
         setPosition(found.position);
         setBin(found.bin);
       }
+    } 
+    if (props.query === "") {
+      setLocation(-1); // reset location as neither bookshelf or storage.
     }
     props.onHide();
   }, [props.show, props.query]);

@@ -22,7 +22,6 @@ class App extends React.Component {
   }
 
   clickOverview = (e) => {
-    // console.log('overview button clicked', e.target.value);
     this.showDrawer();
   }
 

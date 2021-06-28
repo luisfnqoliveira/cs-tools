@@ -54,7 +54,6 @@ function Bin(props) {
     if (Object.keys(props.books).length === 0 && props.books.constructor === Object) {
 
     } else {
-        // TODO: not only for location == 0, also need to seperate them by different bins
         let storageBook = props.books.filter(book => book.location === 0);
         if (!props.animationShow) {
             content = (

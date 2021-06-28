@@ -64,11 +64,6 @@ function Book(props) {
         // }
     }, []);
 
-    // const onFlyingComplete = () => {
-    //     console.log("flying completed")
-    // }
-
-
     if (!props.animationShow) {
         return (
             <div ref={drag}>

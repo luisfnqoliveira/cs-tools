@@ -10,7 +10,7 @@ import { Catalog } from './Catalog.js';
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import Storage from './Storage';
-import { message, Button, List, Tooltip, Select, Popconfirm, InputNumber, Statistic, Card, Popover } from 'antd';
+import { message, Button, List, Tooltip, Select, Popconfirm, InputNumber, Statistic, Card, Popover, Input } from 'antd';
 import InfiniteScroll from 'react-infinite-scroller';
 
 function getStoredBooks() {
@@ -91,15 +91,14 @@ class Main extends PureComponent {
 
     constructor(props) {
         super(props);
-        this.hiddenFileInput = React.createRef();
-        this.updateInput = this.updateInput.bind(this);
+        this.hiddenFileInput = React.createRef(); // Element reference for upload JSON input
         this.handleClickNext = this.handleClickNext.bind(this);
         this.handleClickPrevious = this.handleClickPrevious.bind(this);
         this.handleClickShowSteps = this.handleClickShowSteps.bind(this);
         this.handleSelectChange = this.handleSelectChange.bind(this);
         this.handleConfirm = this.handleConfirm.bind(this);
         this.handleFaultsIncrement = this.handleFaultsIncrement.bind(this);
-        this.handleClickSearch = this.handleClickSearch.bind(this);
+        this.queryRef = React.createRef(); // Element reference for search input
         this.state = {
             role: this.props.role,
             value: '',
@@ -113,12 +112,11 @@ class Main extends PureComponent {
             bookstandMarginLeft: '5px',
             numOfBins: 4,
             books: getStoredBooks(), // location: 0-storage; 1-bookshelf
-            query: '',
             error: 0,
             steps: getStoredSteps(),
             pointer: 0,
             isToggleOn: false,
-            display: 'none',
+            displayStepInfos: 'none',
             disableNext: true,
             loading: false,
             hasMore: true,
@@ -128,7 +126,7 @@ class Main extends PureComponent {
             bouncingBooks: [],
             flyingBooks: [],
             nextClicked: false,
-            configVisible: false,
+            configVisible: false, // show config table in "build your own" or not
             isSuccess: false,
             displayToLibrarianDialog: 'none',
             displayMoveBookDialog: 'none',
@@ -138,10 +136,6 @@ class Main extends PureComponent {
             bookshelfDim: [],
             storageDim: [],
         }
-    }
-
-    updateInput(event) {
-        this.setState({ query: event.target.value })
     }
 
     updateBookshelfDim = (newDim) => {
@@ -194,9 +188,6 @@ class Main extends PureComponent {
             for (i = 0; i < storedBooks.length; i++) {
                 if (storedBooks[i].code === item.code) {
                     if (storedBooks[i].location === 0 && toLocation === 1) {
-                        // var today = new Date();
-                        // storedBooks[i].created_date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
-                        // sessionStorage.setItem("STORED_BOOK_KEY", item.name);
                         if (item.name === this.state.value) {
                             this.handleToStudent();
                         } else if (this.state.value) {
@@ -276,45 +267,6 @@ class Main extends PureComponent {
                         message.warning("Cannot retrieve book in storage! Please drag the book to bookshelf.")
                     }
                 }
-                // if (data === book_name) {
-                //     if (found && found.location === 1) {
-                //         retrieveSuccess = true;
-                //         this.setState({
-                //             isSuccess: retrieveSuccess,
-                //         });
-                //         this.showRetriveSuccess();
-                //         let today = new Date();
-                //         let index = storedBooks.indexOf(found)
-                //         found.frequency += 1;
-                //         found.last_borrowed = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate() + ' ' + today.getHours() + ':' + today.getMinutes() + ':' + today.getSeconds();
-                //         storedBooks[index] = found
-                //         let storedBooksJson = JSON.stringify(storedBooks);
-                //         localStorage.setItem("STORED_BOOK_KEY", storedBooksJson);
-                // sessionStorage.setItem('STORED_BOOK_KEY', '');
-                // this.setState({
-                //     books: getStoredBooks()
-                // });
-                //     }
-                //     else if (found.location === 0) {
-                //         message.warning("Cannot retrieve book in storage! Please drag the book to bookshelf.")
-                //     }
-                //     // for (var i = 0; i < storedBooks.length; i++) {
-                //     //     if (storedBooks[i].name === data) {
-                //     //         storedBooks[i].frequency += 1;
-                //     //         // this.updateFrequency(storedBooks[i].frequency);
-                //     //         storedBooks[i].last_borrowed = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate() + ' ' + today.getHours() + ':' + today.getMinutes() + ':' + today.getSeconds();
-                //     //     }
-                //     //     var storedBooksJson = JSON.stringify(storedBooks);
-                //     //     localStorage.setItem("STORED_BOOK_KEY", storedBooksJson);
-                //     // }
-                //     sessionStorage.setItem('STORED_BOOK_KEY', '');
-                //     this.setState({
-                //         books: getStoredBooks()
-                //     });
-                // }
-                // else {
-                //     message.warning("Please choose again");
-                // }
             }
         }
     }
@@ -328,13 +280,6 @@ class Main extends PureComponent {
             });
             this.setState({ error: 0 });
         }
-
-        // if (this.state.catalogShow !== prevStates.catalogShow) {
-        //     this.setState({
-        //         // books: getStoredBooks(),
-        //         catalogShow: false,
-        //     });
-        // }
     }
 
     showToLibrarianDialog = () => {
@@ -371,15 +316,19 @@ class Main extends PureComponent {
         })
     }
 
-    handleClickSearch = () => {
-        if (!this.state.query) {
+    onSearch = (value) => {
+        if (value == "") {
             alert('Please input a name!');
         } else {
-            storeBook(this.state.query, this.state.numOfBins);
-            this.setState({ catalogShow: true, value: this.state.query, books: getStoredBooks() })
-            sessionStorage.setItem('STORED_BOOK_KEY', this.state.query)
+            storeBook(value, this.state.numOfBins);
+            this.setState({
+                catalogShow: true,
+                value: value,
+                books: getStoredBooks()
+            })
+            sessionStorage.setItem('STORED_BOOK_KEY', value)
             let books = getStoredBooks()
-            let targetBook = books.find(book => book.name === this.state.query)
+            let targetBook = books.find(book => book.name === value)
             if (targetBook) {
                 if (targetBook.location === 0) {
                     this.showToLibrarianDialog();
@@ -431,7 +380,7 @@ class Main extends PureComponent {
                 else {
                     message.error("There is something wrong with your file. Please try again!")
                 }
-                this.hiddenFileInput.current.value = "";
+                this.hiddenFileInput.current.value = ""; // Enable uploading duplicate files
             };
         }
     };
@@ -611,10 +560,11 @@ class Main extends PureComponent {
     handleClickShowSteps() {
         this.setState(prevState => ({
             isToggleOn: !prevState.isToggleOn,
-            display: prevState.isToggleOn ? 'none' : 'block'
+            displayStepInfos: prevState.isToggleOn ? 'none' : 'block'
         }));
     }
 
+    // used for step infos inner scroll
     handleInfiniteOnLoad = () => {
         let { steps } = this.state;
         this.setState({
@@ -760,12 +710,16 @@ class Main extends PureComponent {
                         <Col>
                             <Button type="primary" onClick={() => {
                                 localStorage.setItem("STORED_BOOK_KEY", "[]");
+                                localStorage.setItem("STORED_STEP_KEY", "[]");
                                 localStorage.setItem("STORED_FAULTS_KEY", 0);
+                                this.queryRef.current.state.value = "";
                                 this.setState({
                                     books: [],
+                                    steps: [],
                                     bouncingBooks: [],
                                     flyingBooks: [],
                                     pageFaults: 0,
+                                    value: "",
                                     displayMoveBookDialog: 'none',
                                     displayToLibrarianDialog: 'none',
                                     displayNoticeDialog: 'none',
@@ -805,18 +759,16 @@ class Main extends PureComponent {
                                             </Row>
                                             <Row>
                                                 <div className="form-inline mt-4 mb-4" >
-                                                    <input className="form-control-sm" type="text" placeholder="Find a Book" aria-label="Search"
-                                                        // value={this.state.query}
+                                                    <Input.Search
+                                                        type="text"
+                                                        placeholder="Find a Book"
+                                                        ref={this.queryRef}
                                                         onClick={event => {
                                                             message.info("You can enter any book you want")
                                                         }}
-                                                        onChange={this.updateInput}
-                                                        onKeyPress={event => {
-                                                            if (event.key === 'Enter') {
-                                                                this.handleClickSearch()
-                                                            }
-                                                        }} />
-                                                    <Button type="primary" onClick={this.handleClickSearch}>Search</Button>
+                                                        enterButton="Search"
+                                                        onSearch={this.onSearch}
+                                                    />
                                                 </div>
                                             </Row>
                                             <Row>
@@ -934,7 +886,7 @@ class Main extends PureComponent {
                                 </Row>
                             </Col>
                         </DndProvider>
-                        <Col style={{ display: this.state.display }}>
+                        <Col style={{ display: this.state.displayStepInfos }}>
                             <h5 className="computer-title"><strong>Steps Info</strong></h5>
                             <div className="demo-infinite-container">
                                 <InfiniteScroll
@@ -953,6 +905,7 @@ class Main extends PureComponent {
                                                 {step.map(book => (
                                                     <p key={step.indexOf(book)}><strong>{book.name}</strong> {(book.location === 0 ? "storage: bin" + book.bin : "bookshelf: level" + book.level + "; position" + book.position)}</p>
                                                 ))}
+                                                <p><strong>Current page faults:</strong> {step[0].faults}</p>
                                             </List.Item>
                                         )} />
                                 </InfiniteScroll>

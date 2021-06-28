@@ -43,10 +43,7 @@
 
   .demo-infinite-container {
     height: 600px;
-    /* padding: 8px 24px; */
     overflow: auto;
-    /* border: 1px solid #e8e8e8; */
-    /* border-radius: 4px; */
   }
 
 .offset-md-3 {
@@ -94,6 +91,8 @@
   padding: 24px;
   text-align: center;
   color: #000;
+  margin-left: 20%;
+  margin-bottom: 6px;
 }
 
 .bubble-bottom-left:before {
@@ -105,7 +104,7 @@
   border-top: 12px solid #f9bbb1;
   border-bottom: 25px solid transparent;
   left: 0px;
-  top: 100px;
+  top: 72%;
 }
 
 .ant-statistic-title {

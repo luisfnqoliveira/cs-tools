@@ -3,9 +3,9 @@ import "../styles/Footer.css"
 
 class Footer extends Component {
     render() {
-        return ( 
-            <footer className = "footer" >
-            University of Pittsburgh 
+        return (
+            <footer className="footer" >
+                University of Pittsburgh
             </footer>
         );
     }
