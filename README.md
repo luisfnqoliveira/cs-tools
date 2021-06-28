@@ -41,9 +41,11 @@ Possible solution: save steps in session storage instead of local storage.
 
 3. Book style issue. The book turns transparent if it flew out from a transparent storage bin.
 
-4. Json file format check and error handling.
+4. Retrieving books only works when clicking on the book image.
 
-5. Responsive design.
+5. Json file format check and error handling.
+
+6. Responsive design.
 
 ## Available Scripts
 
